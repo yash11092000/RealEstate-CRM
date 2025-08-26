@@ -156,7 +156,7 @@ namespace PhysioWeb.Controllers
         #region SearchProperty
         public async Task<ActionResult> SearchProperty(string location = "", string Bedrooms = "", string PropertyType = "", string RentalType = "", string PropertyCategory = "", string Amenities = "", string MinPrice = "", string MaxPrice = "", int PageNo = 1, int PageSize = 6)
         {
-            var result = await _masterRepository.SearchProperties(location, Bedrooms, PropertyType, RentalType, PropertyCategory, Amenities, MinPrice, MaxPrice, PageNo, PageSize);
+            var result = await _masterRepository.SearchProperties(location, PropertyType, Bedrooms, RentalType, PropertyCategory, Amenities, MinPrice, MaxPrice, PageNo, PageSize);
             return View(result);
         }
 

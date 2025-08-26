@@ -782,12 +782,12 @@
 		function SearchProperty(){
 			var location = $("#location").val();
 			var PropertyType = $("#propertyType").val().toString();
+			var Bedrooms = $("#bedrooms").val().toString();
 			var RentalType = $("#RentalType").val().toString();
 			var PropertyCategory = $("#PropertyCategory").val().toString();
 			var Amenities = $("#Amenities").val().toString();
 			var MinPrice = $("#MinPrice").val();
 			var MaxPrice = $("#MaxPrice").val();
-			//window.location.href = `/Home/SearchProperty?location=${location}&PropertyType=${PropertyType}&RentalType=${RentalType}&PropertyCategory=${PropertyCategory}&Amenities=${Amenities}&MinPrice=${MinPrice}&MaxPrice=${MaxPrice}`;
 
 
 					// Create and submit a form
@@ -796,7 +796,7 @@
 			form.action = '/Home/SearchProperty';
 
 			const params = {
-			  location, PropertyType, RentalType, PropertyCategory,
+			  location, PropertyType,Bedrooms, RentalType, PropertyCategory,
 			  Amenities, MinPrice, MaxPrice
 			};
 
