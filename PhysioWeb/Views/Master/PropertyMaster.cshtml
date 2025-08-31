@@ -947,9 +947,9 @@
 				$("#Amenities").val("");
 			}
 
-				
+
 			function OnSuccessOfEdit(data) {
-						
+
 			// ✅ Switch tab first
 			var triggerTab = new bootstrap.Tab(document.querySelector('#form-tab'));
 			triggerTab.show();
@@ -987,7 +987,7 @@
 			$("#displayMinBudget").val(data.budgetMin);
 			$("#ConvertedActualPrice").val(data.convertedActualPrice);
 			$("#Amenities").val(data.amenities);
-					//	showMediaFromPaths(data.images, "imageGallery", "image");
+			//	showMediaFromPaths(data.images, "imageGallery", "image");
 		//showMediaFromPaths(data.videos, "videoGallery", "video");
 			// If checkbox
 			 $("#IsNegotiable").prop("checked", data.isNegotiable);
