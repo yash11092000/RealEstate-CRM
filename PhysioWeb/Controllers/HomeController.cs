@@ -156,7 +156,15 @@ namespace PhysioWeb.Controllers
         #region SearchProperty
         public async Task<ActionResult> SearchProperty(string location = "", string Bedrooms = "", string PropertyType = "", string RentalType = "", string PropertyCategory = "", string Amenities = "", string MinPrice = "", string MaxPrice = "", int PageNo = 1, int PageSize = 6)
         {
-            var result = await _masterRepository.SearchProperties(location, PropertyType, Bedrooms, RentalType, PropertyCategory, Amenities, MinPrice, MaxPrice, PageNo, PageSize);
+            HomeDashboard result = await _masterRepository.SearchProperties(location, PropertyType, Bedrooms, RentalType, PropertyCategory, Amenities, MinPrice, MaxPrice, PageNo, PageSize);
+            result.SelectedBedrooms = Bedrooms?.Split(',', StringSplitOptions.RemoveEmptyEntries).ToList() ?? new List<string>();
+            result.SelectedpropertyType = PropertyType?.Split(',').ToList() ?? new List<string>();
+            result.SelectedRentalType = RentalType?.Split(',', StringSplitOptions.RemoveEmptyEntries).ToList() ?? new List<string>();
+            result.SelectedPropertyCategory = PropertyCategory?.Split(',').ToList() ?? new List<string>();
+            result.SelectedAmenities = Amenities?.Split(',').ToList() ?? new List<string>();
+            result.SearchedLocation = location;
+            result.SearchedMinPrice = MinPrice;
+            result.SearchedMaxPrice = MaxPrice;
             return View(result);
         }
 

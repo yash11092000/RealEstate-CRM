@@ -1,34 +1,100 @@
 ﻿@model PhysioWeb.Models.HomeDashboard
 
 <div class="row g-4">
-	@foreach (var property in Model.PropertyDetails)
+	@if (Model.PropertyDetails != null && Model.PropertyDetails.Count > 0)
 	{
-		<div class="col-md-4 col-sm-6">
-			<div class="card h-100 shadow-lg border-0 rounded-4 overflow-hidden property-card">
-				<div class="position-relative">
-					<img src="/secure-images/@property.PropertyImg"
-						 class="card-img-top img-fluid"
-						 alt="Property Image"
-						 style="height: 220px; object-fit: cover;">
-					<span class="badge bg-success position-absolute top-0 end-0 m-2 px-3 py-2 rounded-pill shadow">
-						@property.PropertyType
-					</span>
-				</div>
-				<div class="card-body p-4 d-flex flex-column">
-					<h5 class="card-title fw-bold text-dark">@property.PropertyName</h5>
-					<p class="card-text text-muted mb-3">Modern @property.PropertyType</p>
 
-					<div class="mt-auto">
-						<p class="fw-semibold text-success fs-5 mb-2">
-							₹@property.MinPrice - ₹@property.MaxPrice
-						</p>
-						<a href="/PropertyDetails/Property?PropertyId=@property.PropertyId"
-						   class="btn btn-dark w-100 rounded-pill shadow-sm">
-							View Details
-						</a>
+		foreach (var property in Model.PropertyDetails)
+		{
+			<div class="col-md-4 col-sm-6">
+				<div class="card h-100 shadow-lg border-0 rounded-4 overflow-hidden property-card">
+					<div class="position-relative">
+						<img src="/secure-images/@property.PropertyImg"
+							 class="card-img-top img-fluid"
+							 alt="Property Image"
+							 style="height: 220px; object-fit: cover;">
+						<span class="badge bg-success position-absolute top-0 end-0 m-2 px-3 py-2 rounded-pill shadow">
+							@property.PropertyType
+						</span>
+					</div>
+					<div class="card-body p-4 d-flex flex-column">
+						<h5 class="card-title fw-bold text-dark">@property.PropertyName</h5>
+						<p class="card-text text-muted mb-3">Modern @property.PropertyType</p>
+
+						<div class="mt-auto">
+							<p class="fw-semibold text-success fs-5 mb-2">
+								₹@property.MinPrice - ₹@property.MaxPrice
+							</p>
+							<a href="/PropertyDetails/Property?PropertyId=@property.PropertyId"
+							   class="btn btn-dark w-100 rounded-pill shadow-sm">
+								View Details
+							</a>
+						</div>
 					</div>
 				</div>
 			</div>
+
+
+		}
+		<nav class="my-3">
+			<ul class="pagination justify-content-center" id="pagination">
+				@{
+					int totalPageCount = (int)Math.Ceiling((decimal)Model.TotalCount / 6);
+					int range = 2;
+
+					<li class="page-item @(Model.CurrentPage == 1 ? "disabled" : "")">
+						<a class="page-link" href="#" data-page="@(Model.CurrentPage - 1)">Previous</a>
+					</li>
+
+
+					@if (Model.CurrentPage > range + 1)
+					{
+						<li class="page-item"><a class="page-link" href="#" data-page="1">1</a></li>
+						@if (Model.CurrentPage > range + 2)
+						{
+							<li class="page-item disabled"><span class="page-link">...</span></li>
+						}
+					}
+
+					@for (int i = Math.Max(1, Model.CurrentPage - range); i <= Math.Min(totalPageCount, Model.CurrentPage + range); i++)
+					{
+						<li class="page-item @(i == Model.CurrentPage ? "active" : "")">
+							<a class="page-link" href="#" data-page="@i">@i</a>
+						</li>
+					}
+
+					@if (Model.CurrentPage < totalPageCount - range)
+					{
+						@if (Model.CurrentPage < totalPageCount - range - 1)
+						{
+							<li class="page-item disabled"><span class="page-link">...</span></li>
+						}
+						<li class="page-item"><a class="page-link" href="#" data-page="@totalPageCount">@totalPageCount</a></li>
+					}
+
+
+					<li class="page-item @(Model.CurrentPage == totalPageCount ? "disabled" : "")">
+						<a class="page-link" href="#" data-page="@(Model.CurrentPage + 1)">Next</a>
+					</li>
+				}
+			</ul>
+		</nav>
+	}
+	else
+	{
+		<div class="col-12">
+			<div class="text-center p-5 bg-light rounded-4 shadow-sm">
+				<i class="bi bi-house-x text-muted" style="font-size: 3rem;"></i>
+				<h4 class="fw-bold text-dark mt-3">No Properties Found</h4>
+				<p class="text-muted mb-4">
+					We couldn’t find any properties matching your search.
+					Try adjusting your filters or check back later.
+				</p>
+				<a href="/Property/Search" class="btn btn-success rounded-pill px-4">
+					<i class="bi bi-search me-2"></i> Explore Properties
+				</a>
+			</div>
 		</div>
+
 	}
 </div>

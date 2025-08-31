@@ -95,7 +95,7 @@
 				<label for="location" class="form-label fw-semibold">
 					<i class="bi bi-geo-alt-fill text-success"></i> Location
 				</label>
-				<input type="text" id="location" class="form-control rounded-3" placeholder="Enter Location">
+				<input type="text" id="location" class="form-control rounded-3" placeholder="Enter Location" value="@Model.SearchedLocation">
 			</div>
 
 			<!-- Property Type -->
@@ -107,7 +107,14 @@
 					<option></option>
 					@foreach (var item in Model.PropertyTypeList)
 					{
-						<option value="@item.Value">@item.Text</option>
+						if (Model.SelectedpropertyType.Contains(item.Value))
+						{
+							<option value="@item.Value" selected>@item.Text</option>
+						}
+						else
+						{
+							<option value="@item.Value">@item.Text</option>
+						}
 					}
 				</select>
 			</div>
@@ -121,8 +128,18 @@
 					<option></option>
 					@foreach (var item in Model.BedroomList)
 					{
-						<option value="@item.Value">@item.Text</option>
+
+						if (Model.SelectedBedrooms.Contains(item.Value))
+						{
+							<option value="@item.Value" selected>@item.Text</option>
+						}
+						else
+						{
+							<option value="@item.Value">@item.Text</option>
+						}
 					}
+
+
 				</select>
 			</div>
 
@@ -135,7 +152,14 @@
 					<option></option>
 					@foreach (var item in Model.RentalTypeList)
 					{
-						<option value="@item.Value">@item.Text</option>
+						if (Model.SelectedRentalType.Contains(item.Value))
+						{
+							<option value="@item.Value" selected>@item.Text</option>
+						}
+						else
+						{
+							<option value="@item.Value">@item.Text</option>
+						}
 					}
 				</select>
 			</div>
@@ -149,7 +173,14 @@
 					<option></option>
 					@foreach (var item in Model.PropertyCategoryList)
 					{
-						<option value="@item.Value">@item.Text</option>
+						if (Model.SelectedPropertyCategory.Contains(item.Value))
+						{
+							<option value="@item.Value" selected>@item.Text</option>
+						}
+						else
+						{
+							<option value="@item.Value">@item.Text</option>
+						}
 					}
 				</select>
 			</div>
@@ -178,7 +209,14 @@
 					<option></option>
 					@foreach (var item in Model.AmenityList)
 					{
-						<option value="@item.Value">@item.Text</option>
+						if (Model.SelectedAmenities.Contains(item.Value))
+						{
+							<option value="@item.Value" selected>@item.Text</option>
+						}
+						else
+						{
+							<option value="@item.Value">@item.Text</option>
+						}
 					}
 				</select>
 			</div>
@@ -192,15 +230,6 @@
 		</form>
 	</div>
 
-	<!-- Filter tags -->
-@* 	<div class="filter-tags px-3 pb-3">
-		<div class="d-flex flex-nowrap gap-2 overflow-auto">
-			<span class="badge filter-badge bg-light text-dark">Mumbai <i class="bi bi-x-circle ms-1"></i></span>
-			<span class="badge filter-badge bg-light text-dark">Apartment <i class="bi bi-x-circle ms-1"></i></span>
-			<span class="badge filter-badge bg-light text-dark">2 Beds <i class="bi bi-x-circle ms-1"></i></span>
-			<span class="badge filter-badge bg-light text-dark">₹20k-₹50k <i class="bi bi-x-circle ms-1"></i></span>
-		</div>
-	</div> *@
 </div>
 
 <!-- ✅ Floating Search trigger button -->
@@ -221,49 +250,7 @@
 
 	<!-- Pagination -->
 
-	<nav class="my-3">
-		<ul class="pagination justify-content-center" id="pagination">
-			@{
-				int totalPageCount = (int)Math.Ceiling((decimal)Model.TotalCount / 6);
-				int range = 2;
 
-				<li class="page-item @(Model.CurrentPage == 1 ? "disabled" : "")">
-					<a class="page-link" href="#" data-page="@(Model.CurrentPage - 1)">Previous</a>
-				</li>
-
-
-				@if (Model.CurrentPage > range + 1)
-				{
-					<li class="page-item"><a class="page-link" href="#" data-page="1">1</a></li>
-					@if (Model.CurrentPage > range + 2)
-					{
-						<li class="page-item disabled"><span class="page-link">...</span></li>
-					}
-				}
-
-				@for (int i = Math.Max(1, Model.CurrentPage - range); i <= Math.Min(totalPageCount, Model.CurrentPage + range); i++)
-				{
-					<li class="page-item @(i == Model.CurrentPage ? "active" : "")">
-						<a class="page-link" href="#" data-page="@i">@i</a>
-					</li>
-				}
-
-				@if (Model.CurrentPage < totalPageCount - range)
-				{
-					@if (Model.CurrentPage < totalPageCount - range - 1)
-					{
-						<li class="page-item disabled"><span class="page-link">...</span></li>
-					}
-					<li class="page-item"><a class="page-link" href="#" data-page="@totalPageCount">@totalPageCount</a></li>
-				}
-
-
-				<li class="page-item @(Model.CurrentPage == totalPageCount ? "disabled" : "")">
-					<a class="page-link" href="#" data-page="@(Model.CurrentPage + 1)">Next</a>
-				</li>
-			}
-		</ul>
-	</nav>
 
 </div>
 
@@ -346,7 +333,7 @@
 			});
 		}
 
-		function SearchProperty(){
+		function SearchProperty(page){
 			var location = $("#location").val();
 			var PropertyType = $("#propertyType").val().toString();
 			var Bedrooms = $("#bedrooms").val().toString();
@@ -356,7 +343,8 @@
 			var MinPrice = $("#MinPrice").val();
 			var MaxPrice = $("#MaxPrice").val();
 
-
+			var PageNo = page;
+			var PageSize =  6
 					// Create and submit a form
 			const form = document.createElement('form');
 			form.method = 'POST';
@@ -364,7 +352,7 @@
 
 			const params = {
 			  location, PropertyType,Bedrooms, RentalType, PropertyCategory,
-			  Amenities, MinPrice, MaxPrice
+			  Amenities, MinPrice, MaxPrice,PageNo,PageSize
 			};
 
 			Object.keys(params).forEach(key => {

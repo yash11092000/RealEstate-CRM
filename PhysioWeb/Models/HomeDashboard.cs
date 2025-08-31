@@ -16,7 +16,17 @@ namespace PhysioWeb.Models
         public List<DropDownSource> AmenityList { get; set; }
 
         public int TotalCount { get; set; }
-        public int CurrentPage{ get; set; }
+        public int CurrentPage { get; set; }
+
+        public List<string> SelectedRentalType { get; set; } = new();
+        public List<string> SelectedpropertyType { get; set; } = new();
+        public List<string> SelectedBedrooms { get; set; } = new();
+        public List<string> SelectedPropertyCategory { get; set; } = new();
+        public List<string> SelectedAmenities { get; set; } = new();
+
+        public string SearchedLocation { get; set; }
+        public string SearchedMinPrice { get; set; }
+        public string SearchedMaxPrice { get; set; }
         public HomeDashboard()
         {
             PropertyDetails = new List<PropertyDetails>();
@@ -117,7 +127,7 @@ namespace PhysioWeb.Models
             if (!rdr.IsDBNull(rdr.GetOrdinal("Area")))
             {
                 obj.Area = rdr.GetString(rdr.GetOrdinal("Area"));
-            } 
+            }
             if (!rdr.IsDBNull(rdr.GetOrdinal("PropertyImage")))
             {
                 obj.PropertyImg = rdr.GetString(rdr.GetOrdinal("PropertyImage"));
