@@ -168,17 +168,9 @@ namespace PhysioWeb.Controllers
             return View(result);
         }
 
-        public async Task<ActionResult> LoadProperties(int PageNo = 1, int PageSize = 6)
+        public async Task<ActionResult> LoadProperties(int PageNo = 1, int PageSize = 6, string location = null, string PropertyType = null, string Bedrooms = null, string RentalType = null, string PropertyCategory = null, string Amenities = null,string MinPrice = null, string MaxPrice = null)
         {
-            string location = null;
-            string PropertyType = null;
-            string Bedroom = null;
-            string RentalType = null;
-            string PropertyCategory = null;
-            string Amenities = null;
-            string MinPrice = null;
-            string MaxPrice = null;
-            var result = await _masterRepository.SearchProperties(location, PropertyType, Bedroom, RentalType, PropertyCategory, Amenities, MinPrice, MaxPrice, PageNo, PageSize);
+            var result = await _masterRepository.SearchProperties(location, PropertyType, Bedrooms, RentalType, PropertyCategory, Amenities, MinPrice, MaxPrice, PageNo, PageSize);
             return PartialView("_PropertyListPartial", result);
         }
         #endregion
