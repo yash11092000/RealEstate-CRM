@@ -1122,7 +1122,7 @@ namespace PhysioWeb.Repository
                     {
                         while (data.Read())
                         {
-                            PropertyMaster.Images.Add(new DropDownSource(data));
+                            PropertyMaster.Images.Add(new DropDownSource(data , true));
                         }
                     }
 
@@ -1130,8 +1130,7 @@ namespace PhysioWeb.Repository
                     {
                         while (data.Read())
                         {
-                            PropertyMaster.Videos.Add(new DropDownSource(data));
-
+                            PropertyMaster.Videos.Add(new DropDownSource(data, true));
                         }
                     }
 

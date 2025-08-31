@@ -946,7 +946,9 @@
 				$("#IsActive").prop("checked", true);
 				$("#Amenities").val("");
 			}
-					function OnSuccessOfEdit(data) {
+
+				
+			function OnSuccessOfEdit(data) {
 						
 			// ✅ Switch tab first
 			var triggerTab = new bootstrap.Tab(document.querySelector('#form-tab'));
@@ -985,11 +987,73 @@
 			$("#displayMinBudget").val(data.budgetMin);
 			$("#ConvertedActualPrice").val(data.convertedActualPrice);
 			$("#Amenities").val(data.amenities);
-
+					//	showMediaFromPaths(data.images, "imageGallery", "image");
+		//showMediaFromPaths(data.videos, "videoGallery", "video");
 			// If checkbox
 			 $("#IsNegotiable").prop("checked", data.isNegotiable);
 			 $("#IsActive").prop("checked", data.isActive);
 		}
+
+		document.querySelectorAll(".imageInput, .videoInput").forEach(assignInputId);
+
+						function handleFilePreview(input, containerId, type) {
+			const files = input.files;
+			const container = document.getElementById(containerId);
+			container.innerHTML = "";
+
+			Array.from(files).forEach(file => {
+				const reader = new FileReader();
+				reader.onload = function (e) {
+					let element;
+					if (type === "image") {
+						element = document.createElement("img");
+						element.src = e.target.result;
+						element.style.width = "120px";
+						element.style.height = "100px";
+						element.classList.add("rounded", "border");
+					} else if (type === "video") {
+						element = document.createElement("video");
+						element.src = e.target.result;
+						element.controls = true;
+						element.style.width = "200px";
+						element.style.height = "150px";
+						element.classList.add("rounded", "border");
+					}
+					container.appendChild(element);
+				};
+				reader.readAsDataURL(file);
+			});
+		}
+
+		// // ✅ Event delegation for dynamically added inputs
+		// document.addEventListener("change", function (e) {
+		// 	if (e.target.classList.contains("imageInput")) {
+		// 		handleFilePreview(e.target, "imageGallery", "image");
+		// 	}
+		// 	if (e.target.classList.contains("videoInput")) {
+		// 		handleFilePreview(e.target, "videoGallery", "video");
+		// 	}
+		// });
+
+		// // ✅ Add more input fields dynamically
+		// document.getElementById("addImageInput").addEventListener("click", function () {
+		// 	const newInput = document.createElement("input");
+		// 	newInput.type = "file";
+		// 	newInput.name = "Images";
+		// 	newInput.accept = "image/*";
+		// 	newInput.classList.add("form-control", "mb-2", "imageInput");
+		// 	document.getElementById("imageInputs").appendChild(newInput);
+		// });
+
+		// document.getElementById("addVideoInput").addEventListener("click", function () {
+		// 	const newInput = document.createElement("input");
+		// 	newInput.type = "file";
+		// 	newInput.name = "Videos";
+		// 	newInput.accept = "video/*";
+		// 	newInput.classList.add("form-control", "mb-2", "videoInput");
+		// 	document.getElementById("videoInputs").appendChild(newInput);
+		// });
+
 
 		$(document).on("change", "#IsNegotiable", function () {
 			if ($(this).is(":checked")) {
@@ -1131,6 +1195,35 @@
 			}
 
 			return true; // ✅ Passed all validations
+		}
+				function showMediaFromPaths(paths, containerId, type) {
+			const container = document.getElementById(containerId);
+			container.innerHTML = ""; // clear only once when loading DB data
+
+			if (paths && paths.length > 0) {
+				paths.forEach(path => createPreviewFromPath(path, type, containerId));
+			}
+		}
+
+				function createPreviewFromPath(path, type, containerId) {
+			const gallery = document.getElementById(containerId);
+			const card = document.createElement("div");
+			card.classList.add("preview-card");
+
+			card.innerHTML = `
+				<button type="button" class="delete-btn">&times;</button>
+				${type === "image"
+					? `<img src="/secure-images/${path}" alt="Preview">`
+					: `<video controls><source src="/secure-images/${path}" type="${type}/${path.split('.').pop()}"></video>`}
+			`;
+
+			gallery.appendChild(card);
+
+			// Delete functionality
+			card.querySelector(".delete-btn").addEventListener("click", () => {
+				card.remove();
+				// TODO: mark file for deletion in hidden input if needed
+			});
 		}
 
 	</script>
