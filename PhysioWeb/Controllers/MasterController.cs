@@ -924,6 +924,33 @@ namespace PhysioWeb.Controllers
             }
         }
         #endregion
+
+        [HttpPost]
+        public async Task<ActionResult> GetSoldOutDetails(int UniqueID)
+        {
+            try
+            {
+                string UserID = User.FindFirst(ClaimTypes.PrimarySid)?.Value;
+                var data = await _masterRepository.GetSoldOutDetails(UniqueID, UserID);
+
+                return Json(data);
+
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, message = ex.Message });
+            }
+        }
+
+        [HttpPost]
+        public async Task<ActionResult> SaveSoldOutDetails(PropertyTypeMaster propertyTypeMaster)
+        {
+            propertyTypeMaster.UserID = User.FindFirst(ClaimTypes.PrimarySid)?.Value;
+            propertyTypeMaster.AgencyId = User.FindFirst(ClaimTypes.GroupSid)?.Value;
+            var result = await _masterRepository.SaveSoldOutDetails(propertyTypeMaster);
+            return Json(result);
+        }
+
     }
 
     public class PermissionUpdateModel
