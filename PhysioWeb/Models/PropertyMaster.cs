@@ -90,6 +90,10 @@ namespace PhysioWeb.Models
         public string AmountUnitMaxPrice { get; set; }
         public decimal ConvertedActualPrice { get; set; }
         public decimal ConvertedNegotiablePrice { get; set; }
+        public string PropUniquId { get; set; }
+        public bool IsSoldOut { get; set; }
+        public string SoldOutToWhome { get; set; }
+        public string SoldOutContactNo { get; set; }
         public PropertyMaster()
         {
             CountryList = new List<DropDownSource>();
@@ -139,6 +143,10 @@ namespace PhysioWeb.Models
             else if (flag == 3)
             {
                 populateObjectEdit(this, Idr);
+            }
+            else if (flag == 4)
+            {
+                populateObjectEditOfSoldOUtDetails(this, Idr);
             }
             else
             {
@@ -462,7 +470,7 @@ namespace PhysioWeb.Models
             {
                 obj.Landmark = rdr.GetString(rdr.GetOrdinal("Landmark"));
             }
-            
+
             if (!rdr.IsDBNull(rdr.GetOrdinal("MinPrice")))
             {
                 obj.BudgetMin = rdr.GetDecimal(rdr.GetOrdinal("MinPrice"));
@@ -504,5 +512,25 @@ namespace PhysioWeb.Models
             }
         }
 
+        private void populateObjectEditOfSoldOUtDetails(PropertyMaster obj, IDataReader rdr)
+        {
+            if (!rdr.IsDBNull(rdr.GetOrdinal("PropUniquId")))
+            {
+                obj.PropUniquId = rdr.GetString(rdr.GetOrdinal("PropUniquId"));
+            }
+            if (!rdr.IsDBNull(rdr.GetOrdinal("IsSoldOut")))
+            {
+                obj.IsSoldOut = rdr.GetBoolean(rdr.GetOrdinal("IsSoldOut"));
+            }
+            if (!rdr.IsDBNull(rdr.GetOrdinal("SoldOutToWhome")))
+            {
+                obj.SoldOutToWhome = rdr.GetString(rdr.GetOrdinal("SoldOutToWhome"));
+            }
+            if (!rdr.IsDBNull(rdr.GetOrdinal("SoldOutContactNo")))
+            {
+                obj.SoldOutContactNo = rdr.GetString(rdr.GetOrdinal("SoldOutContactNo"));
+            }
+
+        }
     }
 }

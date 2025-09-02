@@ -1271,5 +1271,51 @@ namespace PhysioWeb.Repository
                 throw e;
             }
         }
+
+        public async Task<PropertyMaster> GetSoldOutDetails(int UniqueID, string UserID)
+        {
+            try
+            {
+                string[] parameterNames = { "UniqueID", "UserID" };
+                object[] parameterValues = { UniqueID, UserID };
+
+                string Sp = "FMR_EditSoldOutDetails";
+                var data = await _dbHelper.GetDataReaderAsync(Sp, parameterNames, parameterValues);
+                var PropertyMaster = new PropertyMaster();
+
+                while (data.Read())
+                {
+                    PropertyMaster = new PropertyMaster(data, 4);
+                   
+                    return PropertyMaster;
+                }
+
+                return PropertyMaster;
+                //bind 
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }
+
+        public async Task<bool> SaveSoldOutDetails(PropertyTypeMaster PropertyTypeMaster)
+        {
+            try
+            {
+                string[] parametersName = { "UniquId", "PropertyType", "Description", "IsActive", "AgencyID", "UserID" };
+                object[] Values = { PropertyTypeMaster.UniquId,PropertyTypeMaster.PropertyType, PropertyTypeMaster.Description,
+                PropertyTypeMaster.IsActive ,PropertyTypeMaster.AgencyId ,PropertyTypeMaster.UserID };
+
+                string Sp = "FMR_SavePropertyType";
+                int RecordAffected = await _dbHelper.ExecuteNonQueryAsync(Sp, parametersName, Values);
+                return RecordAffected > 0;
+            }
+            catch (Exception ex)
+            {
+                // Optional: log error here
+                throw;
+            }
+        }
     }
 }
