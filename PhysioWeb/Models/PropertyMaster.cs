@@ -198,7 +198,6 @@ namespace PhysioWeb.Models
             {
                 obj.Description = rdr.GetString(rdr.GetOrdinal("Description"));
             }
-
             if (!rdr.IsDBNull(rdr.GetOrdinal("PropertyType")))
             {
                 obj.PropertyType = rdr.GetString(rdr.GetOrdinal("PropertyType"));
@@ -333,10 +332,34 @@ namespace PhysioWeb.Models
                 obj.Floor = rdr.GetString(rdr.GetOrdinal("Floor"));
             }
 
-            //if (!rdr.IsDBNull(rdr.GetOrdinal("PropertyCategory")))
-            //{
-            //    obj.PropertyCategory = rdr.GetString(rdr.GetOrdinal("PropertyCategory"));
-            //}
+            if (!rdr.IsDBNull(rdr.GetOrdinal("TotalFloorBuilding")))
+            {
+                obj.TotalFloorBuilding = rdr.GetInt32(rdr.GetOrdinal("TotalFloorBuilding"));
+            }
+            if (!rdr.IsDBNull(rdr.GetOrdinal("PropertyCategoryName")))
+            {
+                obj.PropertyCategory = rdr.GetString(rdr.GetOrdinal("PropertyCategoryName"));
+            }
+            if (!rdr.IsDBNull(rdr.GetOrdinal("Vastu")))
+            {
+                obj.Vastu = rdr.GetString(rdr.GetOrdinal("Vastu"));
+            }
+            if (!rdr.IsDBNull(rdr.GetOrdinal("YearOfConstruction")))
+            {
+                obj.YearOfConstruction = rdr.GetInt32(rdr.GetOrdinal("YearOfConstruction"));
+            }
+            if (!rdr.IsDBNull(rdr.GetOrdinal("BuyerType")))
+            {
+                obj.PreferedBuyerType = rdr.GetString(rdr.GetOrdinal("BuyerType"));
+            }
+            if (!rdr.IsDBNull(rdr.GetOrdinal("ShowMinPrice")))
+            {
+                obj.DisplayMinPrice = rdr.GetString(rdr.GetOrdinal("ShowMinPrice"));
+            }
+            if (!rdr.IsDBNull(rdr.GetOrdinal("ShowMaxPrice")))
+            {
+                obj.DisplayMaxPrice = rdr.GetString(rdr.GetOrdinal("ShowMaxPrice"));
+            }
         }
 
         private void populateObjectEdit(PropertyMaster obj, IDataReader rdr)
@@ -462,7 +485,7 @@ namespace PhysioWeb.Models
             {
                 obj.Landmark = rdr.GetString(rdr.GetOrdinal("Landmark"));
             }
-            
+
             if (!rdr.IsDBNull(rdr.GetOrdinal("MinPrice")))
             {
                 obj.BudgetMin = rdr.GetDecimal(rdr.GetOrdinal("MinPrice"));

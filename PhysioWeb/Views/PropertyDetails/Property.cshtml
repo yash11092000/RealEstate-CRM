@@ -260,23 +260,26 @@
 		--bs-aspect-ratio: calc(16 / 9 * 100%); /* 177.77% */
 	}
 
-	
 </style>
 
 <!-- Property Header -->
 <div class="property-header py-3 py-md-4">
-	<div class="container">
+	<div class="container-fluid">
 		<div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center">
 			<div class="mb-3 mb-md-0">
-				<h1 class="h4 h3-md mb-1 fw-bold">@Model.Title</h1>
+				<h1 class="h4 h3-md mb-1 fw-bold">@Model.Title <span class="badge price-badge">@Model.PropertyType</span></h1>
 				<p class="text-muted mb-0">
 					<i class="bi bi-geo-alt-fill me-1"></i>
-					<span class="text-dark">@Model.Address</span>
+					<span class="text-dark">@(Model.Address == "" ? "Location Not Found" : Model.Address)</span>
+				</p>
+				<p class="text-muted mb-0">
+					<i class="bi bi-pin-map-fill me-1"></i>
+					<span class="text-dark">@(Model.Landmark == "" ? "LandMark Not Found" : Model.Landmark)</span>
 				</p>
 			</div>
 			<div class="d-flex align-items-center gap-3">
 				<span class="badge price-badge">
-					₹@Model.BudgetMin - ₹@Model.BudgetMax
+					₹@Model.DisplayMinPrice - ₹@Model.DisplayMaxPrice
 				</span>
 				<button class="btn btn-green btn-sm" data-bs-toggle="modal" data-bs-target="#shareModal">
 					<i class="bi bi-share-fill me-1 me-md-2"></i>
@@ -288,7 +291,7 @@
 </div>
 
 <!-- Main Content -->
-<div class="container my-3 my-md-4">
+<div class="container-fluid my-3 my-md-4">
 	<div class="row">
 		<!-- Gallery Column -->
 		<div class="col-lg-8">
@@ -338,7 +341,7 @@
 								<i class="bi bi-arrows-angle-expand"></i>
 							</div>
 							<div>
-								<div class="h5 mb-0">@Model.BuiltUpArea sq.ft</div>
+								<div class="h5 mb-0">@Model.CarpetArea sq.ft</div>
 								<small class="text-muted">Built Up Area</small>
 							</div>
 						</div>
@@ -371,7 +374,7 @@
 						<div class="detail-item">
 							<div class="d-flex justify-content-between">
 								<span class="detail-label">Built Up Area:</span>
-								<span class="detail-value">@Model.BuiltUpArea sq.ft</span>
+								<span class="detail-value">@Model.CarpetArea sq.ft</span>
 							</div>
 						</div>
 					</div>
@@ -389,6 +392,124 @@
 							</div>
 						</div>
 					</div>
+					<div class="col-md-6">
+						<div class="detail-item">
+							<div class="d-flex justify-content-between">
+								<span class="detail-label">Country:</span>
+								<span class="detail-value">@Model.Country</span>
+							</div>
+						</div>
+						<div class="detail-item">
+							<div class="d-flex justify-content-between">
+								<span class="detail-label">State:</span>
+								<span class="detail-value">@Model.State</span>
+							</div>
+						</div>
+					</div>
+					<div class="col-md-6">
+						<div class="detail-item">
+							<div class="d-flex justify-content-between">
+								<span class="detail-label">City:</span>
+								<span class="detail-value">@Model.City</span>
+							</div>
+						</div>
+						<div class="detail-item">
+							<div class="d-flex justify-content-between">
+								<span class="detail-label">Pincode:</span>
+								<span class="detail-value">@Model.PinCode</span>
+							</div>
+						</div>
+					</div>
+					<div class="col-md-6">
+						<div class="detail-item">
+							<div class="d-flex justify-content-between">
+								<span class="detail-label">Furnishing Status:</span>
+								<span class="detail-value">@Model.FurnishingStatus</span>
+							</div>
+						</div>
+						<div class="detail-item">
+							<div class="d-flex justify-content-between">
+								<span class="detail-label">Contact Person Name:</span>
+								<span class="detail-value">@Model.ContactPersonName</span>
+							</div>
+						</div>
+					</div>
+					<div class="col-md-6">
+						<div class="detail-item">
+							<div class="d-flex justify-content-between">
+								<span class="detail-label">Contact Person No:</span>
+								<span class="detail-value">@Model.ContactPersonPhone</span>
+							</div>
+						</div>
+						<div class="detail-item">
+							<div class="d-flex justify-content-between">
+								<span class="detail-label">Contact Person Alternate No:</span>
+								<span class="detail-value">@Model.ContactPersonAlternatePhone</span>
+							</div>
+						</div>
+					</div>
+					<div class="col-md-6">
+						<div class="detail-item">
+							<div class="d-flex justify-content-between">
+								<span class="detail-label">Area:</span>
+								<span class="detail-value">@Model.Area</span>
+							</div>
+						</div>
+						<div class="detail-item">
+							<div class="d-flex justify-content-between">
+								<span class="detail-label">Total Floor:</span>
+								<span class="detail-value">@Model.TotalFloorBuilding</span>
+							</div>
+						</div>
+					</div>
+
+					<div class="col-md-6">
+						<div class="detail-item">
+							<div class="d-flex justify-content-between">
+								<span class="detail-label">Sub Area:</span>
+								<span class="detail-value">@Model.SubArea</span>
+							</div>
+						</div>
+						<div class="detail-item">
+							<div class="d-flex justify-content-between">
+								<span class="detail-label">Floor:</span>
+								<span class="detail-value">@Model.Floor</span>
+							</div>
+						</div>
+					</div>
+
+					<div class="col-md-6">
+						<div class="detail-item">
+							<div class="d-flex justify-content-between">
+								<span class="detail-label">Year Of Construction:</span>
+								<span class="detail-value">@Model.YearOfConstruction</span>
+							</div>
+						</div>
+						<div class="detail-item">
+							<div class="d-flex justify-content-between">
+								<span class="detail-label">Buyer Type:</span>
+								<span class="detail-value">@Model.PreferedBuyerType</span>
+							</div>
+						</div>
+					</div>
+
+					<div class="col-md-6">
+						<div class="detail-item">
+							<div class="d-flex justify-content-between">
+								<span class="detail-label">Vastu:</span>
+								<span class="detail-value">@Model.Vastu</span>
+							</div>
+						</div>
+						<div class="detail-item">
+							<div class="d-flex justify-content-between">
+								<span class="detail-label">Property Category:</span>
+								<span class="detail-value">@Model.PropertyCategory</span>
+							</div>
+						</div>
+					</div>
+
+
+
 				</div>
 			</div>
 
@@ -433,7 +554,7 @@
 		<!-- Sidebar Column -->
 		<div class="col-lg-4">
 			<!-- Contact Form -->
-			<div class="detail-card p-3 p-md-4 sticky-lg-top" style="top:5rem;">
+			<div class="detail-card p-3 p-md-4" style="top:5rem;">
 				<h3 class="section-title">Schedule a Viewing</h3>
 				<form class="contact-form">
 					<div class="mb-3">

@@ -880,6 +880,20 @@ namespace PhysioWeb.Controllers
                 return Json(new { success = false, message = ex.Message });
             }
         }
+
+        public async Task<ActionResult> UpdatePermissions(PermissionUpdateModel model)
+        {
+            try
+            {
+                var data = await _masterRepository.UpdateAgentPermission(model.Id, model.ShowLandmark, model.ShowAddress);
+
+                return Json(data);
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, message = ex.Message });
+            }
+        }
         #endregion
 
         #region Comman Things
@@ -910,5 +924,12 @@ namespace PhysioWeb.Controllers
             }
         }
         #endregion
+    }
+
+    public class PermissionUpdateModel
+    {
+        public string Id { get; set; }
+        public bool ShowLandmark { get; set; }
+        public bool ShowAddress { get; set; }
     }
 }

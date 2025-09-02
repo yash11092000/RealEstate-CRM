@@ -1122,7 +1122,7 @@ namespace PhysioWeb.Repository
                     {
                         while (data.Read())
                         {
-                            PropertyMaster.Images.Add(new DropDownSource(data , true));
+                            PropertyMaster.Images.Add(new DropDownSource(data, true));
                         }
                     }
 
@@ -1269,6 +1269,25 @@ namespace PhysioWeb.Repository
             catch (Exception e)
             {
                 throw e;
+            }
+        }
+
+        public async Task<bool> UpdateAgentPermission(string id, bool showLandmark, bool showAddress)
+        {
+
+            try
+            {
+                string[] parametersName = { "AgentId", "IsShowLandMark", "IsShowAddress" };
+                object[] Values = { id, showLandmark, showAddress };
+
+                string Sp = "FMR_UpdateAgenctPermission";
+                int RecordAffected = await _dbHelper.ExecuteNonQueryAsync(Sp, parametersName, Values);
+                return RecordAffected > 0;
+            }
+            catch (Exception ex)
+            {
+                // Optional: log error here
+                throw;
             }
         }
     }
