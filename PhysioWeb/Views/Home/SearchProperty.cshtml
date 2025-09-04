@@ -1,429 +1,429 @@
 ﻿@model PhysioWeb.Models.HomeDashboard
 
 @{
-    ViewData["Title"] = "Property Search";
+	ViewData["Title"] = "Property Search";
 }
 
 <style>
-    .property-card {
-        transition: transform 0.3s ease, box-shadow 0.3s ease;
-    }
+	.property-card {
+		transition: transform 0.3s ease, box-shadow 0.3s ease;
+	}
 
-        .property-card:hover {
-            transform: translateY(-8px);
-            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
-        }
+		.property-card:hover {
+			transform: translateY(-8px);
+			box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+		}
 
-    .pagination {
-        margin: 20px 0;
-    }
+	.pagination {
+		margin: 20px 0;
+	}
 
-    .page-item.active .page-link {
-        background-color: #198754;
-        border-color: #198754;
-    }
+	.page-item.active .page-link {
+		background-color: #198754;
+		border-color: #198754;
+	}
 
-    .page-link {
-        color: #198754;
-    }
+	.page-link {
+		color: #198754;
+	}
 
-        .page-link:hover {
-            color: #146c43;
-        }
+		.page-link:hover {
+			color: #146c43;
+		}
 
-    .calculation-box {
-        background-color: #f8f9fa;
-        border-left: 4px solid #198754;
-        padding: 15px;
-        margin: 20px 0;
-        border-radius: 5px;
-    }
+	.calculation-box {
+		background-color: #f8f9fa;
+		border-left: 4px solid #198754;
+		padding: 15px;
+		margin: 20px 0;
+		border-radius: 5px;
+	}
 
-    .offcanvas-top {
-        height: auto;
-        max-height: 90vh;
-        overflow-y: auto;
-    }
+	.offcanvas-top {
+		height: auto;
+		max-height: 90vh;
+		overflow-y: auto;
+	}
 
-    /* Compact form spacing on small devices */
-    @@media (max-width: 768px) {
-        .offcanvas-body .row.g-3 {
-            gap: 0.5rem;
-        }
+	/* Compact form spacing on small devices */
+	@@media (max-width: 768px) {
+		.offcanvas-body .row.g-3 {
+			gap: 0.5rem;
+		}
 
-        .offcanvas-body .form-label {
-            font-size: 0.9rem;
-        }
-    }
+		.offcanvas-body .form-label {
+			font-size: 0.9rem;
+		}
+	}
 
-    /* Floating filter button */
-    .search-trigger {
-        position: fixed;
-        bottom: 20px;
-        right: 20px;
-        z-index: 1050;
-        border-radius: 50px;
-        padding: 10px 16px;
-        box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-    }
+	/* Floating filter button */
+	.search-trigger {
+		position: fixed;
+		bottom: 20px;
+		right: 20px;
+		z-index: 1050;
+		border-radius: 50px;
+		padding: 10px 16px;
+		box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+	}
 
-    /* Filter tags scrollable */
-    .filter-tags .d-flex {
-        scrollbar-width: thin;
-        -webkit-overflow-scrolling: touch;
-    }
+	/* Filter tags scrollable */
+	.filter-tags .d-flex {
+		scrollbar-width: thin;
+		-webkit-overflow-scrolling: touch;
+	}
 
-    .filter-badge {
-        padding: 0.5rem 0.8rem;
-        border-radius: 20px;
-        font-size: 0.85rem;
-        white-space: nowrap;
-    }
+	.filter-badge {
+		padding: 0.5rem 0.8rem;
+		border-radius: 20px;
+		font-size: 0.85rem;
+		white-space: nowrap;
+	}
 </style>
 <div class="offcanvas offcanvas-top" tabindex="-1" id="searchOffcanvas" aria-labelledby="searchOffcanvasLabel">
-    <div class="offcanvas-header bg-light">
-        <h5 class="offcanvas-title fw-bold text-success" id="searchOffcanvasLabel">
-            <i class="bi bi-search me-2"></i>Find Your Dream Property
-        </h5>
-        <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-    </div>
+	<div class="offcanvas-header bg-light">
+		<h5 class="offcanvas-title fw-bold text-success" id="searchOffcanvasLabel">
+			<i class="bi bi-search me-2"></i>Find Your Dream Property
+		</h5>
+		<button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+	</div>
 
-    <div class="offcanvas-body compact-form">
-        <form class="row g-3">
-            <!-- Location -->
-            <div class="col-12 col-md-6 col-lg-3">
-                <label for="location" class="form-label fw-semibold">
-                    <i class="bi bi-geo-alt-fill text-success"></i> Location
-                </label>
-                <input type="text" id="location" class="form-control rounded-3" placeholder="Enter Location" value="@Model.SearchedLocation">
-            </div>
+	<div class="offcanvas-body compact-form">
+		<form class="row g-3">
+			<!-- Location -->
+			<div class="col-12 col-md-6 col-lg-3">
+				<label for="location" class="form-label fw-semibold">
+					<i class="bi bi-geo-alt-fill text-success"></i> Location
+				</label>
+				<input type="text" id="location" class="form-control rounded-3" placeholder="Enter Location" value="@Model.SearchedLocation">
+			</div>
 
-            <!-- Property Type -->
-            <div class="col-12 col-md-6 col-lg-3">
-                <label class="form-label fw-semibold">
-                    <i class="bi bi-house-door-fill text-success"></i> Property Type
-                </label>
-                <select multiple class="form-select select2 rounded-3" id="propertyType" name="PropertyType">
-                    <option></option>
-                    @foreach (var item in Model.PropertyTypeList)
-                    {
-                        if (Model.SelectedpropertyType.Contains(item.Value))
-                        {
-                            <option value="@item.Value" selected>@item.Text</option>
-                        }
-                        else
-                        {
-                            <option value="@item.Value">@item.Text</option>
-                        }
-                    }
-                </select>
-            </div>
+			<!-- Property Type -->
+			<div class="col-12 col-md-6 col-lg-3">
+				<label class="form-label fw-semibold">
+					<i class="bi bi-house-door-fill text-success"></i> Property Type
+				</label>
+				<select multiple class="form-select select2 rounded-3" id="propertyType" name="PropertyType">
+					<option></option>
+					@foreach (var item in Model.PropertyTypeList)
+					{
+						if (Model.SelectedpropertyType.Contains(item.Value))
+						{
+							<option value="@item.Value" selected>@item.Text</option>
+						}
+						else
+						{
+							<option value="@item.Value">@item.Text</option>
+						}
+					}
+				</select>
+			</div>
 
-            <!-- Bedrooms -->
-            <div class="col-12 col-md-6 col-lg-2">
-                <label class="form-label fw-semibold">
-                    <i class="bi bi-door-open-fill text-success"></i> Bedrooms
-                </label>
-                <select multiple class="form-select select2 rounded-3" id="bedrooms" name="Bedrooms">
-                    <option></option>
-                    @foreach (var item in Model.BedroomList)
-                    {
+			<!-- Bedrooms -->
+			<div class="col-12 col-md-6 col-lg-2">
+				<label class="form-label fw-semibold">
+					<i class="bi bi-door-open-fill text-success"></i> Bedrooms
+				</label>
+				<select multiple class="form-select select2 rounded-3" id="bedrooms" name="Bedrooms">
+					<option></option>
+					@foreach (var item in Model.BedroomList)
+					{
 
-                        if (Model.SelectedBedrooms.Contains(item.Value))
-                        {
-                            <option value="@item.Value" selected>@item.Text</option>
-                        }
-                        else
-                        {
-                            <option value="@item.Value">@item.Text</option>
-                        }
-                    }
+						if (Model.SelectedBedrooms.Contains(item.Value))
+						{
+							<option value="@item.Value" selected>@item.Text</option>
+						}
+						else
+						{
+							<option value="@item.Value">@item.Text</option>
+						}
+					}
 
 
-                </select>
-            </div>
+				</select>
+			</div>
 
-            <!-- Rental Type -->
-            <div class="col-12 col-md-6 col-lg-2">
-                <label class="form-label fw-semibold">
-                    <i class="bi bi-key-fill text-success"></i> Rental Type
-                </label>
-                <select multiple class="form-select select2 rounded-3" id="RentalType" name="RentalType">
-                    <option></option>
-                    @foreach (var item in Model.RentalTypeList)
-                    {
-                        if (Model.SelectedRentalType.Contains(item.Value))
-                        {
-                            <option value="@item.Value" selected>@item.Text</option>
-                        }
-                        else
-                        {
-                            <option value="@item.Value">@item.Text</option>
-                        }
-                    }
-                </select>
-            </div>
+			<!-- Rental Type -->
+			<div class="col-12 col-md-6 col-lg-2">
+				<label class="form-label fw-semibold">
+					<i class="bi bi-key-fill text-success"></i> Rental Type
+				</label>
+				<select multiple class="form-select select2 rounded-3" id="RentalType" name="RentalType">
+					<option></option>
+					@foreach (var item in Model.RentalTypeList)
+					{
+						if (Model.SelectedRentalType.Contains(item.Value))
+						{
+							<option value="@item.Value" selected>@item.Text</option>
+						}
+						else
+						{
+							<option value="@item.Value">@item.Text</option>
+						}
+					}
+				</select>
+			</div>
 
-            <!-- Property Category -->
-            <div class="col-12 col-md-6 col-lg-2">
-                <label class="form-label fw-semibold">
-                    <i class="bi bi-grid-fill text-success"></i> Category
-                </label>
-                <select multiple class="form-select select2 rounded-3" id="PropertyCategory" name="PropertyCategory">
-                    <option></option>
-                    @foreach (var item in Model.PropertyCategoryList)
-                    {
-                        if (Model.SelectedPropertyCategory.Contains(item.Value))
-                        {
-                            <option value="@item.Value" selected>@item.Text</option>
-                        }
-                        else
-                        {
-                            <option value="@item.Value">@item.Text</option>
-                        }
-                    }
-                </select>
-            </div>
+			<!-- Property Category -->
+			<div class="col-12 col-md-6 col-lg-2">
+				<label class="form-label fw-semibold">
+					<i class="bi bi-grid-fill text-success"></i> Category
+				</label>
+				<select multiple class="form-select select2 rounded-3" id="PropertyCategory" name="PropertyCategory">
+					<option></option>
+					@foreach (var item in Model.PropertyCategoryList)
+					{
+						if (Model.SelectedPropertyCategory.Contains(item.Value))
+						{
+							<option value="@item.Value" selected>@item.Text</option>
+						}
+						else
+						{
+							<option value="@item.Value">@item.Text</option>
+						}
+					}
+				</select>
+			</div>
 
-            <!-- Budget -->
-            <div class="col-12 col-md-6 col-lg-4">
-                <label class="form-label fw-semibold">
-                    <i class="bi bi-cash-coin text-success"></i> Budget (₹)
-                </label>
-                <div class="row g-2">
-                    <div class="col-6">
-                        <input type="number" id="MinPrice" class="form-control rounded-3" placeholder="Min" min="0">
-                    </div>
-                    <div class="col-6">
-                        <input type="number" id="MaxPrice" class="form-control rounded-3" placeholder="Max" min="0">
-                    </div>
-                </div>
-            </div>
+			<!-- Budget -->
+			<div class="col-12 col-md-6 col-lg-4">
+				<label class="form-label fw-semibold">
+					<i class="bi bi-cash-coin text-success"></i> Budget (₹)
+				</label>
+				<div class="row g-2">
+					<div class="col-6">
+						<input type="number" id="MinPrice" class="form-control rounded-3" placeholder="Min" min="0" value="@Model.SearchedMinPrice">
+					</div>
+					<div class="col-6">
+						<input type="number" id="MaxPrice" class="form-control rounded-3" placeholder="Max" min="0" value="@Model.SearchedMaxPrice">
+					</div>
+				</div>
+			</div>
 
-            <!-- Amenities -->
-            <div class="col-12 col-md-6 col-lg-4">
-                <label class="form-label fw-semibold">
-                    <i class="bi bi-lightning-charge-fill text-success"></i> Amenities
-                </label>
-                <select multiple class="form-select select2 rounded-3" name="Amenities" id="Amenities">
-                    <option></option>
-                    @foreach (var item in Model.AmenityList)
-                    {
-                        if (Model.SelectedAmenities.Contains(item.Value))
-                        {
-                            <option value="@item.Value" selected>@item.Text</option>
-                        }
-                        else
-                        {
-                            <option value="@item.Value">@item.Text</option>
-                        }
-                    }
-                </select>
-            </div>
+			<!-- Amenities -->
+			<div class="col-12 col-md-6 col-lg-4">
+				<label class="form-label fw-semibold">
+					<i class="bi bi-lightning-charge-fill text-success"></i> Amenities
+				</label>
+				<select multiple class="form-select select2 rounded-3" name="Amenities" id="Amenities">
+					<option></option>
+					@foreach (var item in Model.AmenityList)
+					{
+						if (Model.SelectedAmenities.Contains(item.Value))
+						{
+							<option value="@item.Value" selected>@item.Text</option>
+						}
+						else
+						{
+							<option value="@item.Value">@item.Text</option>
+						}
+					}
+				</select>
+			</div>
 
-            <!-- Submit Button -->
-            <div class="col-12 col-lg-4 text-center pt-4">
-                <button type="button" class="btn btn-success w-100 rounded-pill" onclick="SearchProperty()" data-bs-dismiss="offcanvas">
-                    <i class="bi bi-search me-2"></i> Search Properties
-                </button>
-            </div>
-        </form>
-    </div>
+			<!-- Submit Button -->
+			<div class="col-12 col-lg-4 text-center pt-4">
+				<button type="button" class="btn btn-success w-100 rounded-pill" onclick="SearchProperty()" data-bs-dismiss="offcanvas">
+					<i class="bi bi-search me-2"></i> Search Properties
+				</button>
+			</div>
+		</form>
+	</div>
 
 </div>
 
 <!-- ✅ Floating Search trigger button -->
 <button class="btn btn-success search-trigger" type="button" data-bs-toggle="offcanvas" data-bs-target="#searchOffcanvas" aria-controls="searchOffcanvas">
-    <i class="bi bi-funnel me-1"></i> Filters
+	<i class="bi bi-funnel me-1"></i> Filters
 </button>
 
 <div class="container my-2">
 
 
 
-    <!-- Property container -->
-    <div id="propertyContainer">
-        @await Html.PartialAsync("_PropertyListPartial", Model)
+	<!-- Property container -->
+	<div id="propertyContainer">
+		@await Html.PartialAsync("_PropertyListPartial", Model)
 
 
-    </div>
+	</div>
 
-    <!-- Pagination -->
+	<!-- Pagination -->
 
 
 
 </div>
 
 @section Scripts {
-    <script>
-        new Choices('#propertyType', {
-          removeItemButton: true,
-          duplicateItemsAllowed: false
-        });
+	<script>
+		new Choices('#propertyType', {
+		  removeItemButton: true,
+		  duplicateItemsAllowed: false
+		});
 
-        new Choices('#bedrooms', { removeItemButton: true ,duplicateItemsAllowed: false});
-        new Choices('#Amenities', { removeItemButton: true,duplicateItemsAllowed: false });
-        new Choices('#PropertyCategory', { removeItemButton: true ,duplicateItemsAllowed: false});
-        new Choices('#RentalType', { removeItemButton: true ,duplicateItemsAllowed: false});
+		new Choices('#bedrooms', { removeItemButton: true ,duplicateItemsAllowed: false});
+		new Choices('#Amenities', { removeItemButton: true,duplicateItemsAllowed: false });
+		new Choices('#PropertyCategory', { removeItemButton: true ,duplicateItemsAllowed: false});
+		new Choices('#RentalType', { removeItemButton: true ,duplicateItemsAllowed: false});
 
-        $("#location").autocomplete({
-                source: function (request, response) {
-                $.ajax({
-                    url: '/Master/GetAreas',
-                    type: 'GET',
-                    data: { searchTerm: request.term },
-                    success: function (data) {
-                        console.log(data);
-                        response(data); // expects list of strings
-                    },
-                    error: function () {
-                        response([]);
-                    }
-                });
-            },
-            minLength: 1
-        });
+		$("#location").autocomplete({
+				source: function (request, response) {
+				$.ajax({
+					url: '/Master/GetAreas',
+					type: 'GET',
+					data: { searchTerm: request.term },
+					success: function (data) {
+						console.log(data);
+						response(data); // expects list of strings
+					},
+					error: function () {
+						response([]);
+					}
+				});
+			},
+			minLength: 1
+		});
 
-                // ✅ Function to collect filter values
-        function getSearchParams() {
-            return {
-                location: $("#location").val(),
-                PropertyType: $("#propertyType").val()?.toString() || "",
-                Bedrooms: $("#bedrooms").val()?.toString() || "",
-                RentalType: $("#RentalType").val()?.toString() || "",
-                PropertyCategory: $("#PropertyCategory").val()?.toString() || "",
-                Amenities: $("#Amenities").val()?.toString() || "",
-                MinPrice: $("#MinPrice").val(),
-                MaxPrice: $("#MaxPrice").val()
-            };
-        }
+				// ✅ Function to collect filter values
+		function getSearchParams() {
+			return {
+				location: $("#location").val(),
+				PropertyType: $("#propertyType").val()?.toString() || "",
+				Bedrooms: $("#bedrooms").val()?.toString() || "",
+				RentalType: $("#RentalType").val()?.toString() || "",
+				PropertyCategory: $("#PropertyCategory").val()?.toString() || "",
+				Amenities: $("#Amenities").val()?.toString() || "",
+				MinPrice: $("#MinPrice").val(),
+				MaxPrice: $("#MaxPrice").val()
+			};
+		}
 
-                // ✅ Function to load page content with filters
-        function loadPageContent(page) {
-            var params = getSearchParams();
-            params.PageNo = page;
-            params.PageSize = 6;
+				// ✅ Function to load page content with filters
+		function loadPageContent(page) {
+			var params = getSearchParams();
+			params.PageNo = page;
+			params.PageSize = 6;
 
-            $.ajax({
-                url: '/Home/LoadProperties',
-                type: 'GET',
-                data: params,
-                success: function (result) {
-                    $('#propertyContainer').html(result);
-                },
-                error: function (xhr, status, error) {
-                    console.error('Error loading page:', error);
-                }
-            });
-        }
-
-
-
-        // ✅ Handle pagination click
-        $(document).on('click', '.page-link-ajax', function (e) {
-            e.preventDefault();
-
-            var page = $(this).data('page');
-            console.log("Clicked Page:", page);
-
-            loadPageContent(page);
-
-            // Update URL with filters + page
-            var params = getSearchParams();
-            params.page = page;
-            var newUrl = window.location.pathname + '?' + $.param(params);
-            history.pushState(params, null, newUrl);
-        });
-
-        // ✅ Handle back/forward button
-        window.addEventListener('popstate', function (event) {
-            var urlParams = new URLSearchParams(window.location.search);
-            var page = urlParams.get('page') || 1;
-            loadPageContent(page);
-        });
-
-        //     $(document).on('click', '.page-link-ajax', function(e) {
-        //         e.preventDefault();
-
-        //         var page = $(this).data('page');
-        //         console.log(page);
-
-        //         // Make AJAX call
-        //         $.ajax({
-        //             url: '/Home/LoadProperties',
-        //             type: 'GET',
-        //             data: { PageNo: page, PageSize: 6 },
-        //             success: function(result) {
-        //                 // Update your content with the returned data
-        //                 $('#propertyContainer').html(result); // Update with your container ID
-
-        //                 // Update URL without reloading page (optional)
-        //                 history.pushState(null, null, '?page=' + page);
-        //             },
-        //             error: function(xhr, status, error) {
-        //                 console.error('Error loading page:', error);
-        //                 alert('Error loading page content. Please try again.');
-        //             }
-        //         });
-        //     });
-
-        //     // Handle browser back/forward buttons
-        //     window.addEventListener('popstate', function() {
-        //         // Parse page from URL and load content
-        //         var urlParams = new URLSearchParams(window.location.search);
-        //         var page = urlParams.get('page') || 1;
-        //         loadPageContent(page);
-        //     });
-
-        // function loadPageContent(page) {
-        //     // Same AJAX call as above
-        //     $.ajax({
-        //         url: '/Home/LoadProperties',
-        //         type: 'GET',
-        //         data: { PageNo: page, PageSize: 6 },
-        //         success: function(result) {
-        //             $('#propertyContainer').html(result);
-        //         },
-        //         error: function(xhr, status, error) {
-        //             console.error('Error loading page:', error);
-        //         }
-        //     });
-        // }
-
-        function SearchProperty(page){
-            var location = $("#location").val();
-            var PropertyType = $("#propertyType").val().toString();
-            var Bedrooms = $("#bedrooms").val().toString();
-            var RentalType = $("#RentalType").val().toString();
-            var PropertyCategory = $("#PropertyCategory").val().toString();
-            var Amenities = $("#Amenities").val().toString();
-            var MinPrice = $("#MinPrice").val();
-            var MaxPrice = $("#MaxPrice").val();
-
-            var PageNo = page;
-            var PageSize =  6
-                    // Create and submit a form
-            const form = document.createElement('form');
-            form.method = 'POST';
-            form.action = '/Home/SearchProperty';
-
-            const params = {
-              location, PropertyType,Bedrooms, RentalType, PropertyCategory,
-              Amenities, MinPrice, MaxPrice,PageNo,PageSize
-            };
-
-            Object.keys(params).forEach(key => {
-              const input = document.createElement('input');
-              input.type = 'hidden';
-              input.name = key;
-              input.value = params[key];
-              form.appendChild(input);
-            });
-
-            document.body.appendChild(form);
-            form.submit();
+			$.ajax({
+				url: '/Home/LoadProperties',
+				type: 'GET',
+				data: params,
+				success: function (result) {
+					$('#propertyContainer').html(result);
+				},
+				error: function (xhr, status, error) {
+					console.error('Error loading page:', error);
+				}
+			});
+		}
 
 
-        }
-    </script>
+
+		// ✅ Handle pagination click
+		$(document).on('click', '.page-link-ajax', function (e) {
+			e.preventDefault();
+
+			var page = $(this).data('page');
+			console.log("Clicked Page:", page);
+
+			loadPageContent(page);
+
+			// Update URL with filters + page
+			var params = getSearchParams();
+			params.page = page;
+			var newUrl = window.location.pathname + '?' + $.param(params);
+			history.pushState(params, null, newUrl);
+		});
+
+		// ✅ Handle back/forward button
+		window.addEventListener('popstate', function (event) {
+			var urlParams = new URLSearchParams(window.location.search);
+			var page = urlParams.get('page') || 1;
+			loadPageContent(page);
+		});
+
+		//     $(document).on('click', '.page-link-ajax', function(e) {
+		//         e.preventDefault();
+
+		//         var page = $(this).data('page');
+		//         console.log(page);
+
+		//         // Make AJAX call
+		//         $.ajax({
+		//             url: '/Home/LoadProperties',
+		//             type: 'GET',
+		//             data: { PageNo: page, PageSize: 6 },
+		//             success: function(result) {
+		//                 // Update your content with the returned data
+		//                 $('#propertyContainer').html(result); // Update with your container ID
+
+		//                 // Update URL without reloading page (optional)
+		//                 history.pushState(null, null, '?page=' + page);
+		//             },
+		//             error: function(xhr, status, error) {
+		//                 console.error('Error loading page:', error);
+		//                 alert('Error loading page content. Please try again.');
+		//             }
+		//         });
+		//     });
+
+		//     // Handle browser back/forward buttons
+		//     window.addEventListener('popstate', function() {
+		//         // Parse page from URL and load content
+		//         var urlParams = new URLSearchParams(window.location.search);
+		//         var page = urlParams.get('page') || 1;
+		//         loadPageContent(page);
+		//     });
+
+		// function loadPageContent(page) {
+		//     // Same AJAX call as above
+		//     $.ajax({
+		//         url: '/Home/LoadProperties',
+		//         type: 'GET',
+		//         data: { PageNo: page, PageSize: 6 },
+		//         success: function(result) {
+		//             $('#propertyContainer').html(result);
+		//         },
+		//         error: function(xhr, status, error) {
+		//             console.error('Error loading page:', error);
+		//         }
+		//     });
+		// }
+
+		function SearchProperty(page){
+			var location = $("#location").val();
+			var PropertyType = $("#propertyType").val().toString();
+			var Bedrooms = $("#bedrooms").val().toString();
+			var RentalType = $("#RentalType").val().toString();
+			var PropertyCategory = $("#PropertyCategory").val().toString();
+			var Amenities = $("#Amenities").val().toString();
+			var MinPrice = $("#MinPrice").val();
+			var MaxPrice = $("#MaxPrice").val();
+
+			var PageNo = page;
+			var PageSize =  6
+					// Create and submit a form
+			const form = document.createElement('form');
+			form.method = 'POST';
+			form.action = '/Home/SearchProperty';
+
+			const params = {
+			  location, PropertyType,Bedrooms, RentalType, PropertyCategory,
+			  Amenities, MinPrice, MaxPrice,PageNo,PageSize
+			};
+
+			Object.keys(params).forEach(key => {
+			  const input = document.createElement('input');
+			  input.type = 'hidden';
+			  input.name = key;
+			  input.value = params[key];
+			  form.appendChild(input);
+			});
+
+			document.body.appendChild(form);
+			form.submit();
+
+
+		}
+	</script>
 }

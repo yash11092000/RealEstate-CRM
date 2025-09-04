@@ -1015,7 +1015,7 @@ namespace PhysioWeb.Repository
             try
             {
                 string[] parametersName = { "Location", "PropertyType", "Bedrooms", "RentalType", "PropertyCategory", "Amenities", "MinPrice", "MaxPrice", "PageNo", "PageSize" };
-                object[] Values = { location, propertyType, Bedroom, rentalType, propertyCategory, amenities, minPrice, maxPrice, pageNo, pageSize };
+                object[] Values = { location, propertyType, Bedroom, rentalType, propertyCategory, amenities, minPrice == "" ? null : minPrice, maxPrice == "" ? null : maxPrice, pageNo, pageSize };
 
                 string Sp = "FMR_SearchProperties";
                 var data = await _dbHelper.GetDataReaderAsync(Sp, parametersName, Values);
@@ -1286,7 +1286,7 @@ namespace PhysioWeb.Repository
                 while (data.Read())
                 {
                     PropertyMaster = new PropertyMaster(data, 4);
-                   
+
                     return PropertyMaster;
                 }
 

@@ -70,6 +70,8 @@ namespace PhysioWeb.Models
         public string PropertyType { get; set; }
         public string Area { get; set; }
 
+        public string DisplayMinPrice { get; set; }
+        public string DisplayMaxPrice { get; set; }
         public PropertyDetails(IDataReader Idr, int flag = 0)
         {
             if (flag == 0)
@@ -102,11 +104,11 @@ namespace PhysioWeb.Models
             }
             if (!rdr.IsDBNull(rdr.GetOrdinal("MinPrice")))
             {
-                obj.MinPrice = rdr.GetDecimal(rdr.GetOrdinal("MinPrice"));
+                obj.DisplayMinPrice = rdr.GetString(rdr.GetOrdinal("MinPrice"));
             }
             if (!rdr.IsDBNull(rdr.GetOrdinal("MaxPrice")))
             {
-                obj.MaxPrice = rdr.GetDecimal(rdr.GetOrdinal("MaxPrice"));
+                obj.DisplayMaxPrice = rdr.GetString(rdr.GetOrdinal("MaxPrice"));
             }
             if (!rdr.IsDBNull(rdr.GetOrdinal("CarpetArea")))
             {
