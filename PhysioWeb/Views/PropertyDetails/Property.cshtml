@@ -588,17 +588,20 @@
 
 <!-- Video Modal -->
 <div class="modal fade" id="videoModal" tabindex="-1" aria-hidden="true">
-	<div class="modal-dialog modal-dialog-centered" style="max-width:500px;">
-		<!-- optional max-width -->
-		<div class="modal-content border-0">
-			<div class="modal-header border-0">
-				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-			</div>
-			<div class="modal-body p-0">
-				<div class="ratio ratio-9x16">
-					<video id="propertyVideo" controls class="w-100 h-100" style="object-fit:cover;">
-						<source src="" type="video/mp4">
-						Your browser does not support the video tag.
+	<div class="modal-dialog modal-dialog-centered" style="max-width:360px">
+		<div class="modal-content border-0 rounded-4 shadow-lg p-0" style="background: transparent;">
+			<div class="modal-body p-0 position-relative">
+
+				<!-- Cancel / Close Button -->
+				<button type="button"
+						class="btn-close btn-close-white position-absolute top-0 end-0 m-2"
+						data-bs-dismiss="modal"
+						aria-label="Close"></button>
+
+				<!-- Video container -->
+				<div style="aspect-ratio:9/16; width:100%; background:black; border-radius: 1.5rem; overflow:hidden;">
+					<video id="propertyVideo" controls autoplay class="w-100 h-100" style="object-fit:cover;">
+						<source src="your-video.mp4" type="video/mp4">
 					</video>
 				</div>
 			</div>

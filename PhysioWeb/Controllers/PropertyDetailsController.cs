@@ -1,9 +1,11 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using PhysioWeb.Models;
 using PhysioWeb.Repository;
 
 namespace PhysioWeb.Controllers
 {
+    [Authorize]
     public class PropertyDetailsController : Controller
     {
         private readonly IPropertyRepository _propertyRepository;
