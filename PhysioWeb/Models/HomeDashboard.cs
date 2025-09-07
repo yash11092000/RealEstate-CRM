@@ -182,6 +182,14 @@ namespace PhysioWeb.Models
             {
                 obj.PropertyImg = rdr.GetString(rdr.GetOrdinal("PropertyImg"));
             }
+            if (!rdr.IsDBNull(rdr.GetOrdinal("ShowMinPrice")))
+            {
+                obj.DisplayMinPrice = rdr.GetString(rdr.GetOrdinal("ShowMinPrice"));
+            }
+            if (!rdr.IsDBNull(rdr.GetOrdinal("ShowMaxPrice")))
+            {
+                obj.DisplayMaxPrice = rdr.GetString(rdr.GetOrdinal("ShowMaxPrice"));
+            }
         }
     }
 }

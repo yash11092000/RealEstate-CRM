@@ -344,130 +344,21 @@
 	<!-- Hero Section -->
 	<section class="py-5 text-center">
 		<div class="container">
-		@* 	<div>
-				<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320">
-					<path fill="#00cba9" fill-opacity="1" d="M0,224L0,160L120,160L120,192L240,192L240,64L360,64L360,224L480,224L480,192L600,192L600,288L720,288L720,256L840,256L840,256L960,256L960,160L1080,160L1080,192L1200,192L1200,160L1320,160L1320,256L1440,256L1440,320L1320,320L1320,320L1200,320L1200,320L1080,320L1080,320L960,320L960,320L840,320L840,320L720,320L720,320L600,320L600,320L480,320L480,320L360,320L360,320L240,320L240,320L120,320L120,320L0,320L0,320Z"></path>
-				</svg>
-			</div>
-			<div> *@
 
-				<h1 class="fw-bold mb-3">Find Your Dream Home</h1>
-				<p class="mb-4 text-muted">Find Your Perfect Space with Confidence.</p>
-				<a href="/PropertyDetails/Property"
-				   class="btn btn-success btn-lg px-4 shadow rounded-pill d-inline-flex align-items-center slide-btn">
-					Get Started
-					<i class="bi bi-arrow-right-circle-fill ms-2 arrow-slide"></i>
-				</a>
-			@* </div>
- *@
+			<h1 class="fw-bold mb-3">Find Your Dream Home</h1>
+			<p class="mb-4 text-muted">Find Your Perfect Space with Confidence.</p>
+			<a href="/PropertyDetails/Property"
+			   class="btn btn-success btn-lg px-4 shadow rounded-pill d-inline-flex align-items-center slide-btn">
+				Get Started
+				<i class="bi bi-arrow-right-circle-fill ms-2 arrow-slide"></i>
+			</a>
 
 
 		</div>
 
 	</section>
 
-	@* 
-	<!-- ✅ Search Form Section -->
-	<section class="py-5 bg-light">
-		<div class="container">
-			<h3 class="text-center mb-4 fw-bold text-success">Find Your Dream Property</h3>
-			<form class="row g-3">
 
-				<!-- Location -->
-				<div class="col-md-3">
-					<label for="location" class="form-label fw-bold">Location</label>
-					<input type="text" id="location" class="form-control" placeholder="Enter Location">
-				</div>
-
-				<!-- Property Type -->
-				<div class="col-md-3">
-					<label class="form-label fw-bold">Property Type</label>
-					<select multiple class="form-select select2" id="propertyType" name="PropertyType">
-						<option></option>
-						@foreach (var item in Model.PropertyTypeList)
-						{
-							<option value="@item.Value">@item.Text</option>
-						}
-					</select>
-				</div>
-
-				<!-- Bedrooms -->
-				<div class="col-md-3">
-					<label class="form-label fw-bold">Bedrooms</label>
-					<select multiple class="form-select select2" id="bedrooms" name="Bedrooms">
-						<option></option>
-						@foreach (var item in Model.BedroomList)
-						{
-							<option value="@item.Value">@item.Text</option>
-						}
-					</select>
-				</div>
-
-				<!-- Rental Type -->
-				<div class="col-md-3">
-					<label class="form-label fw-bold">Rental Type</label>
-					<select multiple class="form-select select2" id="RentalType" name="RentalType">
-						<option></option>
-						@foreach (var item in Model.RentalTypeList)
-						{
-							<option value="@item.Value">@item.Text</option>
-						}
-					</select>
-				</div>
-
-				<!-- Property Category -->
-				<div class="col-md-3">
-					<label class="form-label fw-bold">Property Category</label>
-					<select multiple class="form-select select2" id="PropertyCategory" name="PropertyCategory">
-						<option></option>
-						@foreach (var item in Model.PropertyCategoryList)
-						{
-							<option value="@item.Value">@item.Text</option>
-						}
-					</select>
-				</div>
-
-				<!-- Amenities -->
-				<div class="col-md-6">
-					<label class="form-label fw-bold">Amenities</label>
-					<select multiple class="form-select select2" name="Amenities" id="Amenities">
-						<option></option>
-						@foreach (var item in Model.AmenityList)
-						{
-							<option value="@item.Value">@item.Text</option>
-						}
-					</select>
-				</div>
-
-				<!-- Budget -->
-				<div class="col-md-3">
-					<label class="form-label fw-bold">Budget</label>
-					<div class="row g-1">
-						<div class="col-6">
-							<div class="input-group">
-								<span class="input-group-text">₹</span>
-								<input type="number" id="MinPrice" class="form-control" placeholder="Min" min="0">
-							</div>
-						</div>
-						<div class="col-6">
-							<div class="input-group">
-								<span class="input-group-text">₹</span>
-								<input type="number" id="MaxPrice" class="form-control" placeholder="Max" min="0">
-							</div>
-						</div>
-					</div>
-				</div>
-
-				<!-- Submit Button -->
-				<div class="col-md-3 mx-auto text-center mt-3">
-					<button type="button" class="btn btn-success w-100" onclick="SearchProperty()">
-						<i class="bi bi-search"></i> Search
-					</button>
-				</div>
-			</form>
-		</div>
-	</section>
- *@
 
 	<section class="py-5 bg-light">
 		<div class="container-fluid">
@@ -653,11 +544,7 @@
 								</div>
 
 								<div class="d-flex justify-content-between align-items-center">
-									<h4 class="text-success mb-0">₹@prop.Price</h4>
-									<div class="rating">
-										<i class="fas fa-star text-warning"></i>
-										<span class="ms-1">4.8</span>
-									</div>
+									<h5 class="text-success mb-0">₹@prop.DisplayMinPrice - @prop.DisplayMaxPrice</h5>
 								</div>
 							</div>
 
