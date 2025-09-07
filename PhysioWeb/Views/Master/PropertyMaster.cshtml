@@ -1285,11 +1285,10 @@
                  $.ajax({
             url: '/Master/GetSoldOutDetails', 
             type: 'POST',
-            data: { PropUniquId: $("#PropUniquId").val() },
+            data: { UniqueID: $("#PropUniquId").val() },
             success: function (data) {
+                
                 if (data) {
-                 
-                    $("#PropUniquId").val(data.propUniquId);
                     $("#SoldOutToWhome").val(data.soldOutToWhome);
                     $("#SoldOutContactNo").val(data.soldOutContactNo);
 
@@ -1306,7 +1305,8 @@
             }
         });
         }
-                function SaveSoldOut() {
+        $(document).on("click", "#btnSaveSoldOut", function () {
+               
             var soldOutData = {
                 PropUniquId: $("#PropUniquId").val(),
                 SoldOutToWhome: $("#SoldOutToWhome").val(),
@@ -1319,17 +1319,13 @@
                 type: 'POST',
                 data: soldOutData,
                 success: function (response) {
-                    if (response.success) {
-                        // ✅ close modal
+                    console.log(response);
+                    if (response > 0) {
                         $("#addSoldoutModal").modal("hide");
 
-                        // ✅ show message
-                        alert("Saved successfully!");
-
-                        // ✅ reload table or refresh data
-                        // $("#yourDataTable").DataTable().ajax.reload();
+                        notyf.success("Saved successfully!");
                     } else {
-                        alert("Something went wrong while saving.");
+                        notyf.error("Something went wrong while saving.");
                     }
                 },
                 error: function (xhr, status, error) {
@@ -1337,7 +1333,7 @@
                     alert("Error occurred while saving data.");
                 }
             });
-        }
+        });
 
     </script>
 
