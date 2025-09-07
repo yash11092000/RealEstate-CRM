@@ -1276,7 +1276,7 @@
         }
 
 
-                function SoldOutData(uniquId) {
+           function SoldOutData(uniquId) {
             
             $("#PropUniquId").val(uniquId);
 
@@ -1305,6 +1305,38 @@
                 }
             }
         });
+        }
+                function SaveSoldOut() {
+            var soldOutData = {
+                PropUniquId: $("#PropUniquId").val(),
+                SoldOutToWhome: $("#SoldOutToWhome").val(),
+                SoldOutContactNo: $("#SoldOutContactNo").val(),
+                IsSoldOut: $("#IsSoldOut").is(":checked") // true/false
+            };
+
+            $.ajax({
+                url: '/Master/SaveSoldOutDetails',
+                type: 'POST',
+                data: soldOutData,
+                success: function (response) {
+                    if (response.success) {
+                        // ✅ close modal
+                        $("#addSoldoutModal").modal("hide");
+
+                        // ✅ show message
+                        alert("Saved successfully!");
+
+                        // ✅ reload table or refresh data
+                        // $("#yourDataTable").DataTable().ajax.reload();
+                    } else {
+                        alert("Something went wrong while saving.");
+                    }
+                },
+                error: function (xhr, status, error) {
+                    console.error(error);
+                    alert("Error occurred while saving data.");
+                }
+            });
         }
 
     </script>

@@ -47,7 +47,7 @@ namespace PhysioWeb.Repository
         Task<Agent> EditAgent(int uniqueID, int v);
 
         Task<PropertyMaster> GetSoldOutDetails(int UniqueID, string UserID);
-        Task<bool> SaveSoldOutDetails(PropertyTypeMaster PropertyTypeMaster);
+        Task<bool> SaveSoldOutDetails(PropertyMaster PropertyMaster);
         Task<bool> UpdateAgentPermission(string id, bool showLandmark, bool showAddress);
     }
 }

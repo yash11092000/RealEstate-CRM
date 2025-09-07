@@ -943,11 +943,11 @@ namespace PhysioWeb.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult> SaveSoldOutDetails(PropertyMaster PropertyMaster)
+        public async Task<ActionResult> SaveSoldOutDetails(PropertyTypeMaster propertyTypeMaster)
         {
-            PropertyMaster.UserID = User.FindFirst(ClaimTypes.PrimarySid)?.Value;
-            PropertyMaster.AgencyId = User.FindFirst(ClaimTypes.GroupSid)?.Value;
-            var result = await _masterRepository.SaveSoldOutDetails(PropertyMaster);
+            propertyTypeMaster.UserID = User.FindFirst(ClaimTypes.PrimarySid)?.Value;
+            propertyTypeMaster.AgencyId = User.FindFirst(ClaimTypes.GroupSid)?.Value;
+            var result = await _masterRepository.SaveSoldOutDetails(propertyTypeMaster);
             return Json(result);
         }
 

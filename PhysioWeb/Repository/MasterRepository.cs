@@ -1299,15 +1299,15 @@ namespace PhysioWeb.Repository
             }
         }
 
-        public async Task<bool> SaveSoldOutDetails(PropertyTypeMaster PropertyTypeMaster)
+        public async Task<bool> SaveSoldOutDetails(PropertyMaster PropertyMaster)
         {
             try
             {
-                string[] parametersName = { "UniquId", "PropertyType", "Description", "IsActive", "AgencyID", "UserID" };
-                object[] Values = { PropertyTypeMaster.UniquId,PropertyTypeMaster.PropertyType, PropertyTypeMaster.Description,
-                PropertyTypeMaster.IsActive ,PropertyTypeMaster.AgencyId ,PropertyTypeMaster.UserID };
+                string[] parametersName = { "PropUniquId", "SoldOutToWhome", "SoldOutContactNo", "IsSoldOut", "AgencyID", "UserID" };
+                object[] Values = { PropertyMaster.PropUniquId,PropertyMaster.SoldOutToWhome, PropertyMaster.SoldOutContactNo,
+                PropertyMaster.IsSoldOut ,PropertyMaster.AgencyId ,PropertyMaster.UserID };
 
-                string Sp = "FMR_SavePropertyType";
+                string Sp = "FMR_SaveSoldOutDetails";
                 int RecordAffected = await _dbHelper.ExecuteNonQueryAsync(Sp, parametersName, Values);
                 return RecordAffected > 0;
             }
