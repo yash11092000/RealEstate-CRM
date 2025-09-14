@@ -4,11 +4,15 @@
 	ViewData["Title"] = "Properties";
 }
 
+@{
+	var theme = User.FindFirst("Theme")?.Value ?? "#14532d";
+}
 <style>
 	:root {
-		--primary-green: #28a745;
-		--dark-green: #218838;
-		--light-green: #d4edda;
+		--primary-green: @theme;
+		/* Derived from primary */
+		--dark-green: color-mix(in srgb, var(--primary-green) 80%, black);
+		--light-green: color-mix(in srgb, var(--primary-green) 80%, white);
 		--light-gray: #f8f9fa;
 		--medium-gray: #e9ecef;
 		--dark-gray: #6c757d;
@@ -559,21 +563,21 @@
 				<form class="contact-form">
 					<div class="mb-3">
 						<label class="form-label">Your Name</label>
-						<input type="text" class="form-control" placeholder="Enter your name" required>
+						<input type="text" class="form-control" id="ContactPersonName" placeholder="Enter your name" required>
 					</div>
 					<div class="mb-3">
 						<label class="form-label">Email Address</label>
-						<input type="email" class="form-control" placeholder="Enter your email" required>
+						<input type="email" class="form-control" id="ContactPersonEmail" placeholder="Enter your email" required>
 					</div>
 					<div class="mb-3">
 						<label class="form-label">Phone Number</label>
-						<input type="tel" class="form-control" placeholder="Enter your phone" required>
+						<input type="tel" class="form-control" id="ContactPersonPhone" placeholder="Enter your phone" required>
 					</div>
 					<div class="mb-3">
 						<label class="form-label">Message</label>
-						<textarea class="form-control" rows="3" placeholder="Any specific requirements?"></textarea>
+						<textarea class="form-control" rows="3" id="ContactPersonDescription" placeholder="Any specific requirements?"></textarea>
 					</div>
-					<button type="submit" class="btn btn-green w-100 py-2">
+					<button type="button" id="SendRequest" class="btn btn-green w-100 py-2">
 						<i class="bi bi-calendar-check me-2"></i> Request Viewing
 					</button>
 				</form>
@@ -723,5 +727,41 @@
 				copyBtn.innerHTML = originalText;
 			}, 2000);
 		}
+
+		$("#SendRequest").on("click",function(){
+			var ContactPersonName = $("#ContactPersonName");
+			var ContactPersonEmail = $("#ContactPersonEmail");
+			var ContactPersonPhone = $("#ContactPersonPhone");
+			var ContactPersonDescription = $("#ContactPersonDescription");
+
+			if(ContactPersonName.val() == ""){
+				notyf.error("Enter Name");
+				ContactPersonName.focus();
+			}
+			else if(ContactPersonEmail.val() == ""){
+				notyf.error("Enter Name");
+				ContactPersonEmail.focus();
+			}
+			else if(ContactPersonPhone.val() == ""){
+				notyf.error("Enter Name");
+				ContactPersonPhone.focus();
+			}
+			else {
+				 $.ajax({
+				url: "/PropertyDetails/SendRequest",  // 🔹 Change this to your endpoint
+				type: "POST",
+				contentType: "application/json; charset=utf-8",
+				data: JSON.stringify(data),
+				success: function (response) {
+					alert("Your request has been submitted successfully!");
+					$(".contact-form")[0].reset(); // reset form
+				},
+				error: function (xhr, status, error) {
+					console.error("Error: " + error);
+					alert("Something went wrong. Please try again.");
+				}
+			});
+			}
+		})
 	</script>
 }

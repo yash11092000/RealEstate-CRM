@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using System.Security.Claims;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using PhysioWeb.Models;
 using PhysioWeb.Repository;
@@ -63,5 +64,15 @@ namespace PhysioWeb.Controllers
         //    var contentType = "image/jpeg"; // Or detect based on extension
         //    return PhysicalFile(fullPath, contentType);
         //}
+
+        #region request Demo
+        public async Task<ActionResult> SendRequest(string ContactPersonName, string ContactPersonEmail, string ContactPersonPhone, string Description, int PropertyId)
+        {
+            string UserID = User.FindFirst(ClaimTypes.PrimarySid)?.Value;
+            string AgencyId = User.FindFirst(ClaimTypes.GroupSid)?.Value;
+            var result = await _propertyRepository.SendRequest(ContactPersonName, ContactPersonEmail, ContactPersonPhone, Description, PropertyId);
+            return Json(result);
+        }
+        #endregion
     }
 }

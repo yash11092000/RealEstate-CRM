@@ -41,7 +41,7 @@ namespace PhysioWeb.Repository
                 string[] parameterNames = { "UniqueID", "UserID" };
                 object[] parameterValues = { uniqueID, userID };
 
-                string Sp = "FMR_EditPropertyType";
+                string Sp = "FMR_EditAgencyDetails";
                 var data = await _dbHelper.GetDataReaderAsync(Sp, parameterNames, parameterValues);
                 while (data.Read())
                 {
@@ -174,7 +174,7 @@ namespace PhysioWeb.Repository
                 "LicenseIssueDate", "LicenseExpiryDate", "PAN", "GST", "IsActive",
                 "ReraCertificateFilePath", "ReraCertificateFileName",
                 "AgencyLicenseFilePath", "AgencyLicenseFileName",
-                "AddressProofFilePath", "AddressProofFileName","UserName","Password","CreatedBy"
+                "AddressProofFilePath", "AddressProofFileName","UserName","Password","CreatedBy","ThemeColor"
                 };
                 object[] Values = {
                 AgencyDetails.UniquId,
@@ -207,6 +207,7 @@ namespace PhysioWeb.Repository
                 AgencyDetails.UserName,
                 AgencyDetails.Password,
                 AgencyDetails.CreatedBy,
+                AgencyDetails.AgencyTheme
             };
                 string Sp = "FMR_SaveAgencyDetails";
                 int RecordAffected = await _dbHelper.ExecuteNonQueryAsync(Sp, parametersName, Values);

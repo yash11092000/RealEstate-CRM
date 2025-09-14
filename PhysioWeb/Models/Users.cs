@@ -17,6 +17,8 @@ namespace PhysioWeb.Models
 
         public string EmailId { get; set; }
 
+        public string Theme { get; set; }
+
         public Users()
         {
 
@@ -63,6 +65,10 @@ namespace PhysioWeb.Models
             if (!rdr.IsDBNull(rdr.GetOrdinal("AgencyLogo")))
             {
                 obj.AgencyLogo = rdr.GetString(rdr.GetOrdinal("AgencyLogo"));
+            }
+            if (!rdr.IsDBNull(rdr.GetOrdinal("ThemeColor")))
+            {
+                obj.Theme = rdr.GetString(rdr.GetOrdinal("ThemeColor"));
             }
             //if (!rdr.IsDBNull(rdr.GetOrdinal("IsActive")))
             //{

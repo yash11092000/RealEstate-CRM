@@ -65,8 +65,11 @@ namespace PhysioWeb.Controllers
                         model.AgencyName,
                         "AddressProofs");
                 }
-                string hashed = BCrypt.Net.BCrypt.HashPassword(model.Password);
-                model.Password = hashed;
+                if (model.UniquId == 0)
+                {
+                    string hashed = BCrypt.Net.BCrypt.HashPassword(model.Password);
+                    model.Password = hashed;
+                }
                 model.CreatedBy = User.FindFirst(ClaimTypes.PrimarySid)?.Value;
                 var result = await _superAdminRepository.SaveAgency(model);
 
@@ -154,6 +157,55 @@ namespace PhysioWeb.Controllers
             }
         }
 
+        [Route("SecureUploads")]
+        public IActionResult GetSecureImage(string filePath = "")
+        {
+            // Combine with secure-images directory
+            if (filePath != null)
+            {
+                var fullPath = Path.Combine(Directory.GetCurrentDirectory(), filePath);
+
+                // Security check - prevent directory traversal
+                fullPath = Path.GetFullPath(fullPath);
+                if (!fullPath.StartsWith(Path.Combine(Directory.GetCurrentDirectory())))
+                {
+                    return BadRequest("Invalid file path");
+                }
+
+                if (!System.IO.File.Exists(fullPath))
+                    return NotFound();
+
+                // Get proper content type based on file extension
+                var contentType = GetContentType(fullPath);
+
+                // Special handling for video files
+                if (contentType.StartsWith("video/"))
+                {
+                    // Enable range requests for video streaming
+                    var fileStream = new FileStream(fullPath, FileMode.Open, FileAccess.Read, FileShare.Read);
+                    return File(fileStream, contentType, enableRangeProcessing: true);
+                }
+
+                // Standard handling for images
+                return PhysicalFile(fullPath, contentType);
+            }
+            return null;
+        }
+        private string GetContentType(string path)
+        {
+            var extension = Path.GetExtension(path).ToLowerInvariant();
+            return extension switch
+            {
+                ".jpg" or ".jpeg" => "image/jpeg",
+                ".png" => "image/png",
+                ".gif" => "image/gif",
+                ".webp" => "image/webp",
+                ".mp4" => "video/mp4",
+                ".webm" => "video/webm",
+                ".ogg" => "video/ogg",
+                _ => "application/octet-stream"
+            };
+        }
         #endregion
 
         #region Dashboard
