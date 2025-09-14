@@ -153,6 +153,26 @@
 			});
 		});
 
+		 $("#Mobile").on("change", function () {
+            var mobile = $(this).val().trim();
+            var mobileRegex = /^[6-9]\d{9}$/; 
 
+            if (!mobileRegex.test(mobile)) {
+				notyf.error("Please enter a valid mobile number");
+                $(this).val(""); 
+                $(this).focus(); 
+            }
+        });
+
+        $("#Email").on("change", function () {
+            var email = $(this).val().trim();
+          
+			const emailRegex = /^[^\s@@]+@@[^\s@@]+\.[^\s@@]+$/;
+            if (!emailRegex.test(email)) {
+                notyf.error("Please enter a valid email address");
+                $(this).val("");
+                $(this).focus();
+            }
+        });
 	</script>
 }
