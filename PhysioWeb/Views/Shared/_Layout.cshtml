@@ -17,13 +17,35 @@
 	<link rel="stylesheet" href="https://cdn.datatables.net/2.3.2/css/dataTables.dataTables.min.css" />
 	<link rel="stylesheet" href="https://code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
 
+	@{
+		var theme = User.FindFirst("Theme")?.Value ?? "#14532d";
+	}
 	<style>
+
+		:root {
+			--theme-color: @theme;
+		}
+
 		html {
 			scroll-behavior: smooth;
 		}
 
+		.text-success {
+			color: var(--theme-color) !important;
+		}
+
 		.bg-dark-green {
-			background-color: #14532d !important;
+			background-color: var(--theme-color) !important;
+		}
+
+		.bg-success {
+			background-color: var(--theme-color) !important;
+		}
+
+		.btn-success {
+			color: #fff !important;
+			background-color: var(--theme-color) !important;
+			border-color: var(--theme-color) !important;
 		}
 
 		.navbar-dark .navbar-nav .nav-link {
@@ -35,7 +57,7 @@
 		}
 
 		.navbar-nav .nav-link {
-			color: #ffffffcc; /* semi-white base */
+			color: #ffffffcc;
 			transition: all 0.3s ease-in-out;
 			position: relative;
 			font-weight: 500;
@@ -131,9 +153,48 @@
 			}
 		}
 
-		footer{
-			line-height:30px !important;
+		footer {
+			line-height: 30px !important;
 		}
+
+		.slide-btn {
+			position: relative;
+			overflow: hidden;
+			transition: color 0.3s;
+			z-index: 1;
+		}
+
+			.slide-btn:hover {
+				color: #fff !important;
+			}
+
+				.slide-btn:hover::before {
+					width: 100%;
+				}
+
+		.slide-btn {
+			position: relative;
+			overflow: hidden;
+			z-index: 1;
+			color: #fff;
+			border: 2px solid var(--theme-color);
+			background: transparent;
+			padding: 10px 20px;
+			cursor: pointer;
+		}
+
+			.slide-btn::before {
+				content: "";
+				position: absolute;
+				left: 0;
+				top: 0;
+				bottom: 0;
+				width: 0;
+				background: var(--theme-color); /* dynamic theme color */
+				z-index: -1;
+				transition: width 0.4s cubic-bezier(0.45,0,0.55,1);
+			}
+
 	</style>
 </head>
 <body>
@@ -141,7 +202,7 @@
 		<nav class="navbar navbar-expand-lg navbar-dark bg-dark-green">
 			<div class="container-fluid">
 				<a class="navbar-brand d-flex align-items-center" href="/">
-					<i class="bi bi-house-door-fill me-2 text-success"></i>
+					<i class="bi bi-house-door-fill me-2 text-light"></i>
 					<strong class="text-light">Find My Roof</strong>
 				</a>
 				<button class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navbarNav">

@@ -238,6 +238,7 @@
 			<form id="agencyForm">
 				<div class="tab-content">
 					<input type="text" id="IsActiveText" hidden />
+					<input type="text" id="UniquId" hidden />
 					<!-- Step 1 -->
 					<div class="tab-pane fade show active" id="agencyStep1">
 						<div class="mb-3">
@@ -251,7 +252,8 @@
 						<div class="mb-3">
 							<label class="form-label fw-bold">Agency Logo</label>
 							<input type="file" class="form-control file-input" id="AgencyLogo" accept="image/*">
-							<div id="previewAgencyLogo" class="gallery row g-2 text-center"></div>
+							<img id="previewAgencyLogo" src="#" alt="Agency Logo Preview" style="max-width: 150px; display: none; border: 1px solid #ccc; padding: 5px; border-radius: 8px;" />
+
 						</div>
 						<button type="button" class="btn btn-success next-step">Next</button>
 					</div>
@@ -278,6 +280,10 @@
 							<div class="col-md-6 mb-3">
 								<label class="form-label fw-bold">Website URL</label>
 								<input type="text" class="form-control" id="WebsiteUrl" name="WebsiteUrl">
+							</div>
+							<div class="col-md-3 mb-3">
+								<label for="AgencyTheme" class="form-label fw-bold">Choose Theme </label>
+								<input type="color" class="form-control form-control-color" id="AgencyTheme" value="#563d7c" title="Choose your color">
 							</div>
 							<div class="col-md-12 mb-3">
 								<label class="form-label fw-bold">Street Address</label>
@@ -354,17 +360,20 @@
 						<div class="mb-3">
 							<label class="form-label fw-bold">Upload RERA Certificate</label>
 							<input type="file" class="form-control file-input" id="ReraCertificate" accept="application/pdf,image/*">
-							<div id="previewReraCertificate" class="gallery row g-2 text-center"></div>
+							<img id="previewReraCertificate" src="#" alt="Agency Logo Preview" style="max-width: 150px; display: none; border: 1px solid #ccc; padding: 5px; border-radius: 8px;" />
+
 						</div>
 						<div class="mb-3">
 							<label class="form-label fw-bold">Upload Agency License</label>
 							<input type="file" class="form-control file-input" id="AgencyLicense" accept="application/pdf,image/*">
-							<div id="previewAgencyLicense" class="gallery row g-2 text-center"></div>
+							<img id="previewAgencyLicense" src="#" alt="Agency Logo Preview" style="max-width: 150px; display: none; border: 1px solid #ccc; padding: 5px; border-radius: 8px;" />
+
 						</div>
 						<div class="mb-3">
 							<label class="form-label fw-bold">Upload Address Proof</label>
 							<input type="file" class="form-control file-input" id="AddressProof" accept="application/pdf,image/*">
-							<div id="previewAddressProof" class="gallery row g-2 text-center"></div>
+							<img id="previewAddressProof" src="#" alt="Agency Logo Preview" style="max-width: 150px; display: none; border: 1px solid #ccc; padding: 5px; border-radius: 8px;" />
+
 						</div>
 						<button type="button" class="btn btn-light prev-step">Back</button>
 						<button type="button" class="btn btn-success next-step">Next</button>
@@ -441,7 +450,7 @@
 					{
 							data: null,
 							render: function (data, type, row) {
-								let para = `'${row.uniquId}', 'Master', 'EditAgencyDetails'`;
+								let para = `'${row.uniquId}', 'SuperAdmin', 'EditAgencyDetails'`;
 								return `<a href="javascript:void(0)" onclick="EditData(${para})">
 											<i class="bi bi-pencil-square text-primary fs-5" title="Edit"></i>
 										</a>`;
@@ -563,6 +572,7 @@
 
 
 		// ✅ Basic Info
+		fd.append("UniquId", $("#UniquId").val());
 		fd.append("AgencyName", $("#AgencyName").val());
 		fd.append("IsAgencyRegistered", $("#IsAgencyRegistered").is(":checked"));
 		fd.append("ContactPersonName", $("#ContactPersonName").val());
@@ -570,6 +580,7 @@
 		fd.append("MobileNo", $("#MobileNo").val());
 		fd.append("AlternateMobileNo", $("#AlternateMobileNo").val());
 		fd.append("WebsiteUrl", $("#WebsiteUrl").val());
+		fd.append("AgencyTheme", $("#AgencyTheme").val());
 
 		// ✅ Address
 		fd.append("StreetAddress", $("#StreetAddress").val());
@@ -672,5 +683,170 @@
 		function OnSuccessOfDelete(){
 					notyf.success("Agency Deleted");
 				}
+
+		function OnSuccessOfEdit(data) {
+			  var triggerTab = new bootstrap.Tab(document.querySelector('#form-tab'));
+				triggerTab.show();
+				console.log(data);
+			   $("#UniquId").val(data.uniquId);
+				$("#AgencyName").val(data.agencyName);
+				$("#ContactPersonName").val(data.contactPersonName);
+				$("#EmailAddress").val(data.emailAddress);
+				$("#MobileNo").val(data.mobileNo);
+				$("#AlternateMobileNo").val(data.alternateMobileNo);
+				$("#WebsiteUrl").val(data.websiteUrl);
+				$("#StreetAddress").val(data.streetAddress);
+				$("#CityName").val(data.cityName);
+				$("#StateName").val(data.stateName);
+				$("#Pincode").val(data.pincode);
+				$("#Country").val(data.country);
+				$("#ReraRegNo").val(data.reraRegNo);
+				$("#PAN").val(data.pan);
+				$("#GST").val(data.gst);
+				$("#Username").val(data.userName);
+				$("#Password").val(data.password);
+				$("#agencyTheme").val(data.agencyTheme);
+
+				// Date fields
+				$("#LicenseIssueDate").val(data.licenseIssueDate);
+				$("#LicenseExpiryDate").val(data.licenseExpiryDate);
+
+
+
+				  if (data.reraCertificateFilePath) {
+					showProfileImageFromPath(data.profileImageFilePath,"previewReraCertificate")
+					//ImageChanges("ReraCertificate","previewReraCertificate");
+				}
+
+		// Agency License
+		if (data.agencyLicenseFilePath) {
+			showProfileImageFromPath(data.agencyLicenseFilePath,"previewAgencyLicense")
+			//ImageChanges("AgencyLicense","previewAgencyLicense");
+		}
+
+		// Address Proof
+		if (data.addressProofFilePath) {
+						showProfileImageFromPath(data.addressProofFilePath,"previewAddressProof")
+						//ImageChanges("AddressProof","previewAddressProof");
+
+		}
+
+		if (data.agencyLogoFilePath) {
+									showProfileImageFromPath(data.agencyLogoFilePath,"previewAgencyLogo")
+									//ImageChanges("AgencyLogo","previewAgencyLogo");
+
+		}
+
+				// Boolean checkboxes
+				$("#IsAgencyRegistered").prop("checked", data.isAgencyRegistered);
+				$("#IsActive").prop("checked", data.isActive);
+
+		 }
+		document.addEventListener('DOMContentLoaded', () => {
+		  const fields = [
+			{ inputId: 'AgencyLogo', previewId: 'previewAgencyLogo' },
+			{ inputId: 'ReraCertificate', previewId: 'previewReraCertificate' },
+			{ inputId: 'AgencyLicense', previewId: 'previewAgencyLicense' },
+			{ inputId: 'AddressProof', previewId: 'previewAddressProof' },
+			// add AgencyLogo here if you have that input/preview
+		  ];
+
+		  fields.forEach(({ inputId, previewId }) => {
+			const input = document.getElementById(inputId);
+			const preview = document.getElementById(previewId);
+			if (!input || !preview) return;
+
+			// Use onchange assignment to avoid accidentally adding multiple listeners
+			input.onchange = (e) => {
+			  const file = e.target.files && e.target.files[0];
+			  console.log(`${inputId} changed:`, file ? file.name : 'no file'); // debug
+			  showFilePreview(file, preview);
+			};
+		  });
+
+		});
+
+			function showProfileImageFromPath(path,elementId) {
+			var preview = document.getElementById(elementId);
+			if (path) {
+				preview.src = path;
+				preview.style.display = "block";
+			} else {
+				preview.src = "";
+				preview.style.display = "none";
+			}
+		}
+
+				function showFilePreview(file, previewEl) {
+		  // Remove any previously created PDF link
+		  const linkId = previewEl.id + '_link';
+		  const existingLink = document.getElementById(linkId);
+		  if (existingLink) existingLink.remove();
+
+		  if (!file) {
+			previewEl.src = '#';
+			previewEl.style.display = 'none';
+			return;
+		  }
+
+		  const isPdf = file.type === 'application/pdf' || file.name.toLowerCase().endsWith('.pdf');
+
+		  if (isPdf) {
+			// hide <img> and show a link to open the PDF blob
+			previewEl.style.display = 'none';
+
+			const url = URL.createObjectURL(file);
+			const a = document.createElement('a');
+			a.id = linkId;
+			a.href = url;
+			a.textContent = file.name || 'Open PDF';
+			a.target = '_blank';
+			// append after the preview image element so layout stays consistent
+			previewEl.parentNode.appendChild(a);
+		  } else if (file.type.startsWith('image/')) {
+			// show image preview
+			const reader = new FileReader();
+			reader.onload = function (ev) {
+			  previewEl.src = ev.target.result;
+			  previewEl.style.display = 'block';
+			};
+			reader.readAsDataURL(file);
+		  } else {
+			// unknown file type: show filename (optional)
+			previewEl.style.display = 'none';
+			const span = document.createElement('span');
+			span.id = linkId;
+			span.textContent = file.name || 'Selected file';
+			previewEl.parentNode.appendChild(span);
+		  }
+		}
+
+		function showProfileImageFromPath(path, previewId) {
+		  const preview = document.getElementById(previewId);
+		  if (!preview) return;
+
+		  // remove any previously created link
+		  const existingLink = document.getElementById(previewId + '_link');
+		  if (existingLink) existingLink.remove();
+
+		  if (!path) {
+			preview.src = '#';
+			preview.style.display = 'none';
+			return;
+		  }
+
+		  if (/\.pdf$/i.test(path)) {
+			preview.style.display = 'none';
+			const a = document.createElement('a');
+			a.id = previewId + '_link';
+			a.href = path;
+			a.textContent = 'View PDF';
+			a.target = '_blank';
+			preview.parentNode.appendChild(a);
+		  } else {
+			preview.src = path;
+			preview.style.display = 'block';
+		  }
+		}
 	</script>
 }

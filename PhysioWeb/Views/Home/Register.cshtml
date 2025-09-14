@@ -3,35 +3,66 @@
 	Layout = "_MinimalLayout";
 }
 
-<style>
-	.card {
-		border-radius: 12px;
-		transition: transform 0.3s ease;
-	}
-
-		.card:hover {
-			transform: translateY(-3px);
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<style>
+		:root {
+			--theme-color: #198754;
+			--theme-dark: #14532d;
 		}
 
-	@@media (max-width: 768px) {
-		.bg-success {
-			display: none !important;
+		body {
+			font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+			background-color: #f8f9fa;
+			overflow-x: hidden;
 		}
-	}
-</style>
 
+		.gradient-bg {
+			background: linear-gradient(135deg, var(--theme-color), var(--theme-dark)) !important;
+			min-height: 40vh;
+		}
 
-<div class="d-flex min-vh-100">
+		@@media (min-width: 769px) {
+			.gradient-bg {
+				min-height: 100vh;
+			}
+		}
 
-	<!-- Left: Background Image -->
-	<div class="d-none d-md-flex flex-column justify-content-center align-items-center bg-success text-white p-5" style="flex:1; background:url('/images/register-bg.jpg') center/cover no-repeat;">
-		<h1 class="fw-bold">Join Find My Roof</h1>
-		<p class="lead">Create an account and start your property journey today.</p>
+		.card {
+			border: none;
+			border-radius: 12px;
+			box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1);
+		}
+
+		.btn-success {
+			background-color: var(--theme-dark);
+			border-color: var(--theme-dark);
+		}
+
+			.btn-success:hover {
+				background-color: #0f4725;
+				border-color: #0f4725;
+			}
+
+		@@media (max-width: 768px) {
+			.card {
+				margin-top: -60px;
+				margin-bottom: 2rem;
+			}
+		}
+	</style>
+</head>
+
+<div class="row g-0 min-vh-100">
+	<div class="col-12 col-md-6 gradient-bg d-flex flex-column justify-content-center align-items-center text-white p-4 p-md-5">
+		<div class="text-center px-3">
+			<h1 class="fw-bold display-5 mb-3">Find My Roof</h1>
+			<p class="lead">Create an account and start your property journey today.</p>
+		</div>
 	</div>
-
-	<!-- Right: Register Form -->
-	<div class="d-flex flex-column justify-content-center align-items-center bg-light p-4" style="flex:1;">
-		<div class="card shadow-sm p-4 w-100" style="max-width:400px;">
+	<div class="col-12 col-md-6 d-flex flex-column justify-content-center align-items-center bg-light p-3 p-md-4">
+		<div class="card shadow-sm p-3 p-md-4 w-100" style="max-width:400px;">
 			<h3 class="text-center mb-4 text-success">Register</h3>
 
 			<form id="RegisterForm">

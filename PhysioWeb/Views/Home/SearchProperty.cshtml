@@ -3,8 +3,16 @@
 @{
 	ViewData["Title"] = "Property Search";
 }
-
+@{
+	var theme = User.FindFirst("Theme")?.Value ?? "#14532d";
+}
 <style>
+
+	:root {
+		--theme-color: @theme;
+		--theme-hover: color-mix(in srgb, var(--theme-color) 85%, black); /* darker */
+	}
+
 	.property-card {
 		transition: transform 0.3s ease, box-shadow 0.3s ease;
 	}
@@ -19,21 +27,21 @@
 	}
 
 	.page-item.active .page-link {
-		background-color: #198754;
-		border-color: #198754;
+		background-color: var(--theme-color);
+		border-color: var(--theme-color);
 	}
 
 	.page-link {
-		color: #198754;
+		color: var(--theme-color);
 	}
 
 		.page-link:hover {
-			color: #146c43;
+			color: var(--theme-hover);
 		}
 
 	.calculation-box {
 		background-color: #f8f9fa;
-		border-left: 4px solid #198754;
+		border-left: 4px solid var(--theme-color);
 		padding: 15px;
 		margin: 20px 0;
 		border-radius: 5px;

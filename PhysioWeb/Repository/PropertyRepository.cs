@@ -62,5 +62,25 @@ namespace PhysioWeb.Repository
                 throw e;
             }
         }
+
+        public async Task<bool> SendRequest(string contactPersonName, string contactPersonEmail, string contactPersonPhone, string description, int propertyId)
+        {
+            try
+            {
+                string[] parametersName = { "ContactPerson", "Email", "PhoneNo", "Description", "PropertyId" };
+
+                object[] Values = { contactPersonName, contactPersonEmail, contactPersonPhone, description, propertyId };
+
+
+                string Sp = "FMR_BookDemo";
+                int RecordAffected = await _dbHelper.ExecuteNonQueryAsync(Sp, parametersName, Values);
+                return RecordAffected > 0;
+            }
+            catch (Exception ex)
+            {
+                // Optional: log error here
+                throw;
+            }
+        }
     }
 }

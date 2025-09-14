@@ -4,12 +4,14 @@
 @{
 	ViewData["Title"] = "Home Page";
 }
-<!-- Splide CSS -->
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@@splidejs/splide@4.1.4/dist/css/splide.min.css">
 
-<!-- Font Awesome for icons (if not already included) -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-@* <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" /> *@
+
+@{
+	var theme = User.FindFirst("Theme")?.Value ?? "#14532d";
+}
+
 <style>
 	body {
 		font-family: 'Inter', sans-serif;
@@ -18,7 +20,7 @@
 	}
 
 	.btn-green {
-		background-color: #2e7d66;
+		background-color: var(--theme-color) !important;
 		color: white;
 	}
 
@@ -65,12 +67,12 @@
 	}
 
 	.choices__inner {
-		border-color: #14532d;
+		border-color: var(--theme-color) !important;
 	}
 
 	.choices__list--multiple .choices__item {
-		background-color: #2e7d66;
-		border: 1px solid #2e7d66;
+		background-color: var(--theme-color) !important;
+		border: 1px solid var(--theme-color) !important;
 		color: #fff;
 		border-radius: 20px;
 		padding: 3px 10px;
@@ -78,8 +80,8 @@
 	}
 
 	.choices__list--dropdown .choices__item--selectable.is-highlighted {
-		background-color: #d4edda; /* light green on hover */
-		color: #2e7d66;
+		background-color: #d4edda;
+		color: var(--theme-color) !important;
 	}
 
 	#featured-properties .card:hover {
@@ -176,7 +178,6 @@
 		box-shadow: 0 4px 12px rgba(0,0,0,0.08);
 	}
 
-	/* Splide Customizations */
 	.splide {
 		padding: 0 2rem;
 	}
@@ -297,7 +298,6 @@
 			margin-right: 4px;
 		}
 
-	/* Responsive adjustments */
 	@@media (max-width: 768px) {
 		.search-form .col-md-3, .search-form .col-md-6 {
 			margin-bottom: 1rem;
@@ -307,44 +307,13 @@
 			padding: 10px 20px;
 		}
 	}
-
-
-	.slide-btn {
-		position: relative;
-		overflow: hidden;
-		transition: color 0.3s;
-		z-index: 1;
-	}
-
-		.slide-btn::before {
-			content: "";
-			position: absolute;
-			left: 0;
-			top: 0;
-			bottom: 0;
-			width: 0;
-			background: #198754; /* Bootstrap success */
-			z-index: -1;
-			transition: width 0.4s cubic-bezier(0.45,0,0.55,1);
-		}
-
-		.slide-btn:hover {
-			color: #fff !important;
-		}
-
-			.slide-btn:hover::before {
-				width: 100%;
-			}
-
 </style>
-
-
-
 <div class="container-fluid">
+
 	<!-- Hero Section -->
+
 	<section class="py-5 text-center">
 		<div class="container">
-
 			<h1 class="fw-bold mb-3">Find Your Dream Home</h1>
 			<p class="mb-4 text-muted">Find Your Perfect Space with Confidence.</p>
 			<a href="/PropertyDetails/Property"
@@ -352,13 +321,8 @@
 				Get Started
 				<i class="bi bi-arrow-right-circle-fill ms-2 arrow-slide"></i>
 			</a>
-
-
 		</div>
-
 	</section>
-
-
 
 	<section class="py-5 bg-light">
 		<div class="container-fluid">
@@ -481,7 +445,6 @@
 	</section>
 
 </div>
-
 
 <div class="container-fluid px-0">
 	<!-- Splide Carousel with custom arrow position -->
@@ -618,7 +581,6 @@
 	</section>
 
 </div>
-
 
 @section Scripts {
 	<script src="https://cdn.jsdelivr.net/npm/@@splidejs/splide@4.1.4/dist/js/splide.min.js"></script>

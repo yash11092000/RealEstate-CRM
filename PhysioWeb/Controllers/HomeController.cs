@@ -84,6 +84,7 @@ namespace PhysioWeb.Controllers
                     new Claim(ClaimTypes.PrimarySid, Convert.ToString(User.UserId)),
                     new Claim(ClaimTypes.GroupSid, User.AgencyId),
                     new Claim(ClaimTypes.UserData, User.AgencyLogo),
+                    new Claim("Theme", User.Theme),
                 };
                 var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
                 var authProperties = new AuthenticationProperties

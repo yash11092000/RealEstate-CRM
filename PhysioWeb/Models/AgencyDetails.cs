@@ -53,6 +53,7 @@ namespace PhysioWeb.Models
 
         public string UserName { get; set; }
         public string Password { get; set; }
+        public string AgencyTheme { get; set; }
 
         // ✅ For Handling Uploads in Forms
         //public IFormFile AgencyLogoFile { get; set; }
@@ -62,7 +63,7 @@ namespace PhysioWeb.Models
 
         public AgencyDetails()
         {
-            
+
         }
         public AgencyDetails(IDataReader reader, int flag = 0)
         {
@@ -76,9 +77,112 @@ namespace PhysioWeb.Models
             }
         }
 
-        private void populateObject(AgencyDetails agencyDetails, IDataReader reader)
+        private void populateObject(AgencyDetails obj, IDataReader rdr)
         {
-            throw new NotImplementedException();
+            if (!rdr.IsDBNull(rdr.GetOrdinal("AgencyID")))
+            {
+                obj.UniquId = rdr.GetInt32(rdr.GetOrdinal("AgencyID"));
+            }
+            if (!rdr.IsDBNull(rdr.GetOrdinal("AgencyName")))
+            {
+                obj.AgencyName = rdr.GetString(rdr.GetOrdinal("AgencyName"));
+            }
+            if (!rdr.IsDBNull(rdr.GetOrdinal("IsAgencyRegistered")))
+            {
+                obj.IsAgencyRegistered = rdr.GetBoolean(rdr.GetOrdinal("IsAgencyRegistered"));
+            }
+            if (!rdr.IsDBNull(rdr.GetOrdinal("AgencyLogo")))
+            {
+                obj.AgencyLogoFilePath = rdr.GetString(rdr.GetOrdinal("AgencyLogo"));
+            }
+            if (!rdr.IsDBNull(rdr.GetOrdinal("ContactPersonName")))
+            {
+                obj.ContactPersonName = rdr.GetString(rdr.GetOrdinal("ContactPersonName"));
+            }
+            if (!rdr.IsDBNull(rdr.GetOrdinal("EmailAddress")))
+            {
+                obj.EmailAddress = rdr.GetString(rdr.GetOrdinal("EmailAddress"));
+            }
+            if (!rdr.IsDBNull(rdr.GetOrdinal("MobileNo")))
+            {
+                obj.MobileNo = rdr.GetString(rdr.GetOrdinal("MobileNo"));
+            }
+            if (!rdr.IsDBNull(rdr.GetOrdinal("AlternateMobileNo")))
+            {
+                obj.AlternateMobileNo = rdr.GetString(rdr.GetOrdinal("AlternateMobileNo"));
+            }
+            if (!rdr.IsDBNull(rdr.GetOrdinal("WebsiteUrl")))
+            {
+                obj.WebsiteUrl = rdr.GetString(rdr.GetOrdinal("WebsiteUrl"));
+            }
+            if (!rdr.IsDBNull(rdr.GetOrdinal("StreetAddress")))
+            {
+                obj.StreetAddress = rdr.GetString(rdr.GetOrdinal("StreetAddress"));
+            }
+            if (!rdr.IsDBNull(rdr.GetOrdinal("CityName")))
+            {
+                obj.CityName = rdr.GetString(rdr.GetOrdinal("CityName"));
+            }
+            if (!rdr.IsDBNull(rdr.GetOrdinal("StateName")))
+            {
+                obj.StateName = rdr.GetString(rdr.GetOrdinal("StateName"));
+            }
+            if (!rdr.IsDBNull(rdr.GetOrdinal("Pincode")))
+            {
+                obj.Pincode = rdr.GetString(rdr.GetOrdinal("Pincode"));
+            }
+            if (!rdr.IsDBNull(rdr.GetOrdinal("Country")))
+            {
+                obj.Country = rdr.GetString(rdr.GetOrdinal("Country"));
+            }
+            if (!rdr.IsDBNull(rdr.GetOrdinal("ReraRegNo")))
+            {
+                obj.ReraRegNo = rdr.GetString(rdr.GetOrdinal("ReraRegNo"));
+            }
+            if (!rdr.IsDBNull(rdr.GetOrdinal("LicenseIssueDate")))
+            {
+                obj.LicenseIssueDate = rdr.GetString(rdr.GetOrdinal("LicenseIssueDate"));
+            }
+            if (!rdr.IsDBNull(rdr.GetOrdinal("LicenseExpiryDate")))
+            {
+                obj.LicenseExpiryDate = rdr.GetString(rdr.GetOrdinal("LicenseExpiryDate"));
+            }
+            if (!rdr.IsDBNull(rdr.GetOrdinal("PAN")))
+            {
+                obj.PAN = rdr.GetString(rdr.GetOrdinal("PAN"));
+            }
+            if (!rdr.IsDBNull(rdr.GetOrdinal("GST")))
+            {
+                obj.GST = rdr.GetString(rdr.GetOrdinal("GST"));
+            }
+            if (!rdr.IsDBNull(rdr.GetOrdinal("IsActive")))
+            {
+                obj.IsActive = rdr.GetBoolean(rdr.GetOrdinal("IsActive"));
+            }
+            if (!rdr.IsDBNull(rdr.GetOrdinal("ReraCertificate")))
+            {
+                obj.ReraCertificateFilePath = rdr.GetString(rdr.GetOrdinal("ReraCertificate"));
+            }
+            if (!rdr.IsDBNull(rdr.GetOrdinal("AgencyLicense")))
+            {
+                obj.AgencyLicenseFilePath = rdr.GetString(rdr.GetOrdinal("AgencyLicense"));
+            }
+            if (!rdr.IsDBNull(rdr.GetOrdinal("AddressProof")))
+            {
+                obj.AddressProofFilePath = rdr.GetString(rdr.GetOrdinal("AddressProof"));
+            }
+            if (!rdr.IsDBNull(rdr.GetOrdinal("ThemeColor")))
+            {
+                obj.AgencyTheme = rdr.GetString(rdr.GetOrdinal("ThemeColor"));
+            }
+            if (!rdr.IsDBNull(rdr.GetOrdinal("UserName")))
+            {
+                obj.UserName = rdr.GetString(rdr.GetOrdinal("UserName"));
+            }
+            if (!rdr.IsDBNull(rdr.GetOrdinal("Password")))
+            {
+                obj.Password = rdr.GetString(rdr.GetOrdinal("Password"));
+            }
         }
 
         private void populateList(AgencyDetails obj, IDataReader rdr)
