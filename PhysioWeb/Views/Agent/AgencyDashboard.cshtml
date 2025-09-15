@@ -3,7 +3,14 @@
 @{
 	ViewBag.Title = "Agency Dashboard";
 }
+@{
+	var theme = User.FindFirst("Theme")?.Value ?? "#198754";
+}
 <style>
+	:root {
+		--theme-color: @theme;
+	}
+
 	.card.custom-card {
 		position: relative;
 		background: #fff;
@@ -25,7 +32,7 @@
 			position: absolute;
 			bottom: 0;
 			right: 0;
-			border-bottom: 25px solid #198754;
+			border-bottom: 25px solid var(--theme-color);
 			border-left: 25px solid transparent;
 		}
 
@@ -37,7 +44,7 @@
 			left: 0;
 			width: 0%;
 			height: 3px;
-			background: #198754; /* Bootstrap green */
+			background: var(--theme-color); /* Bootstrap green */
 			transition: width 0.3s ease;
 		}
 
