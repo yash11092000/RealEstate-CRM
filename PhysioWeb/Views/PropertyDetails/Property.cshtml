@@ -5,7 +5,7 @@
 }
 
 @{
-	var theme = User.FindFirst("Theme")?.Value ?? "#14532d";
+	var theme = User.FindFirst("Theme")?.Value ?? "#198754";
 }
 <style>
 	:root {
@@ -102,7 +102,7 @@
 
 	.price-badge {
 		background-color: var(--light-green);
-		color: var(--dark-green);
+		color: white;
 		font-size: 1.1rem;
 		font-weight: 600;
 		padding: 0.5rem 1rem;
@@ -205,7 +205,7 @@
 		display: flex;
 		align-items: center;
 		justify-content: center;
-		color: var(--primary-green);
+		color: white;
 		font-size: 1.5rem;
 		margin-right: 1rem;
 	}
@@ -257,7 +257,134 @@
 		}
 	}
 
+	.detail-card {
+		background: white;
+		border-radius: 8px;
+		box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+		padding: 25px;
+		max-width: 1200px;
+		margin: 0 auto;
+	}
 
+	.section-title {
+		font-weight: 600;
+		color: #2c3e50;
+		margin-bottom: 25px;
+		padding-bottom: 10px;
+		border-bottom: 1px solid #eaeaea;
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+	}
+
+	.admin-toggle {
+		display: flex;
+		align-items: center;
+		gap: 10px;
+		font-size: 0.9rem;
+	}
+
+	.switch {
+		position: relative;
+		display: inline-block;
+		width: 50px;
+		height: 24px;
+	}
+
+		.switch input {
+			opacity: 0;
+			width: 0;
+			height: 0;
+		}
+
+	.slider {
+		position: absolute;
+		cursor: pointer;
+		top: 0;
+		left: 0;
+		right: 0;
+		bottom: 0;
+		background-color: #ccc;
+		transition: .4s;
+		border-radius: 24px;
+	}
+
+		.slider:before {
+			position: absolute;
+			content: "";
+			height: 16px;
+			width: 16px;
+			left: 4px;
+			bottom: 4px;
+			background-color: white;
+			transition: .4s;
+			border-radius: 50%;
+		}
+
+	input:checked + .slider {
+		background-color: var(--primary-green);
+	}
+
+		input:checked + .slider:before {
+			transform: translateX(26px);
+		}
+
+	.detail-row {
+		display: flex;
+		margin-bottom: 8px;
+		padding: 5px 0;
+	}
+
+	.detail-heading {
+		font-weight: 500;
+		color: #555;
+		width: 25%;
+		padding-right: 15px;
+	}
+
+	.detail-value {
+		font-weight: 400;
+		color: #222;
+		width: 25%;
+	}
+
+	.admin-only {
+		background-color: #f8f9fa;
+		border-left: 3px solid var(--primary-green);
+		padding-left: 5px;
+	}
+
+	.hidden {
+		display: none;
+	}
+
+	/* Responsive adjustments */
+	@@media (max-width: 992px) {
+		.detail-row {
+			flex-wrap: wrap;
+		}
+
+		.detail-heading, .detail-value {
+			width: 50%;
+			margin-bottom: 5px;
+		}
+	}
+
+	@@media (max-width: 576px) {
+		.detail-heading, .detail-value {
+			width: 100%;
+		}
+
+		.detail-card {
+			padding: 15px;
+		}
+
+		.section-title {
+			flex-direction: column;
+			align-items: flex-start;
+			gap: 10px;
+		}
+	}
 	/* newly added */
 
 	.ratio-9x16 {
@@ -301,7 +428,7 @@
 		<div class="col-lg-8">
 			<!-- Main Image -->
 			<div class="gallery-main mb-3">
-				<img src="/secure-images/@Model.Images[0].Value" class="w-100 h-100 object-fit-cover" id="mainImage" alt="Property image">
+				<img src="/secure-images/@Model.Images[0].Value" class="w-100 h-100" style="object-fit:contain;" id="mainImage" alt="Property image">
 			</div>
 
 			<!-- Thumbnails -->
@@ -364,157 +491,105 @@
 				</div>
 			</div>
 
-			<!-- Property Details -->
-			<div class="detail-card p-3 p-md-4">
-				<h3 class="section-title">Property Details</h3>
-				<div class="row">
-					<div class="col-md-6">
-						<div class="detail-item">
-							<div class="d-flex justify-content-between">
-								<span class="detail-label">Property Type:</span>
-								<span class="detail-value">@Model.PropertyType</span>
-							</div>
-						</div>
-						<div class="detail-item">
-							<div class="d-flex justify-content-between">
-								<span class="detail-label">Built Up Area:</span>
-								<span class="detail-value">@Model.CarpetArea sq.ft</span>
-							</div>
-						</div>
-					</div>
-					<div class="col-md-6">
-						<div class="detail-item">
-							<div class="d-flex justify-content-between">
-								<span class="detail-label">Bedrooms:</span>
-								<span class="detail-value">@Model.Bedrooms</span>
-							</div>
-						</div>
-						<div class="detail-item">
-							<div class="d-flex justify-content-between">
-								<span class="detail-label">Bathrooms:</span>
-								<span class="detail-value">@Model.Bathrooms</span>
-							</div>
-						</div>
-					</div>
-					<div class="col-md-6">
-						<div class="detail-item">
-							<div class="d-flex justify-content-between">
-								<span class="detail-label">Country:</span>
-								<span class="detail-value">@Model.Country</span>
-							</div>
-						</div>
-						<div class="detail-item">
-							<div class="d-flex justify-content-between">
-								<span class="detail-label">State:</span>
-								<span class="detail-value">@Model.State</span>
-							</div>
-						</div>
-					</div>
-					<div class="col-md-6">
-						<div class="detail-item">
-							<div class="d-flex justify-content-between">
-								<span class="detail-label">City:</span>
-								<span class="detail-value">@Model.City</span>
-							</div>
-						</div>
-						<div class="detail-item">
-							<div class="d-flex justify-content-between">
-								<span class="detail-label">Pincode:</span>
-								<span class="detail-value">@Model.PinCode</span>
-							</div>
-						</div>
-					</div>
-					<div class="col-md-6">
-						<div class="detail-item">
-							<div class="d-flex justify-content-between">
-								<span class="detail-label">Furnishing Status:</span>
-								<span class="detail-value">@Model.FurnishingStatus</span>
-							</div>
-						</div>
-						<div class="detail-item">
-							<div class="d-flex justify-content-between">
-								<span class="detail-label">Contact Person Name:</span>
-								<span class="detail-value">@Model.ContactPersonName</span>
-							</div>
-						</div>
-					</div>
-					<div class="col-md-6">
-						<div class="detail-item">
-							<div class="d-flex justify-content-between">
-								<span class="detail-label">Contact Person No:</span>
-								<span class="detail-value">@Model.ContactPersonPhone</span>
-							</div>
-						</div>
-						<div class="detail-item">
-							<div class="d-flex justify-content-between">
-								<span class="detail-label">Contact Person Alternate No:</span>
-								<span class="detail-value">@Model.ContactPersonAlternatePhone</span>
-							</div>
-						</div>
-					</div>
-					<div class="col-md-6">
-						<div class="detail-item">
-							<div class="d-flex justify-content-between">
-								<span class="detail-label">Area:</span>
-								<span class="detail-value">@Model.Area</span>
-							</div>
-						</div>
-						<div class="detail-item">
-							<div class="d-flex justify-content-between">
-								<span class="detail-label">Total Floor:</span>
-								<span class="detail-value">@Model.TotalFloorBuilding</span>
-							</div>
-						</div>
-					</div>
 
-					<div class="col-md-6">
-						<div class="detail-item">
-							<div class="d-flex justify-content-between">
-								<span class="detail-label">Sub Area:</span>
-								<span class="detail-value">@Model.SubArea</span>
-							</div>
-						</div>
-						<div class="detail-item">
-							<div class="d-flex justify-content-between">
-								<span class="detail-label">Floor:</span>
-								<span class="detail-value">@Model.Floor</span>
-							</div>
-						</div>
-					</div>
+			<div class="detail-card">
+				<h3 class="section-title">
+					Property Details
+				</h3>
 
-					<div class="col-md-6">
-						<div class="detail-item">
-							<div class="d-flex justify-content-between">
-								<span class="detail-label">Year Of Construction:</span>
-								<span class="detail-value">@Model.YearOfConstruction</span>
-							</div>
-						</div>
-						<div class="detail-item">
-							<div class="d-flex justify-content-between">
-								<span class="detail-label">Buyer Type:</span>
-								<span class="detail-value">@Model.PreferedBuyerType</span>
-							</div>
-						</div>
-					</div>
-
-					<div class="col-md-6">
-						<div class="detail-item">
-							<div class="d-flex justify-content-between">
-								<span class="detail-label">Vastu:</span>
-								<span class="detail-value">@Model.Vastu</span>
-							</div>
-						</div>
-						<div class="detail-item">
-							<div class="d-flex justify-content-between">
-								<span class="detail-label">Property Category:</span>
-								<span class="detail-value">@Model.PropertyCategory</span>
-							</div>
-						</div>
-					</div>
-
-
-
+				<!-- Row 1 -->
+				<div class="detail-row">
+					<div class="detail-heading">Property Type:</div>
+					<div class="detail-value">@Model.PropertyType</div>
+					<div class="detail-heading">Built Up Area:</div>
+					<div class="detail-value">@Model.CarpetArea sq.ft</div>
 				</div>
+
+				<!-- Row 2 -->
+				<div class="detail-row">
+					<div class="detail-heading">Bedrooms:</div>
+					<div class="detail-value">@Model.Bedrooms</div>
+					<div class="detail-heading">Bathrooms:</div>
+					<div class="detail-value">@Model.Bathrooms</div>
+				</div>
+
+				<!-- Row 3 -->
+				<div class="detail-row">
+					<div class="detail-heading">Country:</div>
+					<div class="detail-value">@Model.Country</div>
+					<div class="detail-heading">State:</div>
+					<div class="detail-value">@Model.State</div>
+				</div>
+
+				<!-- Row 4 -->
+				<div class="detail-row">
+					<div class="detail-heading">City:</div>
+					<div class="detail-value">@Model.City</div>
+					<div class="detail-heading">Pincode:</div>
+					<div class="detail-value">@Model.PinCode</div>
+				</div>
+
+				<!-- Row 5 -->
+				<div class="detail-row">
+					<div class="detail-heading">Furnishing Status:</div>
+					<div class="detail-value">@Model.FurnishingStatus</div>
+					<div class="detail-heading">Area:</div>
+					<div class="detail-value">@Model.Area</div>
+				</div>
+
+				<!-- Row 6 -->
+				<div class="detail-row">
+					<div class="detail-heading">Total Floor:</div>
+					<div class="detail-value">@Model.TotalFloorBuilding</div>
+					<div class="detail-heading">Sub Area:</div>
+					<div class="detail-value">@Model.SubArea</div>
+				</div>
+
+				<!-- Row 7 -->
+				<div class="detail-row">
+					<div class="detail-heading">Floor:</div>
+					<div class="detail-value">@Model.Floor</div>
+					<div class="detail-heading">Year Of Construction:</div>
+					<div class="detail-value">@Model.YearOfConstruction</div>
+				</div>
+
+				<!-- Row 8 -->
+				<div class="detail-row">
+					<div class="detail-heading">Buyer Type:</div>
+					<div class="detail-value">@Model.PreferedBuyerType</div>
+					<div class="detail-heading">Vastu:</div>
+					<div class="detail-value">@Model.Vastu</div>
+				</div>
+
+				<!-- Row 9 -->
+				<div class="detail-row">
+					<div class="detail-heading">Property Category:</div>
+					<div class="detail-value">@Model.PropertyCategory</div>
+					<div class="detail-heading"></div>
+					<div class="detail-value"></div>
+				</div>
+
+				<!-- Admin-only rows (hidden by default) -->
+				@if (User.IsInRole("Agency"))
+				{
+					<div id="adminRows">
+						<!-- Row 10 -->
+						<div class="detail-row admin-only">
+							<div class="detail-heading">Contact Person Name:</div>
+							<div class="detail-value">@Model.ContactPersonName</div>
+							<div class="detail-heading">Contact Person No:</div>
+							<div class="detail-value">@Model.ContactPersonPhone</div>
+						</div>
+
+						<!-- Row 11 -->
+						<div class="detail-row admin-only">
+							<div class="detail-heading">Contact Person Alternate No:</div>
+							<div class="detail-value">@Model.ContactPersonAlternatePhone</div>
+							<div class="detail-heading"></div>
+							<div class="detail-value"></div>
+						</div>
+					</div>
+				}
 			</div>
 
 			<!-- Description -->
@@ -583,7 +658,8 @@
 				</form>
 				<div class="text-center mt-3">
 					<p class="text-muted small mb-1">Or call us directly at</p>
-					<a href="tel:+919876543210" class="text-success fw-bold">+91 98765 43210</a>
+					<a href="tel:+919876543210" class="text-success fw-bold">+91 9820753830</a><br />
+					<a href="tel:+919876543210" class="text-success fw-bold">+91 7506080089</a>
 				</div>
 			</div>
 		</div>
@@ -600,7 +676,7 @@
 				<button type="button"
 						class="btn-close btn-close-white position-absolute top-0 end-0 m-2"
 						data-bs-dismiss="modal"
-						aria-label="Close"></button>
+						aria-label="Close" style="z-index: 9999 !important;"></button>
 
 				<!-- Video container -->
 				<div style="aspect-ratio:9/16; width:100%; background:black; border-radius: 1.5rem; overflow:hidden;">
