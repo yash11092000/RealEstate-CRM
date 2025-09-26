@@ -848,5 +848,34 @@
 			preview.style.display = 'block';
 		  }
 		}
+
+			 $("#MobileNo ,#AlternateMobileNo").on("change", function () {
+			 validateMobileNo(this);
+		});
+		
+		$("#EmailAddress").on("change", function () {
+			validateEmailID(this);
+		});
+
+		$("#WebsiteUrl").on("change", function () {
+			validateWesiteUrl(this);
+		});
+
+		 $("#Pincode").on("change", function () {
+			 validatePinCode(this);
+		 });
+		  $("#ReraRegNo").on("change", function () {
+			  validateReraRegNo(this);
+		  });
+		   $("#PAN").on("change", function () {
+			   validatepancard(this);
+		   });
+
+			$("#GST").on("change", function () {
+				validateGst(this);
+			});
+			   $("#Password").on("change", function () {
+				   validatePassword(this);
+			   });
 	</script>
 }
