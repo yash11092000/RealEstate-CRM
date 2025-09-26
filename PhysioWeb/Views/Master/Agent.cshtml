@@ -26,7 +26,7 @@
 							<th>Email</th>
 							<th>Phone</th>
 							<th>Created By</th>
-							<th>IsActive</th>
+							<th>Is Active</th>
 							<th>Rights</th>
 							<th><i class="bi bi-pencil-square text-primary fs-5" title="Edit"></i></th>
 							<th><i class="bi bi-trash text-danger fs-5" title="Delete"></i></th>
@@ -77,7 +77,7 @@
 						</div>
 
 						<div class="col-md-4 mb-3">
-							<label class="form-label fw-bold">Email <span class="impMark">*</span></label>
+							<label class="form-label fw-bold">Email </label>
 							<input type="email" class="form-control" id="Email" name="Email" placeholder="Enter Email" />
 						</div>
 
@@ -288,10 +288,10 @@
 					notyf.error("Please fill UserName.");
 					userName.focus();
 				}
-				else if(email === ""){
-					notyf.error("Please fill Email.");
-					email.focus();
-				}
+				// else if(email === ""){
+				// 	notyf.error("Please fill Email.");
+				// 	email.focus();
+				// }
 				else if(FirstName === ""){
 					notyf.error("Please fill FirstName.");
 					FirstName.focus();

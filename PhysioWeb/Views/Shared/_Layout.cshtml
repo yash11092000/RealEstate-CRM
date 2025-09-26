@@ -209,6 +209,11 @@
 				transition: width 0.4s cubic-bezier(0.45,0,0.55,1);
 			}
 
+		.dt-length {
+			display:flex !important;
+			gap: 6px !important;
+		}
+
 	</style>
 </head>
 <body>
@@ -227,13 +232,11 @@
 						<li class="nav-item"><a class="nav-link text-dark" href="/">Home</a></li>
 						@if (User.IsInRole("SuperAdmin"))
 						{
-							<li class="nav-item"><a class="nav-link text-dark" href="/SuperAdmin/AdminDashboard">Admin Dashboard</a></li>
-
-
+							<li class="nav-item"><a class="nav-link text-dark" href="/SuperAdmin/AdminDashboard">SuperAdmin Dashboard</a></li>
 						}
 						@if (User.IsInRole("Agency"))
 						{
-							<li class="nav-item"><a class="nav-link text-dark" href="/Agent/AgencyDashboard">Agency Dashboard</a></li>
+							<li class="nav-item"><a class="nav-link text-dark" href="/Agent/AgencyDashboard">Admin Dashboard</a></li>
 						}
 						@if (User.IsInRole("User"))
 						{
