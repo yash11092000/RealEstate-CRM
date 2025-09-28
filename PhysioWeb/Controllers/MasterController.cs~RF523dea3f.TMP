@@ -898,7 +898,7 @@ namespace PhysioWeb.Controllers
 
         #region Comman Things
         [HttpGet]
-        public async Task<IActionResult> GetAreas(string searchTerm = "")
+        public async Task<IActionResult> GetAreas(string searchTerm)
         {
             string AgencyID = User.FindFirst(ClaimTypes.GroupSid)?.Value;
             var areas = await _masterRepository.GetAreaList(searchTerm, AgencyID);
