@@ -77,8 +77,8 @@ namespace PhysioWeb.Models
         public List<DropDownSource> Amenitie { get; set; }
 
         public string Vastu { get; set; }
-        public int YearOfConstruction { get; set; }
-        public int TotalFloorBuilding { get; set; }
+        public string YearOfConstruction { get; set; }
+        public string TotalFloorBuilding { get; set; }
         public List<DropDownSource> AmountUnitList { get; set; }
         public List<DropDownSource> PreferedBuyerTypeList { get; set; }
 
@@ -342,7 +342,7 @@ namespace PhysioWeb.Models
 
             if (!rdr.IsDBNull(rdr.GetOrdinal("TotalFloorBuilding")))
             {
-                obj.TotalFloorBuilding = rdr.GetInt32(rdr.GetOrdinal("TotalFloorBuilding"));
+                obj.TotalFloorBuilding = rdr.GetString(rdr.GetOrdinal("TotalFloorBuilding"));
             }
             if (!rdr.IsDBNull(rdr.GetOrdinal("PropertyCategoryName")))
             {
@@ -354,7 +354,7 @@ namespace PhysioWeb.Models
             }
             if (!rdr.IsDBNull(rdr.GetOrdinal("YearOfConstruction")))
             {
-                obj.YearOfConstruction = rdr.GetInt32(rdr.GetOrdinal("YearOfConstruction"));
+                obj.YearOfConstruction = rdr.GetString(rdr.GetOrdinal("YearOfConstruction"));
             }
             if (!rdr.IsDBNull(rdr.GetOrdinal("BuyerType")))
             {
@@ -414,7 +414,7 @@ namespace PhysioWeb.Models
 
             if (!rdr.IsDBNull(rdr.GetOrdinal("TotalFloorBuilding")))
             {
-                obj.TotalFloorBuilding = rdr.GetInt32(rdr.GetOrdinal("TotalFloorBuilding"));
+                obj.TotalFloorBuilding = rdr.GetString(rdr.GetOrdinal("TotalFloorBuilding"));
             }
 
             if (!rdr.IsDBNull(rdr.GetOrdinal("FurnishingStatus")))
@@ -433,7 +433,7 @@ namespace PhysioWeb.Models
 
             if (!rdr.IsDBNull(rdr.GetOrdinal("YearOfConstruction")))
             {
-                obj.YearOfConstruction = rdr.GetInt32(rdr.GetOrdinal("YearOfConstruction"));
+                obj.YearOfConstruction = rdr.GetString(rdr.GetOrdinal("YearOfConstruction"));
             }
 
             if (!rdr.IsDBNull(rdr.GetOrdinal("PropertyDescription")))
