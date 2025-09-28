@@ -70,10 +70,9 @@ namespace PhysioWeb.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Login(string Email, string Mobile, string Password, string returnUrl)
+        public async Task<IActionResult> Login(string Email, string Password, string returnUrl)
         {
-
-            var User = await _userRepository.Login(Email, Mobile, Password);
+            var User = await _userRepository.Login(Email, Password);
 
             if (User != null && BCrypt.Net.BCrypt.Verify(Password, User.Password))
             {
@@ -124,6 +123,11 @@ namespace PhysioWeb.Controllers
             return View();
         }
 
+        [HttpGet]
+        public async Task<ActionResult> CheckEmailExists(string Email) {
+            var result = await _userRepository.CheckEmailExists(Email);
+            return Json(result);
+        }
 
         public async Task<ActionResult> Logout()
         {

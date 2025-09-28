@@ -1,5 +1,4 @@
-﻿using System.Reflection;
-using PhysioWeb.Data;
+﻿using PhysioWeb.Data;
 using PhysioWeb.Models;
 
 namespace PhysioWeb.Repository
@@ -13,12 +12,12 @@ namespace PhysioWeb.Repository
             _dbHelper = dbHelper;
         }
 
-        public async Task<Users> Login(string Email, string Mobile, string Password)
+        public async Task<Users> Login(string Email, string Password)
         {
             try
             {
-                string[] parametersName = { "Email", "Password", "Mobile" };
-                object[] Values = { Email, Password, Mobile };
+                string[] parametersName = { "Email", "Password"};
+                object[] Values = { Email, Password };
 
                 string Sp = "FMR_CheckUser";
                 var data = await _dbHelper.GetDataReaderAsync(Sp, parametersName, Values);
@@ -113,6 +112,23 @@ namespace PhysioWeb.Repository
                 throw e;
             }
         }
+
+        public async Task<bool> CheckEmailExists(string email)
+        {
+            try
+            {
+                string[] parametersName = { "EmailMob" };
+                object[] Values = { email };
+
+                string Sp = "FMR_CheckEmailExists";
+                var data = await _dbHelper.ExecuteScalarAsync(Sp, parametersName, Values);
+                return Convert.ToInt32(data) > 0;
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }
         //public async Task<PropertyMaster> GetPropertyDetails()
         //{
         //    try
@@ -125,7 +141,7 @@ namespace PhysioWeb.Repository
         //        var data = await _dbHelper.GetDataReaderAsync(Sp, parameterNames, parameterValues);
         //        PropertyMaster propertyMaster = new PropertyMaster();
 
-               
+
 
 
         //        return propertyMaster;

@@ -70,14 +70,15 @@
 				<!-- Email -->
 				<div class="form-floating mb-3">
 					<input type="email" class="form-control" id="floatingEmail" placeholder="name@example.com">
-					<label for="floatingEmail">Email address</label>
+					<label for="floatingEmail">Email address or Mobile No.</label>
+					<small id="emailError" class="text-danger"></small>
 				</div>
 
-				<!-- Mobile -->
+			@* 		<!-- Mobile -->
 				<div class="form-floating mb-3">
 					<input type="tel" class="form-control" id="floatingMobile" placeholder="9876543210" pattern="[0-9]{10}">
 					<label for="floatingMobile">Mobile Number</label>
-				</div>
+				</div> *@
 
 				<!-- Password -->
 				<div class="form-floating mb-3">
@@ -108,7 +109,7 @@
 	<script>
 		$("#login").on("click", function (e) {
 			let email = $("#floatingEmail").val().trim();
-			let mobile = $("#floatingMobile").val().trim();
+			//let mobile = $("#floatingMobile").val().trim();
 			let password = $("#floatingPassword").val();
 
 			const mobileRegex = new RegExp("^[6-9][0-9]{9}$");
@@ -119,10 +120,10 @@
 				notyf.error("Enter a valid Email address.");
 				return;
 			}
-			else if (mobile && !mobileRegex.test(mobile)) {
-				notyf.error("Enter a valid 10-digit Mobile Number.");
-				return;
-			}
+			// else if (mobile && !mobileRegex.test(mobile)) {
+			// 	notyf.error("Enter a valid 10-digit Mobile Number.");
+			// 	return;
+			// }
 			else if (password.length < 6) {
 				notyf.error("Password must be at least 6 characters.");
 				return;
@@ -132,7 +133,7 @@
 				$.ajax({
 					url: "/Home/Login",
 					type: "POST",
-					data: {Email:email,Mobile: mobile,Password: password},
+					data: {Email:email,Password: password},
 					success: function (response) {
 							showLoader();
 						  if (response.success) {
@@ -151,6 +152,36 @@
 				hideLoader();
 			}
 		});
+
+		//	let debounceTimer;
+
+		// $("#floatingEmail").on("keyup", function () {
+		// 	clearTimeout(debounceTimer);
+
+		// 	let email = $(this).val();
+
+		// 	debounceTimer = setTimeout(function () {
+		// 		if (email.length > 0) {
+		// 			$.ajax({
+		// 				url: "/Home/CheckEmailExists", // your backend endpoint
+		// 				type: "GET",
+		// 				data: { email: email },
+		// 				success: function (response) {
+		// 					if (response) {
+		// 						$("#emailError").text("Email Or Mobile No already exists. Please use another.");
+		// 					} else {
+		// 						$("#emailError").text(""); // clear error
+		// 					}
+		// 				},
+		// 				error: function () {
+		// 					$("#emailError").text("Error checking email.");
+		// 				}
+		// 			});
+		// 		} else {
+		// 			$("#emailError").text(""); // reset if input empty
+		// 		}
+		// 	}, 1000); // debounce delay (500ms)
+		// });
 
 	</script>
 
