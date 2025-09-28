@@ -87,7 +87,7 @@
 						</div>
 
 						<div class="col-md-4 mb-3">
-							<label class="form-label fw-bold" for="Password">Password</label>
+							<label class="form-label fw-bold" for="Password">Password <span class="impMark">*</span></label>
 							<div class="input-group">
 								<input type="password" class="form-control" id="Password" name="Password"
 									   placeholder="Enter password" autocomplete="new-password">
@@ -308,10 +308,10 @@
 					notyf.error("Please fill Phone No.");
 					Phone.focus();
 				}
-				// else if(Password === ""){
-				// 	notyf.error("Please fill Password.");
-				// 	Password.focus();
-				// }
+				 else if(Password === ""){
+				 	notyf.error("Please fill Password.");
+				 	Password.focus();
+				 }
 				else{
 					var OldPassword = $("#OldPassword").val();
 					var fileInput = document.getElementById("ProfileImage");
