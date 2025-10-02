@@ -343,60 +343,11 @@
 			history.pushState(params, null, newUrl);
 		});
 
-		// ✅ Handle back/forward button
 		window.addEventListener('popstate', function (event) {
 			var urlParams = new URLSearchParams(window.location.search);
 			var page = urlParams.get('page') || 1;
 			loadPageContent(page);
 		});
-
-		//     $(document).on('click', '.page-link-ajax', function(e) {
-		//         e.preventDefault();
-
-		//         var page = $(this).data('page');
-		//         console.log(page);
-
-		//         // Make AJAX call
-		//         $.ajax({
-		//             url: '/Home/LoadProperties',
-		//             type: 'GET',
-		//             data: { PageNo: page, PageSize: 6 },
-		//             success: function(result) {
-		//                 // Update your content with the returned data
-		//                 $('#propertyContainer').html(result); // Update with your container ID
-
-		//                 // Update URL without reloading page (optional)
-		//                 history.pushState(null, null, '?page=' + page);
-		//             },
-		//             error: function(xhr, status, error) {
-		//                 console.error('Error loading page:', error);
-		//                 alert('Error loading page content. Please try again.');
-		//             }
-		//         });
-		//     });
-
-		//     // Handle browser back/forward buttons
-		//     window.addEventListener('popstate', function() {
-		//         // Parse page from URL and load content
-		//         var urlParams = new URLSearchParams(window.location.search);
-		//         var page = urlParams.get('page') || 1;
-		//         loadPageContent(page);
-		//     });
-
-		// function loadPageContent(page) {
-		//     // Same AJAX call as above
-		//     $.ajax({
-		//         url: '/Home/LoadProperties',
-		//         type: 'GET',
-		//         data: { PageNo: page, PageSize: 6 },
-		//         success: function(result) {
-		//             $('#propertyContainer').html(result);
-		//         },
-		//         error: function(xhr, status, error) {
-		//             console.error('Error loading page:', error);
-		//         }
-		//     });
-		// }
 
 		function SearchProperty(page){
 			var location = $("#location").val();

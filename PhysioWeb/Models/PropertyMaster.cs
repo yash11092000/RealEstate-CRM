@@ -94,6 +94,8 @@ namespace PhysioWeb.Models
         public bool IsSoldOut { get; set; }
         public string SoldOutToWhome { get; set; }
         public string SoldOutContactNo { get; set; }
+        public List<PropertyDetails> PropertyDetails { get; set; }
+
         public PropertyMaster()
         {
             CountryList = new List<DropDownSource>();
@@ -111,6 +113,7 @@ namespace PhysioWeb.Models
             Videos = new List<DropDownSource>();
             Images = new List<DropDownSource>();
             PreferedBuyerTypeList = new List<DropDownSource>();
+            PropertyDetails = new List<PropertyDetails>();
         }
 
         public PropertyMaster(IDataReader Idr, int flag)
@@ -130,6 +133,7 @@ namespace PhysioWeb.Models
             Videos = new List<DropDownSource>();
             Images = new List<DropDownSource>();
             PreferedBuyerTypeList = new List<DropDownSource>();
+            PropertyDetails = new List<PropertyDetails>();
 
 
             if (flag == 1)

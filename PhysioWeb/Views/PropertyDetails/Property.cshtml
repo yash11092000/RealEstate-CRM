@@ -7,6 +7,9 @@
 @{
 	var theme = User.FindFirst("Theme")?.Value ?? "#198754";
 }
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@@splidejs/splide@4.1.4/dist/css/splide.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
 <style>
 	:root {
 		--primary-green: @theme;
@@ -111,7 +114,7 @@
 
 	.amenity-badge {
 		background-color: var(--light-green);
-		color: var(--dark-green);
+		color: white;
 		padding: 0.5rem 1rem;
 		border-radius: 50px;
 		font-size: 0.9rem;
@@ -391,6 +394,194 @@
 		--bs-aspect-ratio: calc(16 / 9 * 100%); /* 177.77% */
 	}
 
+	.property-card {
+		border-radius: 12px;
+		overflow: hidden;
+		box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+		transition: transform 0.2s, box-shadow 0.2s;
+		background: white;
+		height: 100%;
+		margin: 0 10px;
+	}
+
+		.property-card:hover {
+			transform: translateY(-5px);
+			box-shadow: 0 8px 16px rgba(0,0,0,0.15);
+		}
+
+	.card-image {
+		position: relative;
+		height: 200px;
+		background-size: cover;
+		background-position: center;
+	}
+
+	.status-badge {
+		position: absolute;
+		top: 1rem;
+		left: 1rem;
+		background-color: var(--secondary);
+		color: white;
+		padding: 0.25rem 0.75rem;
+		border-radius: 20px;
+		font-size: 0.75rem;
+		font-weight: bold;
+	}
+
+	.favorite-btn {
+		position: absolute;
+		top: 1rem;
+		right: 1rem;
+		background: rgba(255, 255, 255, 0.8);
+		border: none;
+		width: 32px;
+		height: 32px;
+		border-radius: 50%;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		cursor: pointer;
+		color: #ccc;
+		font-size: 1rem;
+		transition: all 0.2s;
+	}
+
+	/* Modern Card Styling */
+	.card {
+		border-radius: 12px !important;
+		transition: all 0.3s ease;
+		overflow: hidden;
+	}
+
+	.card-img-container {
+		height: 220px;
+		position: relative;
+	}
+
+	.card-img-top {
+		object-fit: cover;
+		transition: transform 0.5s ease;
+	}
+
+	.card:hover {
+		transform: translateY(-5px);
+		box-shadow: 0 10px 20px rgba(0,0,0,0.1) !important;
+	}
+
+		.card:hover .card-img-top {
+			transform: scale(1.05);
+		}
+
+	.shadow-hover {
+		box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+	}
+
+	.splide {
+		padding: 0 2rem;
+	}
+
+	.splide__arrows {
+		z-index: 1;
+	}
+
+	.splide__arrow {
+		width: 40px;
+		height: 40px;
+		opacity: 1;
+		background: white;
+		border: none;
+		transition: all 0.3s ease;
+	}
+
+		.splide__arrow:hover {
+			background: #f8f9fa !important;
+			/* transform: scale(1.1); */
+			border: 1px solid lightblue;
+		}
+
+		.splide__arrow svg {
+			fill: #333;
+		}
+
+	.splide__arrow--prev {
+		left: auto;
+		right: 60px;
+	}
+
+	.splide__arrow--next {
+		right: 0;
+	}
+
+	/* Badge styling */
+	.badge {
+		font-size: 0.75rem;
+		padding: 0.35em 0.65em;
+		font-weight: 500;
+	}
+
+	/* Responsive adjustments */
+	@@media (max-width: 768px) {
+		.splide {
+			padding: 0 1rem;
+		}
+
+		.card-img-container {
+			height: 180px;
+		}
+
+		.splide__arrow {
+			width: 36px;
+			height: 36px;
+		}
+	}
+
+	@@media (max-width: 576px) {
+		.splide {
+			padding: 0 0.5rem;
+		}
+
+		.card-img-container {
+			height: 160px;
+		}
+	}
+
+	@@media (max-width: 768px) {
+
+	.section-header {
+		margin-bottom: 20px;
+	}
+
+	}
+
+	.section-header {
+		margin-bottom: 30px;
+		text-align: center;
+	}
+
+	.section-title {
+		font-weight: 700;
+		color: #2c3e50;
+		margin-bottom: 10px;
+		position: relative;
+		display: inline-block;
+	}
+
+		.section-title:after {
+			content: '';
+			position: absolute;
+			width: 60%;
+			height: 4px;
+			background: linear-gradient(to right, #198754, #ff6b35);
+			bottom: -10px;
+			left: 20%;
+			border-radius: 2px;
+		}
+
+	.section-subtitle {
+		color: #6c757d;
+		max-width: 600px;
+		margin: 0 auto;
+	}
 </style>
 
 <!-- Property Header -->
@@ -614,7 +805,7 @@
 			</div>
 
 			<!-- Floor Plans -->
-			<div class="detail-card p-3 p-md-4">
+			@* <div class="detail-card p-3 p-md-4">
 				<h3 class="section-title">Floor Plans</h3>
 				<div class="text-center">
 					<img src="https://via.placeholder.com/800x600?text=Floor+Plan" alt="Floor Plan" class="img-fluid rounded mb-3">
@@ -627,7 +818,7 @@
 						</button>
 					</div>
 				</div>
-			</div>
+			</div> *@
 		</div>
 
 		<!-- Sidebar Column -->
@@ -663,6 +854,97 @@
 				</div>
 			</div>
 		</div>
+	</div>
+
+	<div class="row">
+
+
+		<div class="container-fluid px-0 mt-4">
+
+			<div class="section-header">
+				<h2 class="section-title">Recommended Properties</h2>
+				<p class="section-subtitle">Discover our handpicked selection of premium properties tailored to your preferences</p>
+			</div>
+
+			<!-- Splide Carousel with custom arrow position -->
+			<div id="propertyCarousel" class="splide position-relative">
+				<!-- Custom arrows container -->
+				<div class="splide__arrows position-absolute top-0 end-0 mt-3 me-4">
+					<button class="splide__arrow splide__arrow--prev bg-white text-dark rounded-circle shadow-sm">
+						<i class="fas fa-chevron-left"></i>
+					</button>
+					<button class="splide__arrow splide__arrow--next bg-white text-dark rounded-circle shadow-sm ms-2">
+						<i class="fas fa-chevron-right"></i>
+					</button>
+				</div>
+
+				<div class="splide__track">
+					<div class="splide__list">
+						@foreach (var prop in Model.PropertyDetails)
+						{
+							<div class="splide__slide px-2">
+								<div class="card h-100 border-0 shadow-hover">
+									<!-- Badge for status -->
+									<div class="position-absolute top-0 start-0 mt-3 ms-3">
+										@* <span class="badge @(prop.Status == "Sale" ? "bg-success" : "bg-primary")">
+									@(prop.Status == "Sale" ? "For Sale" : "For Rent")
+								</span> *@
+									</div>
+
+									<!-- Property Image -->
+									<div class="card-img-container rounded-top overflow-hidden">
+										<img src="/secure-images/@prop.PropertyImg"
+											 class="card-img-top h-100 w-100"
+											 alt="@prop.PropertyName"
+											 loading="lazy">
+									</div>
+
+									<!-- Card Body -->
+									<div class="card-body">
+										<div class="d-flex justify-content-between align-items-start mb-2">
+											<h5 class="card-title mb-0">@prop.PropertyName</h5>
+											<div class="favorite-icon">
+												<i class="far fa-heart text-muted"></i>
+											</div>
+										</div>
+
+										<p class="text-muted mb-3">
+											<i class="fas fa-map-marker-alt text-success me-1"></i>
+											@prop.Address
+										</p>
+
+										<div class="property-features d-flex justify-content-between text-muted mb-3">
+											<span class="d-flex align-items-center">
+												<i class="fas fa-bed me-1"></i> @prop.BedRooms
+											</span>
+											<span class="d-flex align-items-center">
+												<i class="fas fa-bath me-1"></i> @prop.BathRooms
+											</span>
+											<span class="d-flex align-items-center">
+												<i class="fas fa-ruler-combined me-1"></i> @prop.Sqrtft sqft
+											</span>
+										</div>
+
+										<div class="d-flex justify-content-between align-items-center">
+											<h5 class="text-success mb-0">₹@prop.DisplayMinPrice - @prop.DisplayMaxPrice</h5>
+										</div>
+									</div>
+
+									<!-- Card Footer -->
+									<div class="card-footer bg-transparent border-0 pt-0">
+										<a href="/PropertyDetails/Property?PropertyId=@prop.PropertyId"
+										   class="btn btn-success w-100 rounded-pill">
+											View Details <i class="fas fa-arrow-right ms-2"></i>
+										</a>
+									</div>
+								</div>
+							</div>
+						}
+					</div>
+				</div>
+			</div>
+		</div>
+
 	</div>
 </div>
 
@@ -734,7 +1016,34 @@
 </div>
 
 @section Scripts {
+	<script src="https://cdn.jsdelivr.net/npm/@@splidejs/splide@4.1.4/dist/js/splide.min.js"></script>
+
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/corejs-typeahead/1.3.1/typeahead.bundle.min.js"></script>
+
 	<script>
+
+				document.addEventListener('DOMContentLoaded', function() {
+				// Initialize Splide
+				new Splide('#propertyCarousel', {
+					type: 'slide',
+					perPage: 4, // Default number of visible slides
+					perMove: 1,
+					gap: '1rem', // Space between slides
+					arrows: true,
+					pagination: false,
+					drag: 'free',
+					snap: true,
+					progress: true,
+					breakpoints: {
+						1400: { perPage: 4 }, // XL screens
+						1200: { perPage: 3 }, // LG screens
+						992: { perPage: 2 },  // MD screens
+						768: { perPage: 2 },  // SM screens
+						576: { perPage: 1 }   // XS screens
+					}
+				}).mount();
+			});
+
 		// Change main image when thumbnail is clicked
 		function changeMainImage(src, element) {
 			document.getElementById('mainImage').src = src;

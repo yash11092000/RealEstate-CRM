@@ -48,7 +48,13 @@ namespace PhysioWeb.Repository
                             Property.AmenityList.Add(new DropDownSource(data, true));
                         }
                     }
-
+                    if (data.NextResult())
+                    {
+                        while (data.Read())
+                        {
+                            Property.PropertyDetails.Add(new PropertyDetails(data));
+                        }
+                    }
                     return Property;
                 }
 
