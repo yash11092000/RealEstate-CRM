@@ -13,6 +13,7 @@ using System.Net.NetworkInformation;
 using System.Reflection;
 using System.Security.Claims;
 using static System.Net.Mime.MediaTypeNames;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace PhysioWeb.Controllers
 {
@@ -467,6 +468,13 @@ namespace PhysioWeb.Controllers
             {
                 return Json(new { success = false, message = ex.Message });
             }
+        }
+
+
+        [HttpGet]
+        public async Task<ActionResult> ViewProperty(int id) {
+            var result = await _masterRepository.ViewProperty(id);
+            return Json(result);
         }
 
         #endregion

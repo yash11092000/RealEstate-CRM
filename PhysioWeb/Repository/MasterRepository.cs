@@ -1336,5 +1336,35 @@ namespace PhysioWeb.Repository
                 throw;
             }
         }
+        public async Task<PropertyMaster> ViewProperty(int UniqueID)
+        {
+            try
+            {
+                string[] parameterNames = { "UniqueID" };
+                object[] parameterValues = { UniqueID };
+
+                string Sp = "FMR_ViewProperty";
+                var data = await _dbHelper.GetDataReaderAsync(Sp, parameterNames, parameterValues);
+                var PropertyMaster = new PropertyMaster();
+
+                while (data.Read())
+                {
+                    PropertyMaster.Images.Add(new DropDownSource(data, true));
+                }
+                if (data.NextResult())
+                {
+                    while (data.Read())
+                    {
+                        PropertyMaster.Videos.Add(new DropDownSource(data, true));
+                    }
+                }
+
+                return PropertyMaster;
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }
     }
 }
