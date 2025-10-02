@@ -72,6 +72,7 @@ namespace PhysioWeb.Models
 
         public string DisplayMinPrice { get; set; }
         public string DisplayMaxPrice { get; set; }
+
         public PropertyDetails(IDataReader Idr, int flag = 0)
         {
             if (flag == 0)
