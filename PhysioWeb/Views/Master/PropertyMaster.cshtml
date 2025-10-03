@@ -1361,9 +1361,9 @@
 
 			   function ViewData(PropertyId,Controller,Action){
 					$.ajax({
-					url: '/' + Controller + '/' + Action, // e.g., /Property/GetPropertyDetails
-					type: 'GET', // or 'POST' depending on your API
-					data: { id: PropertyId }, // send PropertyId as a parameter
+					url: '/' + Controller + '/' + Action, 
+					type: 'GET', 
+					data: { id: PropertyId }, 
 					success: function(response) {
 						console.log(response);
 						 // Clear previous images
