@@ -2,358 +2,360 @@
 @model PhysioWeb.Models.HomeDashboard
 
 @{
-    ViewData["Title"] = "Home Page";
+	ViewData["Title"] = "Home Page";
 }
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@@splidejs/splide@4.1.4/dist/css/splide.min.css">
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
 @{
-    var theme = User.FindFirst("Theme")?.Value ?? "#198754";
+	var theme = User.FindFirst("Theme")?.Value ?? "#198754";
 }
 
 <style>
-    /* Wrapper input */
-    .typeahead {
-        width: 100%;
-        padding: 8px 12px;
-        font-size: 16px;
-        border: 1px solid #ccc;
-        border-radius: 4px;
-    }
+	/* Wrapper input */
+	.typeahead {
+		width: 100%;
+		padding: 8px 12px;
+		font-size: 16px;
+		border: 1px solid #ccc;
+		border-radius: 4px;
+	}
 
-    /* Dropdown menu */
-    .tt-menu {
-        width: 100%;
-        margin-top: 2px;
-        padding: 8px 0;
-        background-color: #fff;
-        border: 1px solid #ccc;
-        border-radius: 4px;
-        max-height: 200px;
-        overflow-y: auto;
-        z-index: 1000;
-    }
+	/* Dropdown menu */
+	.tt-menu {
+		width: 100%;
+		margin-top: 2px;
+		padding: 8px 0;
+		background-color: #fff;
+		border: 1px solid #ccc;
+		border-radius: 4px;
+		max-height: 200px;
+		overflow-y: auto;
+		z-index: 1000;
+	}
 
-    /* Each suggestion */
-    .tt-suggestion {
-        padding: 8px 12px;
-        cursor: pointer;
-    }
+	/* Each suggestion */
+	.tt-suggestion {
+		padding: 8px 12px;
+		cursor: pointer;
+	}
 
-        /* Hover effect */
-        .tt-suggestion:hover {
-            background-color: #f0f0f0;
-        }
+		/* Hover effect */
+		.tt-suggestion:hover {
+			background-color: #f0f0f0;
+		}
 
-    /* Highlighted text */
-    .tt-highlight {
-        font-weight: bold;
-        color: var(--theme-color) !important;
-    }
+	/* Highlighted text */
+	.tt-highlight {
+		font-weight: bold;
+		color: var(--theme-color) !important;
+	}
 
-    body {
-        font-family: 'Inter', sans-serif;
-        background-color: #f8f9f9;
-    }
+	body {
+		font-family: 'Inter', sans-serif;
+		background-color: #f8f9f9;
+	}
 
-    .btn-green {
-        background-color: var(--theme-color) !important;
-        color: white;
-    }
+	.btn-green {
+		background-color: var(--theme-color) !important;
+		color: white;
+	}
 
-        .btn-green:hover {
-            background-color: #256d5a;
-        }
+		.btn-green:hover {
+			background-color: #256d5a;
+		}
 
 
-    .icon-box {
-        background: #f0f5f4;
-        border-radius: 12px;
-        padding: 20px;
-        text-align: center;
-        height: 100%;
-    }
+	.icon-box {
+		background: #f0f5f4;
+		border-radius: 12px;
+		padding: 20px;
+		text-align: center;
+		height: 100%;
+	}
 
-        .icon-box i {
-            font-size: 2rem;
-            color: #2e7d66;
-            margin-bottom: 10px;
-        }
+		.icon-box i {
+			font-size: 2rem;
+			color: #2e7d66;
+			margin-bottom: 10px;
+		}
 
-    .property-card {
-        background: #ffffff;
-        border-radius: 12px;
-        padding: 20px;
-        box-shadow: 0 0 15px rgba(0,0,0,0.05);
-    }
+	.property-card {
+		background: #ffffff;
+		border-radius: 12px;
+		padding: 20px;
+		box-shadow: 0 0 15px rgba(0,0,0,0.05);
+	}
 
-    .property-image {
-        border-radius: 8px;
-        overflow: hidden;
-    }
+	.property-image {
+		border-radius: 8px;
+		overflow: hidden;
+	}
 
-        .property-image img {
-            width: 100%;
-            height: auto;
-        }
+		.property-image img {
+			width: 100%;
+			height: auto;
+		}
 
-    .property-price {
-        font-size: 1.5rem;
-        font-weight: 600;
-        color: #2e7d66;
-    }
+	.property-price {
+		font-size: 1.5rem;
+		font-weight: 600;
+		color: #2e7d66;
+	}
 
-    .choices__inner {
-        border-color: var(--theme-color) !important;
-    }
+	.choices__inner {
+		border-color: var(--theme-color) !important;
+	}
 
-    .choices__list--multiple .choices__item {
-        background-color: var(--theme-color) !important;
-        border: 1px solid var(--theme-color) !important;
-        color: #fff;
-        border-radius: 20px;
-        padding: 3px 10px;
-        font-size: 14px;
-    }
+	.choices__list--multiple .choices__item {
+		background-color: var(--theme-color) !important;
+		border: 1px solid var(--theme-color) !important;
+		color: #fff;
+		border-radius: 20px;
+		padding: 3px 10px;
+		font-size: 14px;
+	}
 
-    .choices__list--dropdown .choices__item--selectable.is-highlighted {
-        background-color: #d4edda;
-        color: var(--theme-color) !important;
-    }
+	.choices__list--dropdown .choices__item--selectable.is-highlighted {
+		background-color: #d4edda;
+		color: var(--theme-color) !important;
+	}
 
-    #featured-properties .card:hover {
-        transform: translateY(-5px);
-        transition: 0.3s ease;
-    }
+	#featured-properties .card:hover {
+		transform: translateY(-5px);
+		transition: 0.3s ease;
+	}
 
-    :root {
-        --primary: #4a6fa5;
-        --secondary: #ff7e5f;
-        --dark: #333;
-        --light: #f8f9fa;
-    }
+	:root {
+		--primary: #4a6fa5;
+		--secondary: #ff7e5f;
+		--dark: #333;
+		--light: #f8f9fa;
+	}
 
-    .property-card {
-        border-radius: 12px;
-        overflow: hidden;
-        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-        transition: transform 0.2s, box-shadow 0.2s;
-        background: white;
-        height: 100%;
-        margin: 0 10px;
-    }
+	.property-card {
+		border-radius: 12px;
+		overflow: hidden;
+		box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+		transition: transform 0.2s, box-shadow 0.2s;
+		background: white;
+		height: 100%;
+		margin: 0 10px;
+	}
 
-        .property-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 8px 16px rgba(0,0,0,0.15);
-        }
+		.property-card:hover {
+			transform: translateY(-5px);
+			box-shadow: 0 8px 16px rgba(0,0,0,0.15);
+		}
 
-    .card-image {
-        position: relative;
-        height: 200px;
-        background-size: cover;
-        background-position: center;
-    }
+	.card-image {
+		position: relative;
+		height: 200px;
+		background-size: cover;
+		background-position: center;
+	}
 
-    .status-badge {
-        position: absolute;
-        top: 1rem;
-        left: 1rem;
-        background-color: var(--secondary);
-        color: white;
-        padding: 0.25rem 0.75rem;
-        border-radius: 20px;
-        font-size: 0.75rem;
-        font-weight: bold;
-    }
+	.status-badge {
+		position: absolute;
+		top: 1rem;
+		left: 1rem;
+		background-color: var(--secondary);
+		color: white;
+		padding: 0.25rem 0.75rem;
+		border-radius: 20px;
+		font-size: 0.75rem;
+		font-weight: bold;
+	}
 
-    .favorite-btn {
-        position: absolute;
-        top: 1rem;
-        right: 1rem;
-        background: rgba(255, 255, 255, 0.8);
-        border: none;
-        width: 32px;
-        height: 32px;
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        cursor: pointer;
-        color: #ccc;
-        font-size: 1rem;
-        transition: all 0.2s;
-    }
+	.favorite-btn {
+		position: absolute;
+		top: 1rem;
+		right: 1rem;
+		background: rgba(255, 255, 255, 0.8);
+		border: none;
+		width: 32px;
+		height: 32px;
+		border-radius: 50%;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		cursor: pointer;
+		color: #ccc;
+		font-size: 1rem;
+		transition: all 0.2s;
+	}
 
-    /* Modern Card Styling */
-    .card {
-        border-radius: 12px !important;
-        transition: all 0.3s ease;
-        overflow: hidden;
-    }
+	/* Modern Card Styling */
+	.card {
+		border-radius: 12px !important;
+		transition: all 0.3s ease;
+		overflow: hidden;
+	}
 
-    .card-img-container {
-        height: 220px;
-        position: relative;
-    }
+	.card-img-container {
+		height: 220px;
+		position: relative;
+	}
 
-    .card-img-top {
-        object-fit: cover;
-        transition: transform 0.5s ease;
-    }
+	.card-img-top {
+		object-fit: cover;
+		transition: transform 0.5s ease;
+	}
 
-    .card:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 10px 20px rgba(0,0,0,0.1) !important;
-    }
+	.card:hover {
+		transform: translateY(-5px);
+		box-shadow: 0 10px 20px rgba(0,0,0,0.1) !important;
+	}
 
-        .card:hover .card-img-top {
-            transform: scale(1.05);
-        }
+		.card:hover .card-img-top {
+			transform: scale(1.05);
+		}
 
-    .shadow-hover {
-        box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-    }
+	.shadow-hover {
+		box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+	}
 
-    .splide {
-        padding: 0 2rem;
-    }
+	.splide {
+		padding: 0 2rem;
+	}
 
-    .splide__arrows {
-        z-index: 1;
-    }
+	.splide__arrows {
+		z-index: 1;
+	}
 
-    .splide__arrow {
-        width: 40px;
-        height: 40px;
-        opacity: 1;
-        background: white;
-        border: none;
-        transition: all 0.3s ease;
-    }
+	.splide__arrow {
+		width: 40px;
+		height: 40px;
+		opacity: 1;
+		background: white;
+		border: none;
+		transition: all 0.3s ease;
+	}
 
-        .splide__arrow:hover {
-            background: #f8f9fa !important;
-            /* transform: scale(1.1); */
-            border: 1px solid lightblue;
-        }
+		.splide__arrow:hover {
+			background: #f8f9fa !important;
+			/* transform: scale(1.1); */
+			border: 1px solid lightblue;
+		}
 
-        .splide__arrow svg {
-            fill: #333;
-        }
+		.splide__arrow svg {
+			fill: #333;
+		}
 
-    .splide__arrow--prev {
-        left: auto;
-        right: 60px;
-    }
+	.splide__arrow--prev {
+		left: auto;
+		right: 60px;
+	}
 
-    .splide__arrow--next {
-        right: 0;
-    }
+	.splide__arrow--next {
+		right: 0;
+	}
 
-    /* Badge styling */
-    .badge {
-        font-size: 0.75rem;
-        padding: 0.35em 0.65em;
-        font-weight: 500;
-    }
+	/* Badge styling */
+	.badge {
+		font-size: 0.75rem;
+		padding: 0.35em 0.65em;
+		font-weight: 500;
+	}
 
-    /* Responsive adjustments */
-    @@media (max-width: 768px) {
-        .splide {
-            padding: 0 1rem;
-        }
+	/* Responsive adjustments */
+	@@media (max-width: 768px) {
+		.splide {
+			padding: 0 1rem;
+		}
 
-        .card-img-container {
-            height: 180px;
-        }
+		.card-img-container {
+			height: 180px;
+		}
 
-        .splide__arrow {
-            width: 36px;
-            height: 36px;
-        }
-    }
+		.splide__arrow {
+			width: 36px;
+			height: 36px;
+		}
+	}
 
-    @@media (max-width: 576px) {
-        .splide {
-            padding: 0 0.5rem;
-        }
+	@@media (max-width: 576px) {
+		.splide {
+			padding: 0 0.5rem;
+		}
 
-        .card-img-container {
-            height: 160px;
-        }
-    }
+		.card-img-container {
+			height: 160px;
+		}
+	}
 
-    /* Search Form Styling */
-    .search-form {
-        position: relative;
-        z-index: 1;
-    }
+	/* Search Form Styling */
+	.search-form {
+		position: relative;
+		z-index: 1;
+	}
 
-        .search-form .form-control,
-        .search-form .form-select,
-        .search-form .select2-selection {
-            border-radius: 8px !important;
-            padding: 12px 15px;
-            border: 1px solid #e0e0e0;
-            transition: all 0.3s ease;
-        }
+		.search-form .form-control,
+		.search-form .form-select,
+		.search-form .select2-selection {
+			border-radius: 8px !important;
+			padding: 12px 15px;
+			border: 1px solid #e0e0e0;
+			transition: all 0.3s ease;
+		}
 
-            .search-form .form-control:focus,
-            .search-form .form-select:focus,
-            .search-form .select2-selection:focus {
-                border-color: #28a745;
-                box-shadow: 0 0 0 0.25rem rgba(40, 167, 69, 0.15);
-            }
+			.search-form .form-control:focus,
+			.search-form .form-select:focus,
+			.search-form .select2-selection:focus {
+				border-color: #28a745;
+				box-shadow: 0 0 0 0.25rem rgba(40, 167, 69, 0.15);
+			}
 
-        .search-form .input-group-text {
-            border-radius: 8px 0 0 8px !important;
-            border-right: none;
-            background-color: #f8f9fa;
-        }
+		.search-form .input-group-text {
+			border-radius: 8px 0 0 8px !important;
+			border-right: none;
+			background-color: #f8f9fa;
+		}
 
-        .search-form .border-start-0 {
-            border-left: none !important;
-            border-radius: 0 8px 8px 0 !important;
-        }
+		.search-form .border-start-0 {
+			border-left: none !important;
+			border-radius: 0 8px 8px 0 !important;
+		}
 
-        .search-form .select2-selection {
-            min-height: 46px;
-            display: flex !important;
-            align-items: center;
-        }
+		.search-form .select2-selection {
+			min-height: 46px;
+			display: flex !important;
+			align-items: center;
+		}
 
-        .search-form .select2-selection--multiple .select2-selection__choice {
-            background-color: #e8f5e9;
-            border-color: #c8e6c9;
-            color: #2e7d32;
-            border-radius: 4px;
-        }
+		.search-form .select2-selection--multiple .select2-selection__choice {
+			background-color: #e8f5e9;
+			border-color: #c8e6c9;
+			color: #2e7d32;
+			border-radius: 4px;
+		}
 
-        .search-form .select2-selection--multiple .select2-selection__choice__remove {
-            color: #2e7d32;
-            margin-right: 4px;
-        }
+		.search-form .select2-selection--multiple .select2-selection__choice__remove {
+			color: #2e7d32;
+			margin-right: 4px;
+		}
 
-    @@media (max-width: 768px) {
-        .search-form .col-md-3, .search-form .col-md-6 {
-            margin-bottom: 1rem;
-        }
+	@@media (max-width: 768px) {
+		.search-form .col-md-3, .search-form .col-md-6 {
+			margin-bottom: 1rem;
+		}
 
-        .search-form .btn {
-            padding: 10px 20px;
-        }
-    }
+		.search-form .btn {
+			padding: 10px 20px;
+		}
+	}
 
-    .GreenBorder {
-        border-color: var(--theme-color) !important;
-    }
+	.GreenBorder {
+		border-color: var(--theme-color) !important;
+	}
 </style>
 <div class="container-fluid">
 
-    <!-- Hero Section -->
-    @* <section class="py-5 text-center">
+	<input type="hidden" id="ConvertedActualPrice" value="0" name="ConvertedActualPrice" />
+	<input type="hidden" id="ConvertedNegotiablePrice" value="0" name="ConvertedNegotiablePrice" />
+	<!-- Hero Section -->
+	@* <section class="py-5 text-center">
         <div class="container">
             <h1 class="fw-bold mb-3">Find Your Dream Property</h1>
             <p class="mb-4 text-muted">Find Your Perfect Space with Confidence.</p>
@@ -365,434 +367,456 @@
         </div>  
     </section> *@
 
-    <section class="py-5 bg-light">
-        <div class="container-fluid">
-            <div class="shadow-lg border-0 rounded-4" style="border-radius: 12px !important;transition: all 0.3s ease;">
-                <div class="card-body p-4">
-                    <h3 class="text-center mb-4 fw-bold text-success">
-                        <i class="bi bi-building"></i> Find Your Dream Property
-                    </h3>
-                    <form class="row g-4">
+	<section class="py-5 bg-light">
+		<div class="container-fluid">
+			<div class="shadow-lg border-0 rounded-4" style="border-radius: 12px !important;transition: all 0.3s ease;">
+				<div class="card-body p-4">
+					<h3 class="text-center mb-4 fw-bold text-success">
+						<i class="bi bi-building"></i> Find Your Dream Property
+					</h3>
+					<form class="row g-4">
 
-                        <!-- Location -->
-                        <div class="col-md-3">
-                            <label for="location" class="form-label fw-semibold">
-                                <i class="bi bi-geo-alt-fill text-success"></i> Location
-                            </label>
-                            <input type="text" id="location" class="form-control form-control-lg rounded-3 GreenBorder" placeholder="Enter Location">
-                        </div>
+						<!-- Location -->
+						<div class="col-md-3">
+							<label for="location" class="form-label fw-semibold">
+								<i class="bi bi-geo-alt-fill text-success"></i> Location
+							</label>
+							<input type="text" id="location" class="form-control form-control-lg rounded-3 GreenBorder" placeholder="Enter Location">
+						</div>
 
-                        <!-- Property Type -->
-                        <div class="col-md-3">
-                            <label class="form-label fw-semibold">
-                                <i class="bi bi-house-door-fill text-success"></i> Property Type
-                            </label>
-                            <select multiple class="form-select select2 rounded-3" id="propertyType" name="PropertyType">
-                                <option></option>
-                                @foreach (var item in Model.PropertyTypeList)
-                                {
-                                    <option value="@item.Value">@item.Text</option>
-                                }
-                            </select>
-                        </div>
+						<!-- Property Type -->
+						<div class="col-md-3">
+							<label class="form-label fw-semibold">
+								<i class="bi bi-house-door-fill text-success"></i> Property Type
+							</label>
+							<select multiple class="form-select select2 rounded-3" id="propertyType" name="PropertyType">
+								<option></option>
+								@foreach (var item in Model.PropertyTypeList)
+								{
+									<option value="@item.Value">@item.Text</option>
+								}
+							</select>
+						</div>
 
-                        <!-- Bedrooms -->
-                        <div class="col-md-3">
-                            <label class="form-label fw-semibold">
-                                <i class="bi bi-door-open-fill text-success"></i> Bedrooms
-                            </label>
-                            <select multiple class="form-select select2 rounded-3" id="bedrooms" name="Bedrooms">
-                                <option></option>
-                                @foreach (var item in Model.BedroomList)
-                                {
-                                    <option value="@item.Value">@item.Text</option>
-                                }
-                            </select>
-                        </div>
+						<!-- Bedrooms -->
+						<div class="col-md-3">
+							<label class="form-label fw-semibold">
+								<i class="bi bi-door-open-fill text-success"></i> Bedrooms
+							</label>
+							<select multiple class="form-select select2 rounded-3" id="bedrooms" name="Bedrooms">
+								<option></option>
+								@foreach (var item in Model.BedroomList)
+								{
+									<option value="@item.Value">@item.Text</option>
+								}
+							</select>
+						</div>
 
-                        <!-- Rental Type -->
-                        <div class="col-md-3">
-                            <label class="form-label fw-semibold">
-                                <i class="bi bi-key-fill text-success"></i> Rental Type
-                            </label>
-                            <select multiple class="form-select select2 rounded-3" id="RentalType" name="RentalType">
-                                <option></option>
-                                @foreach (var item in Model.RentalTypeList)
-                                {
-                                    <option value="@item.Value">@item.Text</option>
-                                }
-                            </select>
-                        </div>
+						<!-- Rental Type -->
+						<div class="col-md-3">
+							<label class="form-label fw-semibold">
+								<i class="bi bi-key-fill text-success"></i> Rental Type
+							</label>
+							<select multiple class="form-select select2 rounded-3" id="RentalType" name="RentalType">
+								<option></option>
+								@foreach (var item in Model.RentalTypeList)
+								{
+									<option value="@item.Value">@item.Text</option>
+								}
+							</select>
+						</div>
 
-                        <!-- Property Category -->
-                        <div class="col-md-3">
-                            <label class="form-label fw-semibold">
-                                <i class="bi bi-grid-fill text-success"></i> Property Category
-                            </label>
-                            <select multiple class="form-select select2 rounded-3" id="PropertyCategory" name="PropertyCategory">
-                                <option></option>
-                                @foreach (var item in Model.PropertyCategoryList)
-                                {
-                                    <option value="@item.Value">@item.Text</option>
-                                }
-                            </select>
-                        </div>
+						<!-- Property Category -->
+						<div class="col-md-3">
+							<label class="form-label fw-semibold">
+								<i class="bi bi-grid-fill text-success"></i> Property Category
+							</label>
+							<select multiple class="form-select select2 rounded-3" id="PropertyCategory" name="PropertyCategory">
+								<option></option>
+								@foreach (var item in Model.PropertyCategoryList)
+								{
+									<option value="@item.Value">@item.Text</option>
+								}
+							</select>
+						</div>
 
-                        <!-- Amenities -->
-                        <div class="col-md-4">
-                            <label class="form-label fw-semibold">
-                                <i class="bi bi-lightning-charge-fill text-success"></i> Amenities
-                            </label>
-                            <select multiple class="form-select select2 rounded-3" name="Amenities" id="Amenities">
-                                <option></option>
-                                @foreach (var item in Model.AmenityList)
-                                {
-                                    <option value="@item.Value">@item.Text</option>
-                                }
-                            </select>
-                        </div>
+						<!-- Amenities -->
+						<div class="col-md-4">
+							<label class="form-label fw-semibold">
+								<i class="bi bi-lightning-charge-fill text-success"></i> Amenities
+							</label>
+							<select multiple class="form-select select2 rounded-3" name="Amenities" id="Amenities">
+								<option></option>
+								@foreach (var item in Model.AmenityList)
+								{
+									<option value="@item.Value">@item.Text</option>
+								}
+							</select>
+						</div>
 
-                        <!-- Budget -->
-                        <div class="col-md-5">
-                            <label class="form-label fw-semibold">
-                                <i class="bi bi-cash-coin text-success"></i> Budget
-                            </label>
+						<!-- Budget -->
+						<div class="col-md-5">
+							<label class="form-label fw-semibold">
+								<i class="bi bi-cash-coin text-success"></i> Budget
+							</label>
 
-                            <div class="row g-2">
-                                <div class="col-md-6 negotiableprice fw-bold">
-                                   
-                                    <div class="input-group rounded-3">
-                                        <span class="input-group-text bg-success text-white">₹</span>
-                                        <input type="number" class="form-control GreenBorder" name="MinPrice" id="MinPrice" placeholder="Min Budget">
-                                        <select id="AmountUnitMinPrice" class="form-select GreenBorder" style="max-width: 78px; background-color: #f8f9fa;">
-                                            @foreach (var item in Model.AmountUnitList)
-                                            {
-                                                <option value="@item.Value">@item.Text</option>
-                                            }
-                                        </select>
-                                    </div>
-                                    <span id="displayMinBudget" class="text-success fw-bold"></span>
-                                </div>
-                               
-                                <div class="col-md-6">
-                                    
-                                    <div class="input-group rounded-3">
-                                        <span class="input-group-text bg-success text-white">₹</span>
-                                        <input type="number" class="form-control GreenBorder" name="MaxPrice" id="MaxPrice" placeholder="Max Budget">
-                                        <select id="AmountUnitMaxPrice" class="form-select GreenBorder" style="max-width: 78px; background-color: #f8f9fa;">
-                                            @foreach (var item in Model.AmountUnitList)
-                                            {
-                                                <option value="@item.Value">@item.Text</option>
-                                            }
-                                        </select>
-                                    </div>
-                                    <span id="displayMaxBudget" class="text-success fw-bold"></span>
-                                </div>
+							<div class="row g-2">
+								<div class="col-md-6 negotiableprice fw-bold">
 
-                            </div>
-                        </div>
+									<div class="input-group rounded-3">
+										<span class="input-group-text bg-success text-white">₹</span>
+										<input type="number" class="form-control GreenBorder" name="MinPrice" id="MinPrice" placeholder="Min Budget">
+										<select id="AmountUnitMinPrice" class="form-select GreenBorder" style="max-width: 78px; background-color: #f8f9fa;">
+											@foreach (var item in Model.AmountUnitList)
+											{
+												<option value="@item.Value">@item.Text</option>
+											}
+										</select>
+									</div>
+									<span id="displayMinBudget" class="text-success fw-bold"></span>
+								</div>
 
-                        <!-- Submit Button -->
-                        <div class="col-md-3 mx-auto text-center mt-4">
-                            <button type="button" class="btn btn-success btn-lg w-100 shadow-sm rounded-pill" onclick="SearchProperty()">
-                                <i class="bi bi-search"></i> Search Property
-                            </button>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </section>
+								<div class="col-md-6">
+
+									<div class="input-group rounded-3">
+										<span class="input-group-text bg-success text-white">₹</span>
+										<input type="number" class="form-control GreenBorder" name="MaxPrice" id="MaxPrice" placeholder="Max Budget">
+										<select id="AmountUnitMaxPrice" class="form-select GreenBorder" style="max-width: 78px; background-color: #f8f9fa;">
+											@foreach (var item in Model.AmountUnitList)
+											{
+												<option value="@item.Value">@item.Text</option>
+											}
+										</select>
+									</div>
+									<span id="displayMaxBudget" class="text-success fw-bold"></span>
+								</div>
+
+							</div>
+						</div>
+
+						<!-- Submit Button -->
+						<div class="col-md-3 mx-auto text-center mt-4">
+							<button type="button" class="btn btn-success btn-lg w-100 shadow-sm rounded-pill" onclick="SearchProperty()">
+								<i class="bi bi-search"></i> Search Property
+							</button>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+	</section>
 
 </div>
 
 <div class="container-fluid px-0">
-    <!-- Splide Carousel with custom arrow position -->
-    <div id="propertyCarousel" class="splide position-relative">
-        <!-- Custom arrows container -->
-        <div class="splide__arrows position-absolute top-0 end-0 mt-3 me-4">
-            <button class="splide__arrow splide__arrow--prev bg-white text-dark rounded-circle shadow-sm">
-                <i class="fas fa-chevron-left"></i>
-            </button>
-            <button class="splide__arrow splide__arrow--next bg-white text-dark rounded-circle shadow-sm ms-2">
-                <i class="fas fa-chevron-right"></i>
-            </button>
-        </div>
+	<!-- Splide Carousel with custom arrow position -->
+	<div id="propertyCarousel" class="splide position-relative">
+		<!-- Custom arrows container -->
+		<div class="splide__arrows position-absolute top-0 end-0 mt-3 me-4">
+			<button class="splide__arrow splide__arrow--prev bg-white text-dark rounded-circle shadow-sm">
+				<i class="fas fa-chevron-left"></i>
+			</button>
+			<button class="splide__arrow splide__arrow--next bg-white text-dark rounded-circle shadow-sm ms-2">
+				<i class="fas fa-chevron-right"></i>
+			</button>
+		</div>
 
-        <div class="splide__track">
-            <div class="splide__list">
-                @foreach (var prop in Model.PropertyDetails)
-                {
-                    <div class="splide__slide px-2">
-                        <div class="card h-100 border-0 shadow-hover">
-                            <!-- Badge for status -->
-                            <div class="position-absolute top-0 start-0 mt-3 ms-3">
-                                @* <span class="badge @(prop.Status == "Sale" ? "bg-success" : "bg-primary")">
+		<div class="splide__track">
+			<div class="splide__list">
+				@foreach (var prop in Model.PropertyDetails)
+				{
+					<div class="splide__slide px-2">
+						<div class="card h-100 border-0 shadow-hover">
+							<!-- Badge for status -->
+							<div class="position-absolute top-0 start-0 mt-3 ms-3">
+								@* <span class="badge @(prop.Status == "Sale" ? "bg-success" : "bg-primary")">
 									@(prop.Status == "Sale" ? "For Sale" : "For Rent")
 								</span> *@
-                            </div>
+							</div>
 
-                            <!-- Property Image -->
-                            <div class="card-img-container rounded-top overflow-hidden">
-                                <img src="/secure-images/@prop.PropertyImg"
-                                     class="card-img-top h-100 w-100"
-                                     alt="@prop.PropertyName"
-                                     loading="lazy">
-                            </div>
+							<!-- Property Image -->
+							<div class="card-img-container rounded-top overflow-hidden">
+								<img src="/secure-images/@prop.PropertyImg"
+									 class="card-img-top h-100 w-100"
+									 alt="@prop.PropertyName"
+									 loading="lazy">
+							</div>
 
-                            <!-- Card Body -->
-                            <div class="card-body">
-                                <div class="d-flex justify-content-between align-items-start mb-2">
-                                    <h5 class="card-title mb-0">@prop.PropertyName</h5>
-                                    <div class="favorite-icon">
-                                        <i class="far fa-heart text-muted"></i>
-                                    </div>
-                                </div>
+							<!-- Card Body -->
+							<div class="card-body">
+								<div class="d-flex justify-content-between align-items-start mb-2">
+									<h5 class="card-title mb-0">@prop.PropertyName</h5>
+									<div class="favorite-icon">
+										<i class="far fa-heart text-muted"></i>
+									</div>
+								</div>
 
-                                <p class="text-muted mb-3">
-                                    <i class="fas fa-map-marker-alt text-success me-1"></i>
-                                    @prop.Address
-                                </p>
+								<p class="text-muted mb-3">
+									<i class="fas fa-map-marker-alt text-success me-1"></i>
+									@prop.Address
+								</p>
 
-                                <div class="property-features d-flex justify-content-between text-muted mb-3">
-                                    <span class="d-flex align-items-center">
-                                        <i class="fas fa-bed me-1"></i> @prop.BedRooms
-                                    </span>
-                                    <span class="d-flex align-items-center">
-                                        <i class="fas fa-bath me-1"></i> @prop.BathRooms
-                                    </span>
-                                    <span class="d-flex align-items-center">
-                                        <i class="fas fa-ruler-combined me-1"></i> @prop.Sqrtft sqft
-                                    </span>
-                                </div>
+								<div class="property-features d-flex justify-content-between text-muted mb-3">
+									<span class="d-flex align-items-center">
+										<i class="fas fa-bed me-1"></i> @prop.BedRooms
+									</span>
+									<span class="d-flex align-items-center">
+										<i class="fas fa-bath me-1"></i> @prop.BathRooms
+									</span>
+									<span class="d-flex align-items-center">
+										<i class="fas fa-ruler-combined me-1"></i> @prop.Sqrtft sqft
+									</span>
+								</div>
 
-                                <div class="d-flex justify-content-between align-items-center">
-                                    <h5 class="text-success mb-0">₹@prop.DisplayMinPrice - @prop.DisplayMaxPrice</h5>
-                                </div>
-                            </div>
+								<div class="d-flex justify-content-between align-items-center">
+									<h5 class="text-success mb-0">₹@prop.DisplayMinPrice - @prop.DisplayMaxPrice</h5>
+								</div>
+							</div>
 
-                            <!-- Card Footer -->
-                            <div class="card-footer bg-transparent border-0 pt-0">
-                                <a href="/PropertyDetails/Property?PropertyId=@prop.PropertyId"
-                                   class="btn btn-success w-100 rounded-pill">
-                                    View Details <i class="fas fa-arrow-right ms-2"></i>
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                }
-            </div>
-        </div>
-    </div>
+							<!-- Card Footer -->
+							<div class="card-footer bg-transparent border-0 pt-0">
+								<a href="/PropertyDetails/Property?PropertyId=@prop.PropertyId"
+								   class="btn btn-success w-100 rounded-pill">
+									View Details <i class="fas fa-arrow-right ms-2"></i>
+								</a>
+							</div>
+						</div>
+					</div>
+				}
+			</div>
+		</div>
+	</div>
 </div>
 
 <div class="container">
-    <section class="py-5 bg-light" id="why-us">
-        <div class="container text-center">
-            <h2 class="mb-4 text-success">Why Choose Us</h2>
-            <p class="mb-5 text-muted">We provide the best experience when it comes to buying, selling, or renting properties.</p>
+	<section class="py-5 bg-light" id="why-us">
+		<div class="container text-center">
+			<h2 class="mb-4 text-success">Why Choose Us</h2>
+			<p class="mb-5 text-muted">We provide the best experience when it comes to buying, selling, or renting properties.</p>
 
-            <div class="row g-4">
-                <!-- Card 1 -->
-                <div class="col-md-6 col-lg-3">
-                    <div class="card h-100 border-0 shadow-sm p-4 hover-border-green">
-                        <div class="mb-3">
-                            <i class="bi bi-check-circle-fill fs-1 text-success"></i>
-                        </div>
-                        <h5>Verified Listings</h5>
-                        <p class="text-muted small">Every property is manually verified for safety and authenticity.</p>
-                    </div>
-                </div>
+			<div class="row g-4">
+				<!-- Card 1 -->
+				<div class="col-md-6 col-lg-3">
+					<div class="card h-100 border-0 shadow-sm p-4 hover-border-green">
+						<div class="mb-3">
+							<i class="bi bi-check-circle-fill fs-1 text-success"></i>
+						</div>
+						<h5>Verified Listings</h5>
+						<p class="text-muted small">Every property is manually verified for safety and authenticity.</p>
+					</div>
+				</div>
 
-                <!-- Card 2 -->
-                <div class="col-md-6 col-lg-3">
-                    <div class="card h-100 border-0 shadow-sm p-4 hover-border-green">
-                        <div class="mb-3">
-                            <i class="bi bi-lightning-charge-fill fs-1 text-success"></i>
-                        </div>
-                        <h5>Quick Process</h5>
-                        <p class="text-muted small">Fast property discovery, inquiry, and closing support.</p>
-                    </div>
-                </div>
+				<!-- Card 2 -->
+				<div class="col-md-6 col-lg-3">
+					<div class="card h-100 border-0 shadow-sm p-4 hover-border-green">
+						<div class="mb-3">
+							<i class="bi bi-lightning-charge-fill fs-1 text-success"></i>
+						</div>
+						<h5>Quick Process</h5>
+						<p class="text-muted small">Fast property discovery, inquiry, and closing support.</p>
+					</div>
+				</div>
 
-                <!-- Card 3 -->
-                <div class="col-md-6 col-lg-3">
-                    <div class="card h-100 border-0 shadow-sm p-4 hover-border-green">
-                        <div class="mb-3">
-                            <i class="bi bi-people-fill fs-1 text-success"></i>
-                        </div>
-                        <h5>Local Experts</h5>
-                        <p class="text-muted small">Work with area specialists who know the neighborhood.</p>
-                    </div>
-                </div>
+				<!-- Card 3 -->
+				<div class="col-md-6 col-lg-3">
+					<div class="card h-100 border-0 shadow-sm p-4 hover-border-green">
+						<div class="mb-3">
+							<i class="bi bi-people-fill fs-1 text-success"></i>
+						</div>
+						<h5>Local Experts</h5>
+						<p class="text-muted small">Work with area specialists who know the neighborhood.</p>
+					</div>
+				</div>
 
-                <!-- Card 4 -->
-                <div class="col-md-6 col-lg-3">
-                    <div class="card h-100 border-0 shadow-sm p-4 hover-border-green">
-                        <div class="mb-3">
-                            <i class="bi bi-chat-dots-fill fs-1 text-success"></i>
-                        </div>
-                        <h5>24/7 Support</h5>
-                        <p class="text-muted small">Our support team is ready to assist you any time.</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
+				<!-- Card 4 -->
+				<div class="col-md-6 col-lg-3">
+					<div class="card h-100 border-0 shadow-sm p-4 hover-border-green">
+						<div class="mb-3">
+							<i class="bi bi-chat-dots-fill fs-1 text-success"></i>
+						</div>
+						<h5>24/7 Support</h5>
+						<p class="text-muted small">Our support team is ready to assist you any time.</p>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
 
 </div>
 
 @section Scripts {
-    <script src="https://cdn.jsdelivr.net/npm/@@splidejs/splide@4.1.4/dist/js/splide.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/corejs-typeahead/1.3.1/typeahead.bundle.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/@@splidejs/splide@4.1.4/dist/js/splide.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/corejs-typeahead/1.3.1/typeahead.bundle.min.js"></script>
 
-    <script>
+	<script>
 
-                    document.addEventListener('DOMContentLoaded', function() {
-                    // Initialize Splide
-                    new Splide('#propertyCarousel', {
-                        type: 'slide',
-                        perPage: 4, // Default number of visible slides
-                        perMove: 1,
-                        gap: '1rem', // Space between slides
-                        arrows: true,
-                        pagination: false,
-                        drag: 'free',
-                        snap: true,
-                        progress: true,
-                        breakpoints: {
-                            1400: { perPage: 4 }, // XL screens
-                            1200: { perPage: 3 }, // LG screens
-                            992: { perPage: 2 },  // MD screens
-                            768: { perPage: 2 },  // SM screens
-                            576: { perPage: 1 }   // XS screens
-                        }
-                    }).mount();
-                });
-                new Choices('#propertyType', {
-                  removeItemButton: true,
-                  duplicateItemsAllowed: false
-                });
+					document.addEventListener('DOMContentLoaded', function() {
+					// Initialize Splide
+					new Splide('#propertyCarousel', {
+						type: 'slide',
+						perPage: 4, // Default number of visible slides
+						perMove: 1,
+						gap: '1rem', // Space between slides
+						arrows: true,
+						pagination: false,
+						drag: 'free',
+						snap: true,
+						progress: true,
+						breakpoints: {
+							1400: { perPage: 4 }, // XL screens
+							1200: { perPage: 3 }, // LG screens
+							992: { perPage: 2 },  // MD screens
+							768: { perPage: 2 },  // SM screens
+							576: { perPage: 1 }   // XS screens
+						}
+					}).mount();
+				});
+				new Choices('#propertyType', {
+				  removeItemButton: true,
+				  duplicateItemsAllowed: false
+				});
 
-                new Choices('#bedrooms', { removeItemButton: true ,duplicateItemsAllowed: false});
-                new Choices('#Amenities', { removeItemButton: true,duplicateItemsAllowed: false });
-                new Choices('#PropertyCategory', { removeItemButton: true ,duplicateItemsAllowed: false});
-                new Choices('#RentalType', { removeItemButton: true ,duplicateItemsAllowed: false});
+				new Choices('#bedrooms', { removeItemButton: true ,duplicateItemsAllowed: false});
+				new Choices('#Amenities', { removeItemButton: true,duplicateItemsAllowed: false });
+				new Choices('#PropertyCategory', { removeItemButton: true ,duplicateItemsAllowed: false});
+				new Choices('#RentalType', { removeItemButton: true ,duplicateItemsAllowed: false});
 
-                // $("#location").autocomplete({
-                //         source: function (request, response) {
-                //         $.ajax({
-                //             url: '/Master/GetAreas',
-                //             type: 'GET',
-                //             data: { searchTerm: $("#location") },
-                //             success: function (data) {
-                //                 console.log(data);
-                //                 response(data); // expects list of strings
-                //             },
-                //             error: function () {
-                //                 response([]);
-                //             }
-                //         });
-                //     },
-                //     minLength: 1
-                // });
-                var emailSearch = new Bloodhound({
-            datumTokenizer: Bloodhound.tokenizers.whitespace,
-            queryTokenizer: Bloodhound.tokenizers.whitespace,
-            remote: {
-                url: '/Master/GetAreas?searchTerm=%QUERY',
-                wildcard: '%QUERY'
-            }
-        });
+				// $("#location").autocomplete({
+				//         source: function (request, response) {
+				//         $.ajax({
+				//             url: '/Master/GetAreas',
+				//             type: 'GET',
+				//             data: { searchTerm: $("#location") },
+				//             success: function (data) {
+				//                 console.log(data);
+				//                 response(data); // expects list of strings
+				//             },
+				//             error: function () {
+				//                 response([]);
+				//             }
+				//         });
+				//     },
+				//     minLength: 1
+				// });
+				var emailSearch = new Bloodhound({
+			datumTokenizer: Bloodhound.tokenizers.whitespace,
+			queryTokenizer: Bloodhound.tokenizers.whitespace,
+			remote: {
+				url: '/Master/GetAreas?searchTerm=%QUERY',
+				wildcard: '%QUERY'
+			}
+		});
 
-        $('#location').typeahead(
-            { hint: true, highlight: true, minLength: 2 },
-            { source: emailSearch }
-        );
-                function SearchProperty(){
-                    var location = $("#location").val();
-                    var PropertyType = $("#propertyType").val().toString();
-                    var Bedrooms = $("#bedrooms").val().toString();
-                    var RentalType = $("#RentalType").val().toString();
-                    var PropertyCategory = $("#PropertyCategory").val().toString();
-                    var Amenities = $("#Amenities").val().toString();
-                    var MinPrice = $("#MinPrice").val();
-                    var MaxPrice = $("#MaxPrice").val();
-
-
-                            // Create and submit a form
-                    const form = document.createElement('form');
-                    form.method = 'POST';
-                    form.action = '/Home/SearchProperty';
-
-                    const params = {
-                      location, PropertyType,Bedrooms, RentalType, PropertyCategory,
-                      Amenities, MinPrice, MaxPrice
-                    };
-
-                    Object.keys(params).forEach(key => {
-                      const input = document.createElement('input');
-                      input.type = 'hidden';
-                      input.name = key;
-                      input.value = params[key];
-                      form.appendChild(input);
-                    });
-
-                    document.body.appendChild(form);
-                    form.submit();
-                }
+		$('#location').typeahead(
+			{ hint: true, highlight: true, minLength: 2 },
+			{ source: emailSearch }
+		);
+				function SearchProperty(){
+					var location = $("#location").val();
+					var PropertyType = $("#propertyType").val().toString();
+					var Bedrooms = $("#bedrooms").val().toString();
+					var RentalType = $("#RentalType").val().toString();
+					var PropertyCategory = $("#PropertyCategory").val().toString();
+					var Amenities = $("#Amenities").val().toString();
+					var MinPrice = $("#ConvertedNegotiablePrice").val();
+					var MaxPrice = $("#ConvertedActualPrice").val();
 
 
-                function convertValue(amount, unit) {
-                let multiplier = 1;
+							// Create and submit a form
+					const form = document.createElement('form');
+					form.method = 'POST';
+					form.action = '/Home/SearchProperty';
 
-                switch (unit) {
-                    case "1": // Cr
-                        multiplier = 10000000;
-                        break;
-                    case "2": // Lac
-                        multiplier = 100000;
-                        break;
-                    case "3": // K
-                        multiplier = 1000;
-                        break;
-                    case "4": // Rs
-                        multiplier = 1;
-                        break;
-                }
+					const params = {
+					  location, PropertyType,Bedrooms, RentalType, PropertyCategory,
+					  Amenities, MinPrice, MaxPrice
+					};
 
-                return amount * multiplier;
-            }
+					Object.keys(params).forEach(key => {
+					  const input = document.createElement('input');
+					  input.type = 'hidden';
+					  input.name = key;
+					  input.value = params[key];
+					  form.appendChild(input);
+					});
 
-            // Convert Actual Price
-            function convertActualPrice() {
-                let price = parseFloat($("#MaxPrice").val()) || 0;
-                let unit = $("#AmountUnitMaxPrice").val();
-                let converted = convertValue(price, unit);
-                let formatted = formatIndianNumber(converted);
+					document.body.appendChild(form);
+					form.submit();
+				}
 
-                $("#ConvertedActualPrice").val(converted);
-                        $("#displayMaxBudget").text(`₹ ${formatted}`);
 
-                console.log("Converted Actual Price:", formatted);
-            }
+				function convertValue(amount, unit) {
+				let multiplier = 1;
 
-            // Convert Negotiable Price
-            function convertNegotiablePrice() {
-                let price = parseFloat($("#MinPrice").val()) || 0;
-                let unit = $("#AmountUnitMinPrice").val();
-                let converted = convertValue(price, unit);
-                let formatted = formatIndianNumber(converted);
+				switch (unit) {
+					case "1": // Cr
+						multiplier = 10000000;
+						break;
+					case "2": // Lac
+						multiplier = 100000;
+						break;
+					case "3": // K
+						multiplier = 1000;
+						break;
+					case "4": // Rs
+						multiplier = 1;
+						break;
+				}
 
-                $("#ConvertedNegotiablePrice").val(converted);
+				return amount * multiplier;
+			}
 
-            $("#displayMinBudget").text(`₹ ${formatted}`);
-                        console.log("Converted Negotiable Price:", formatted);
-            }
+			// Convert Actual Price
+			function convertActualPrice() {
+				let price = parseFloat($("#MaxPrice").val()) || 0;
+				let unit = $("#AmountUnitMaxPrice").val();
+				let converted = convertValue(price, unit);
+				let formatted = formatIndianNumber(converted);
 
-            // Trigger conversion when user types or changes dropdown
-            $(document).on("keyup change", "#MaxPrice, #AmountUnitMaxPrice", convertActualPrice);
-            $(document).on("keyup change", "#MinPrice, #AmountUnitMinPrice", convertNegotiablePrice);
+				$("#ConvertedActualPrice").val(converted);
+						$("#displayMaxBudget").text(`₹ ${formatted}`);
 
-    </script>
+				console.log("Converted Actual Price:", formatted);
+			}
+
+			// Convert Negotiable Price
+			function convertNegotiablePrice() {
+				let price = parseFloat($("#MinPrice").val()) || 0;
+				let unit = $("#AmountUnitMinPrice").val();
+				let converted = convertValue(price, unit);
+				let formatted = formatIndianNumber(converted);
+
+				$("#ConvertedNegotiablePrice").val(converted);
+
+			$("#displayMinBudget").text(`₹ ${formatted}`);
+						console.log("Converted Negotiable Price:", formatted);
+			}
+
+			// Trigger conversion when user types or changes dropdown
+			$(document).on("keyup change", "#MaxPrice, #AmountUnitMaxPrice", convertActualPrice);
+			$(document).on("keyup change", "#MinPrice, #AmountUnitMinPrice", convertNegotiablePrice);
+
+			function formatIndianNumber(num) {
+				if (isNaN(num)) return "0";
+
+				// Convert to string and split into parts
+				let numStr = num.toString();
+				let parts = numStr.split('.');
+				let wholeNumber = parts[0];
+				let decimal = parts.length > 1 ? '.' + parts[1] : '';
+
+				// Format the whole number part
+				let lastThree = wholeNumber.substring(wholeNumber.length - 3);
+				let otherNumbers = wholeNumber.substring(0, wholeNumber.length - 3);
+
+				if (otherNumbers !== '') {
+					lastThree = ',' + lastThree;
+				}
+
+				let result = otherNumbers.replace(/\B(?=(\d{2})+(?!\d))/g, ",") + lastThree + decimal;
+
+				return result.replace(/^,/, '');
+			}
+
+	</script>
 }
