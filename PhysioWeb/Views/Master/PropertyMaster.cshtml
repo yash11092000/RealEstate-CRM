@@ -1033,9 +1033,12 @@
 			}
 
 			  function ClearData() {
-					$("#UniquId").val("");
+					$("#UniquId").val("0");
 					$("#IsActive").prop("checked", true);
 					$("#Amenities").val("");
+					$("#propertyForm").trigger("reset")
+					var triggerTab = new bootstrap.Tab(document.querySelector('#list-tab'));
+					triggerTab.show();
 				}
 
 
@@ -1361,9 +1364,9 @@
 
 			   function ViewData(PropertyId,Controller,Action){
 					$.ajax({
-					url: '/' + Controller + '/' + Action, 
-					type: 'GET', 
-					data: { id: PropertyId }, 
+					url: '/' + Controller + '/' + Action,
+					type: 'GET',
+					data: { id: PropertyId },
 					success: function(response) {
 						console.log(response);
 						 // Clear previous images
@@ -1398,7 +1401,7 @@
 				$('#imagesContainer').html('<p>No images available.</p>');
 			}
 
-			
+
 
 			// Show the modal
 			var myModal = new bootstrap.Modal(document.getElementById('imagesModal'), {});
