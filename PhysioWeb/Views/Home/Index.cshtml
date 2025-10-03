@@ -14,43 +14,44 @@
 
 <style>
     /* Wrapper input */
-.typeahead {
-  width: 100%;
-  padding: 8px 12px;
-  font-size: 16px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-}
+    .typeahead {
+        width: 100%;
+        padding: 8px 12px;
+        font-size: 16px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+    }
 
-/* Dropdown menu */
-.tt-menu {
-  width: 100%;
-  margin-top: 2px;
-  padding: 8px 0;
-  background-color: #fff;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  max-height: 200px;
-  overflow-y: auto;
-  z-index: 1000;
-}
+    /* Dropdown menu */
+    .tt-menu {
+        width: 100%;
+        margin-top: 2px;
+        padding: 8px 0;
+        background-color: #fff;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        max-height: 200px;
+        overflow-y: auto;
+        z-index: 1000;
+    }
 
-/* Each suggestion */
-.tt-suggestion {
-  padding: 8px 12px;
-  cursor: pointer;
-}
+    /* Each suggestion */
+    .tt-suggestion {
+        padding: 8px 12px;
+        cursor: pointer;
+    }
 
-/* Hover effect */
-.tt-suggestion:hover {
-  background-color: #f0f0f0;
-}
+        /* Hover effect */
+        .tt-suggestion:hover {
+            background-color: #f0f0f0;
+        }
 
-/* Highlighted text */
-.tt-highlight {
-  font-weight: bold;
-  color:var(--theme-color) !important;
-}
+    /* Highlighted text */
+    .tt-highlight {
+        font-weight: bold;
+        color: var(--theme-color) !important;
+    }
+
     body {
         font-family: 'Inter', sans-serif;
         background-color: #f8f9f9;
@@ -352,7 +353,6 @@
 <div class="container-fluid">
 
     <!-- Hero Section -->
-
     @* <section class="py-5 text-center">
         <div class="container">
             <h1 class="fw-bold mb-3">Find Your Dream Property</h1>
@@ -439,7 +439,7 @@
                         </div>
 
                         <!-- Amenities -->
-                        <div class="col-md-5">
+                        <div class="col-md-4">
                             <label class="form-label fw-semibold">
                                 <i class="bi bi-lightning-charge-fill text-success"></i> Amenities
                             </label>
@@ -453,23 +453,42 @@
                         </div>
 
                         <!-- Budget -->
-                        <div class="col-md-4">
+                        <div class="col-md-5">
                             <label class="form-label fw-semibold">
                                 <i class="bi bi-cash-coin text-success"></i> Budget
                             </label>
+
                             <div class="row g-2">
-                                <div class="col-6">
+                                <div class="col-md-6 negotiableprice fw-bold">
+                                   
                                     <div class="input-group rounded-3">
                                         <span class="input-group-text bg-success text-white">₹</span>
-                                        <input type="number" id="MinPrice" class="form-control GreenBorder" placeholder="Min Price" min="0">
+                                        <input type="number" class="form-control GreenBorder" name="MinPrice" id="MinPrice" placeholder="Min Budget">
+                                        <select id="AmountUnitMinPrice" class="form-select GreenBorder" style="max-width: 78px; background-color: #f8f9fa;">
+                                            @foreach (var item in Model.AmountUnitList)
+                                            {
+                                                <option value="@item.Value">@item.Text</option>
+                                            }
+                                        </select>
                                     </div>
+                                    <span id="displayMinBudget" class="text-success fw-bold"></span>
                                 </div>
-                                <div class="col-6">
+                               
+                                <div class="col-md-6">
+                                    
                                     <div class="input-group rounded-3">
                                         <span class="input-group-text bg-success text-white">₹</span>
-                                        <input type="number" id="MaxPrice" class="form-control GreenBorder" placeholder="Max Price" min="0">
+                                        <input type="number" class="form-control GreenBorder" name="MaxPrice" id="MaxPrice" placeholder="Max Budget">
+                                        <select id="AmountUnitMaxPrice" class="form-select GreenBorder" style="max-width: 78px; background-color: #f8f9fa;">
+                                            @foreach (var item in Model.AmountUnitList)
+                                            {
+                                                <option value="@item.Value">@item.Text</option>
+                                            }
+                                        </select>
                                     </div>
+                                    <span id="displayMaxBudget" class="text-success fw-bold"></span>
                                 </div>
+
                             </div>
                         </div>
 
@@ -629,98 +648,151 @@
 
     <script>
 
-            document.addEventListener('DOMContentLoaded', function() {
-            // Initialize Splide
-            new Splide('#propertyCarousel', {
-                type: 'slide',
-                perPage: 4, // Default number of visible slides
-                perMove: 1,
-                gap: '1rem', // Space between slides
-                arrows: true,
-                pagination: false,
-                drag: 'free',
-                snap: true,
-                progress: true,
-                breakpoints: {
-                    1400: { perPage: 4 }, // XL screens
-                    1200: { perPage: 3 }, // LG screens
-                    992: { perPage: 2 },  // MD screens
-                    768: { perPage: 2 },  // SM screens
-                    576: { perPage: 1 }   // XS screens
+                    document.addEventListener('DOMContentLoaded', function() {
+                    // Initialize Splide
+                    new Splide('#propertyCarousel', {
+                        type: 'slide',
+                        perPage: 4, // Default number of visible slides
+                        perMove: 1,
+                        gap: '1rem', // Space between slides
+                        arrows: true,
+                        pagination: false,
+                        drag: 'free',
+                        snap: true,
+                        progress: true,
+                        breakpoints: {
+                            1400: { perPage: 4 }, // XL screens
+                            1200: { perPage: 3 }, // LG screens
+                            992: { perPage: 2 },  // MD screens
+                            768: { perPage: 2 },  // SM screens
+                            576: { perPage: 1 }   // XS screens
+                        }
+                    }).mount();
+                });
+                new Choices('#propertyType', {
+                  removeItemButton: true,
+                  duplicateItemsAllowed: false
+                });
+
+                new Choices('#bedrooms', { removeItemButton: true ,duplicateItemsAllowed: false});
+                new Choices('#Amenities', { removeItemButton: true,duplicateItemsAllowed: false });
+                new Choices('#PropertyCategory', { removeItemButton: true ,duplicateItemsAllowed: false});
+                new Choices('#RentalType', { removeItemButton: true ,duplicateItemsAllowed: false});
+
+                // $("#location").autocomplete({
+                //         source: function (request, response) {
+                //         $.ajax({
+                //             url: '/Master/GetAreas',
+                //             type: 'GET',
+                //             data: { searchTerm: $("#location") },
+                //             success: function (data) {
+                //                 console.log(data);
+                //                 response(data); // expects list of strings
+                //             },
+                //             error: function () {
+                //                 response([]);
+                //             }
+                //         });
+                //     },
+                //     minLength: 1
+                // });
+                var emailSearch = new Bloodhound({
+            datumTokenizer: Bloodhound.tokenizers.whitespace,
+            queryTokenizer: Bloodhound.tokenizers.whitespace,
+            remote: {
+                url: '/Master/GetAreas?searchTerm=%QUERY',
+                wildcard: '%QUERY'
+            }
+        });
+
+        $('#location').typeahead(
+            { hint: true, highlight: true, minLength: 2 },
+            { source: emailSearch }
+        );
+                function SearchProperty(){
+                    var location = $("#location").val();
+                    var PropertyType = $("#propertyType").val().toString();
+                    var Bedrooms = $("#bedrooms").val().toString();
+                    var RentalType = $("#RentalType").val().toString();
+                    var PropertyCategory = $("#PropertyCategory").val().toString();
+                    var Amenities = $("#Amenities").val().toString();
+                    var MinPrice = $("#MinPrice").val();
+                    var MaxPrice = $("#MaxPrice").val();
+
+
+                            // Create and submit a form
+                    const form = document.createElement('form');
+                    form.method = 'POST';
+                    form.action = '/Home/SearchProperty';
+
+                    const params = {
+                      location, PropertyType,Bedrooms, RentalType, PropertyCategory,
+                      Amenities, MinPrice, MaxPrice
+                    };
+
+                    Object.keys(params).forEach(key => {
+                      const input = document.createElement('input');
+                      input.type = 'hidden';
+                      input.name = key;
+                      input.value = params[key];
+                      form.appendChild(input);
+                    });
+
+                    document.body.appendChild(form);
+                    form.submit();
                 }
-            }).mount();
-        });
-        new Choices('#propertyType', {
-          removeItemButton: true,
-          duplicateItemsAllowed: false
-        });
-
-        new Choices('#bedrooms', { removeItemButton: true ,duplicateItemsAllowed: false});
-        new Choices('#Amenities', { removeItemButton: true,duplicateItemsAllowed: false });
-        new Choices('#PropertyCategory', { removeItemButton: true ,duplicateItemsAllowed: false});
-        new Choices('#RentalType', { removeItemButton: true ,duplicateItemsAllowed: false});
-
-        // $("#location").autocomplete({
-        //         source: function (request, response) {
-        //         $.ajax({
-        //             url: '/Master/GetAreas',
-        //             type: 'GET',
-        //             data: { searchTerm: $("#location") },
-        //             success: function (data) {
-        //                 console.log(data);
-        //                 response(data); // expects list of strings
-        //             },
-        //             error: function () {
-        //                 response([]);
-        //             }
-        //         });
-        //     },
-        //     minLength: 1
-        // });
-        var emailSearch = new Bloodhound({
-    datumTokenizer: Bloodhound.tokenizers.whitespace,
-    queryTokenizer: Bloodhound.tokenizers.whitespace,
-    remote: {
-        url: '/Master/GetAreas?searchTerm=%QUERY',
-        wildcard: '%QUERY'
-    }
-});
-
-$('#location').typeahead(
-    { hint: true, highlight: true, minLength: 2 },
-    { source: emailSearch }
-);
-        function SearchProperty(){
-            var location = $("#location").val();
-            var PropertyType = $("#propertyType").val().toString();
-            var Bedrooms = $("#bedrooms").val().toString();
-            var RentalType = $("#RentalType").val().toString();
-            var PropertyCategory = $("#PropertyCategory").val().toString();
-            var Amenities = $("#Amenities").val().toString();
-            var MinPrice = $("#MinPrice").val();
-            var MaxPrice = $("#MaxPrice").val();
 
 
-                    // Create and submit a form
-            const form = document.createElement('form');
-            form.method = 'POST';
-            form.action = '/Home/SearchProperty';
+                function convertValue(amount, unit) {
+                let multiplier = 1;
 
-            const params = {
-              location, PropertyType,Bedrooms, RentalType, PropertyCategory,
-              Amenities, MinPrice, MaxPrice
-            };
+                switch (unit) {
+                    case "1": // Cr
+                        multiplier = 10000000;
+                        break;
+                    case "2": // Lac
+                        multiplier = 100000;
+                        break;
+                    case "3": // K
+                        multiplier = 1000;
+                        break;
+                    case "4": // Rs
+                        multiplier = 1;
+                        break;
+                }
 
-            Object.keys(params).forEach(key => {
-              const input = document.createElement('input');
-              input.type = 'hidden';
-              input.name = key;
-              input.value = params[key];
-              form.appendChild(input);
-            });
+                return amount * multiplier;
+            }
 
-            document.body.appendChild(form);
-            form.submit();
-        }
+            // Convert Actual Price
+            function convertActualPrice() {
+                let price = parseFloat($("#MaxPrice").val()) || 0;
+                let unit = $("#AmountUnitMaxPrice").val();
+                let converted = convertValue(price, unit);
+                let formatted = formatIndianNumber(converted);
+
+                $("#ConvertedActualPrice").val(converted);
+                        $("#displayMaxBudget").text(`₹ ${formatted}`);
+
+                console.log("Converted Actual Price:", formatted);
+            }
+
+            // Convert Negotiable Price
+            function convertNegotiablePrice() {
+                let price = parseFloat($("#MinPrice").val()) || 0;
+                let unit = $("#AmountUnitMinPrice").val();
+                let converted = convertValue(price, unit);
+                let formatted = formatIndianNumber(converted);
+
+                $("#ConvertedNegotiablePrice").val(converted);
+
+            $("#displayMinBudget").text(`₹ ${formatted}`);
+                        console.log("Converted Negotiable Price:", formatted);
+            }
+
+            // Trigger conversion when user types or changes dropdown
+            $(document).on("keyup change", "#MaxPrice, #AmountUnitMaxPrice", convertActualPrice);
+            $(document).on("keyup change", "#MinPrice, #AmountUnitMinPrice", convertNegotiablePrice);
+
     </script>
 }

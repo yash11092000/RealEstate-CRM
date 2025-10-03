@@ -105,6 +105,13 @@ namespace PhysioWeb.Repository
                         home.PropertyCategoryList.Add(new DropDownSource(data, true));
                     }
                 }
+                if (data.NextResult())
+                {
+                    while (data.Read())
+                    {
+                        home.AmountUnitList.Add(new DropDownSource(data, true));
+                    }
+                }
                 return home;
             }
             catch (Exception e)

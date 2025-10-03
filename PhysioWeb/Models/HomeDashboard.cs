@@ -27,6 +27,7 @@ namespace PhysioWeb.Models
         public string SearchedLocation { get; set; }
         public string SearchedMinPrice { get; set; }
         public string SearchedMaxPrice { get; set; }
+        public List<DropDownSource> AmountUnitList { get; set; }
         public HomeDashboard()
         {
             PropertyDetails = new List<PropertyDetails>();
@@ -36,6 +37,7 @@ namespace PhysioWeb.Models
             RentalTypeList = new List<DropDownSource>();
             BedroomList = new List<DropDownSource>();
             AmenityList = new List<DropDownSource>();
+            AmountUnitList = new List<DropDownSource>();
         }
 
     }
@@ -72,7 +74,7 @@ namespace PhysioWeb.Models
 
         public string DisplayMinPrice { get; set; }
         public string DisplayMaxPrice { get; set; }
-
+       
         public PropertyDetails(IDataReader Idr, int flag = 0)
         {
             if (flag == 0)
