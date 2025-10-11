@@ -225,7 +225,7 @@
 			<div class="container-fluid">
 				<a class="navbar-brand d-flex align-items-center" href="/">
 					<i class="bi bi-house-door-fill me-2 text-light"></i>
-					<strong class="text-light">CHHEDA PROPERTY</strong>
+					<strong class="text-light">@User.Identity.Name</strong>
 				</a>
 				<button class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navbarNav">
 					<span class="navbar-toggler-icon"></span>
@@ -258,7 +258,7 @@
 							string role = User.FindFirst(System.Security.Claims.ClaimTypes.Role)?.Value?.ToUpper() ?? "";
 							string icon = "bi-person"; // default icon
 
-							if (role == "SUPERADMIN") { icon = "bi-shield-lock"; }
+							@* if (role == "SUPERADMIN") { icon = "bi-shield-lock"; }
 							else if (role == "AGENCY") { icon = "bi-building"; }
 							else if (role == "USER") { icon = "bi-person-circle"; }
 
@@ -267,7 +267,7 @@
 								<span class="nav-link text-dark" style="font-weight:500;">
 									<i class="bi @icon me-1"></i> @User.Identity.Name
 								</span>
-							</li>
+							</li> *@
 							@if (User.IsInRole("SuperAdmin"))
 							{
 								<li>

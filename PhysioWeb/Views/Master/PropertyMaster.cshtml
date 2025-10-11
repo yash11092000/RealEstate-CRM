@@ -1037,6 +1037,8 @@
 					$("#IsActive").prop("checked", true);
 					$("#Amenities").val("");
 					$("#propertyForm").trigger("reset")
+					$("#displayMaxBudget").text("");
+					$("#displayMinBudget").text("");
 					var triggerTab = new bootstrap.Tab(document.querySelector('#list-tab'));
 					triggerTab.show();
 				}
@@ -1057,7 +1059,7 @@
 				$("#PropertyCategory").val(data.propertyCategory);
 				$("#Bathrooms").val(data.bathrooms);
 				$("#CarpetArea").val(data.carpetArea);
-				$("#Floor").val(data.Floor);
+				$("#Floor").val(data.floor);
 				$("#TotalFloorBuilding").val(data.totalFloorBuilding);
 				$("#FurnishingStatus").val(data.furnishingStatus);
 				$("#Vastu").val(data.vastu);
@@ -1087,6 +1089,8 @@
 				 $("#IsNegotiable").prop("checked", data.isNegotiable);
 				 $("#IsActive").prop("checked", data.isActive);
 				 $("#PinCode").val(data.pinCode);
+				 $("#AmountUnitMaxPrice").val(data.amountUnitMinPrice);
+				 $("#AmountUnitMinPrice").val(data.amountUnitMaxPrice);
 				 $("#BudgetMax").trigger("change")
 				 $("#BudgetMin").trigger("change")
 
