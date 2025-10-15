@@ -18,6 +18,7 @@ builder.Services.AddScoped<IMasterRepository, MasterRepository>();
 builder.Services.AddScoped<ISuperAdminRepository, SuperAdminRepository>();
 builder.Services.AddScoped<IAgencyRepository, AgencyRepository>();
 builder.Services.AddScoped<IPropertyRepository, PropertyRepository>();
+builder.Services.AddScoped<IWhatsAppService, WhatsAppService>();
 builder.Services.AddScoped<FileUploadService>();
 
 
@@ -35,6 +36,8 @@ builder.Services.Configure<FormOptions>(options =>
     options.MultipartBodyLengthLimit = 500 * 1024 * 1024; // 500 MB
     options.MultipartHeadersLengthLimit = 500 * 1024 * 1024; // 500 MB
 });
+
+
 
 // If using Kestrel (self-hosted), increase max request size
 builder.WebHost.ConfigureKestrel(serverOptions =>

@@ -10,9 +10,12 @@ namespace PhysioWeb.Controllers
     public class PropertyDetailsController : Controller
     {
         private readonly IPropertyRepository _propertyRepository;
-        public PropertyDetailsController(IPropertyRepository propertyRepository)
+        private readonly IWhatsAppService _whatsAppService;
+
+        public PropertyDetailsController(IPropertyRepository propertyRepository, IWhatsAppService whatsAppService)
         {
             _propertyRepository = propertyRepository;
+            _whatsAppService = whatsAppService;
         }
         public async Task<ActionResult> Property(int PropertyId)
         {
@@ -72,6 +75,20 @@ namespace PhysioWeb.Controllers
             string AgencyId = User.FindFirst(ClaimTypes.GroupSid)?.Value;
             var result = await _propertyRepository.SendRequest(ContactPersonName, ContactPersonEmail, ContactPersonPhone, Description, PropertyId);
             return Json(result);
+        }
+        #endregion
+
+        #region whatsapp integration
+        [HttpPost]
+        public async Task<IActionResult> SendImage(string MediaUrl)
+        {
+            string uploadResponse = await _whatsAppService.UploadImageAsync("C:\\Images\\test.jpg");
+
+            //string imageUrl = "https://example.com/myimage.jpg";
+            //string caption = "Hello! Here's your image.";
+
+            string result = await _whatsAppService.SendImageAsync("8779791536", uploadResponse);
+            return Content(result);
         }
         #endregion
     }

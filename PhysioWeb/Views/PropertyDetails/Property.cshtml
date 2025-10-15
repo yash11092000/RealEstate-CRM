@@ -46,6 +46,10 @@
 		}
 	}
 
+	.nav-tabs .nav-link {
+		color: var(--primary-green);
+	}
+
 	.thumb-container {
 		position: relative;
 		width: 80px;
@@ -544,8 +548,6 @@
 			height: 160px;
 		}
 	}
-
-	
 </style>
 
 <!-- Property Header -->
@@ -582,8 +584,15 @@
 		<!-- Gallery Column -->
 		<div class="col-lg-8">
 			<!-- Main Image -->
-			<div class="gallery-main mb-3">
+			<div class="gallery-main mb-3" style="position:relative">
 				<img src="/secure-images/@Model.Images[0].Value" class="w-100 h-100" style="object-fit:contain;" id="mainImage" alt="Property image">
+
+				<!-- Floating Share Button -->
+				<button class="btn btn-danger" style="position:absolute;top:1rem;right:1rem;"
+						data-bs-toggle="modal"
+						data-bs-target="#shareModal2">
+					<i class="bi bi-share-fill"></i>
+				</button>
 			</div>
 
 			<!-- Thumbnails -->
@@ -646,128 +655,139 @@
 				</div>
 			</div>
 
+			<ul class="nav nav-tabs" id="myTab" role="tablist">
+				<li class="nav-item" role="presentation">
+					<button class="nav-link active" id="home-tab" data-bs-toggle="tab" data-bs-target="#PropertyDetails" type="button" role="tab" aria-controls="home" aria-selected="true">Property Details</button>
+				</li>
+				<li class="nav-item" role="presentation">
+					<button class="nav-link" id="profile-tab" data-bs-toggle="tab" data-bs-target="#DescriptionsTab" type="button" role="tab" aria-controls="profile" aria-selected="false">Description</button>
+				</li>
+				<li class="nav-item" role="presentation">
+					<button class="nav-link" id="contact-tab" data-bs-toggle="tab" data-bs-target="#Aminities" type="button" role="tab" aria-controls="contact" aria-selected="false">Aminities</button>
+				</li>
+			</ul>
+			<div class="tab-content" id="myTabContent">
+				<div class="detail-card tab-pane fade show active" id="PropertyDetails" role="tabpanel" aria-labelledby="PropertyDetails-tab">
+					<h3 class="section-title">
+						Property Details
+					</h3>
 
-			<div class="detail-card">
-				<h3 class="section-title">
-					Property Details
-				</h3>
-
-				<!-- Row 1 -->
-				<div class="detail-row">
-					<div class="detail-heading">Property Type:</div>
-					<div class="detail-value">@Model.PropertyType</div>
-					<div class="detail-heading">Built Up Area:</div>
-					<div class="detail-value">@Model.CarpetArea sq.ft</div>
-				</div>
-
-				<!-- Row 2 -->
-				<div class="detail-row">
-					<div class="detail-heading">Bedrooms:</div>
-					<div class="detail-value">@Model.Bedrooms</div>
-					<div class="detail-heading">Bathrooms:</div>
-					<div class="detail-value">@Model.Bathrooms</div>
-				</div>
-
-				<!-- Row 3 -->
-				<div class="detail-row">
-					<div class="detail-heading">Country:</div>
-					<div class="detail-value">@Model.Country</div>
-					<div class="detail-heading">State:</div>
-					<div class="detail-value">@Model.State</div>
-				</div>
-
-				<!-- Row 4 -->
-				<div class="detail-row">
-					<div class="detail-heading">City:</div>
-					<div class="detail-value">@Model.City</div>
-					<div class="detail-heading">Pincode:</div>
-					<div class="detail-value">@Model.PinCode</div>
-				</div>
-
-				<!-- Row 5 -->
-				<div class="detail-row">
-					<div class="detail-heading">Furnishing Status:</div>
-					<div class="detail-value">@Model.FurnishingStatus</div>
-					<div class="detail-heading">Area:</div>
-					<div class="detail-value">@Model.Area</div>
-				</div>
-
-				<!-- Row 6 -->
-				<div class="detail-row">
-					<div class="detail-heading">Total Floor:</div>
-					<div class="detail-value">@Model.TotalFloorBuilding</div>
-					<div class="detail-heading">Sub Area:</div>
-					<div class="detail-value">@Model.SubArea</div>
-				</div>
-
-				<!-- Row 7 -->
-				<div class="detail-row">
-					<div class="detail-heading">Floor:</div>
-					<div class="detail-value">@Model.Floor</div>
-					<div class="detail-heading">Year Of Construction:</div>
-					<div class="detail-value">@Model.YearOfConstruction</div>
-				</div>
-
-				<!-- Row 8 -->
-				<div class="detail-row">
-					<div class="detail-heading">Buyer Type:</div>
-					<div class="detail-value">@Model.PreferedBuyerType</div>
-					<div class="detail-heading">Vastu:</div>
-					<div class="detail-value">@Model.Vastu</div>
-				</div>
-
-				<!-- Row 9 -->
-				<div class="detail-row">
-					<div class="detail-heading">Property Category:</div>
-					<div class="detail-value">@Model.PropertyCategory</div>
-					<div class="detail-heading"></div>
-					<div class="detail-value"></div>
-				</div>
-
-				<!-- Admin-only rows (hidden by default) -->
-				@if (User.IsInRole("Agency"))
-				{
-					<div id="adminRows">
-						<!-- Row 10 -->
-						<div class="detail-row admin-only">
-							<div class="detail-heading">Contact Person Name:</div>
-							<div class="detail-value">@Model.ContactPersonName</div>
-							<div class="detail-heading">Contact Person No:</div>
-							<div class="detail-value">@Model.ContactPersonPhone</div>
-						</div>
-
-						<!-- Row 11 -->
-						<div class="detail-row admin-only">
-							<div class="detail-heading">Contact Person Alternate No:</div>
-							<div class="detail-value">@Model.ContactPersonAlternatePhone</div>
-							<div class="detail-heading"></div>
-							<div class="detail-value"></div>
-						</div>
+					<!-- Row 1 -->
+					<div class="detail-row">
+						<div class="detail-heading">Property Type:</div>
+						<div class="detail-value">@Model.PropertyType</div>
+						<div class="detail-heading">Built Up Area:</div>
+						<div class="detail-value">@Model.CarpetArea sq.ft</div>
 					</div>
-				}
-			</div>
 
-			<!-- Description -->
-			<div class="detail-card p-3 p-md-4">
-				<h3 class="section-title">Description</h3>
-				<div class="description-content" style="line-height: 1.8;">
-					@Html.Raw(Model.Description.Replace("\n", "<br>"))
-				</div>
-			</div>
+					<!-- Row 2 -->
+					<div class="detail-row">
+						<div class="detail-heading">Bedrooms:</div>
+						<div class="detail-value">@Model.Bedrooms</div>
+						<div class="detail-heading">Bathrooms:</div>
+						<div class="detail-value">@Model.Bathrooms</div>
+					</div>
 
-			<!-- Amenities -->
-			<div class="detail-card p-3 p-md-4">
-				<h3 class="section-title">Amenities</h3>
-				<div class="d-flex flex-wrap gap-2">
-					@for (int j = 0; j < Model.AmenityList.Count; j++)
+					<!-- Row 3 -->
+					<div class="detail-row">
+						<div class="detail-heading">Country:</div>
+						<div class="detail-value">@Model.Country</div>
+						<div class="detail-heading">State:</div>
+						<div class="detail-value">@Model.State</div>
+					</div>
+
+					<!-- Row 4 -->
+					<div class="detail-row">
+						<div class="detail-heading">City:</div>
+						<div class="detail-value">@Model.City</div>
+						<div class="detail-heading">Pincode:</div>
+						<div class="detail-value">@Model.PinCode</div>
+					</div>
+
+					<!-- Row 5 -->
+					<div class="detail-row">
+						<div class="detail-heading">Furnishing Status:</div>
+						<div class="detail-value">@Model.FurnishingStatus</div>
+						<div class="detail-heading">Area:</div>
+						<div class="detail-value">@Model.Area</div>
+					</div>
+
+					<!-- Row 6 -->
+					<div class="detail-row">
+						<div class="detail-heading">Total Floor:</div>
+						<div class="detail-value">@Model.TotalFloorBuilding</div>
+						<div class="detail-heading">Sub Area:</div>
+						<div class="detail-value">@Model.SubArea</div>
+					</div>
+
+					<!-- Row 7 -->
+					<div class="detail-row">
+						<div class="detail-heading">Floor:</div>
+						<div class="detail-value">@Model.Floor</div>
+						<div class="detail-heading">Year Of Construction:</div>
+						<div class="detail-value">@Model.YearOfConstruction</div>
+					</div>
+
+					<!-- Row 8 -->
+					<div class="detail-row">
+						<div class="detail-heading">Buyer Type:</div>
+						<div class="detail-value">@Model.PreferedBuyerType</div>
+						<div class="detail-heading">Vastu:</div>
+						<div class="detail-value">@Model.Vastu</div>
+					</div>
+
+					<!-- Row 9 -->
+					<div class="detail-row">
+						<div class="detail-heading">Property Category:</div>
+						<div class="detail-value">@Model.PropertyCategory</div>
+						<div class="detail-heading"></div>
+						<div class="detail-value"></div>
+					</div>
+
+					<!-- Admin-only rows (hidden by default) -->
+					@if (User.IsInRole("Agency"))
 					{
-						<span class="amenity-badge">
-							<i class="bi bi-check-circle me-1"></i> @Model.AmenityList[j].Text
-						</span>
+						<div id="adminRows">
+							<!-- Row 10 -->
+							<div class="detail-row admin-only">
+								<div class="detail-heading">Contact Person Name:</div>
+								<div class="detail-value">@Model.ContactPersonName</div>
+								<div class="detail-heading">Contact Person No:</div>
+								<div class="detail-value">@Model.ContactPersonPhone</div>
+							</div>
+
+							<!-- Row 11 -->
+							<div class="detail-row admin-only">
+								<div class="detail-heading">Contact Person Alternate No:</div>
+								<div class="detail-value">@Model.ContactPersonAlternatePhone</div>
+								<div class="detail-heading"></div>
+								<div class="detail-value"></div>
+							</div>
+						</div>
 					}
 				</div>
-			</div>
 
+				<!-- Description -->
+				<div class="detail-card tab-pane fade" id="DescriptionsTab" role="tabpanel" aria-labelledby="Descriptions-tab">
+					<h3 class="section-title">Description</h3>
+					<div class="description-content" style="line-height: 1.8;">
+						@Html.Raw(Model.Description.Replace("\n", "<br>"))
+					</div>
+				</div>
+
+				<!-- Amenities -->
+				<div class="detail-card tab-pane fade" id="Aminities" role="tabpanel" aria-labelledby="Aminities-tab">
+					<h3 class="section-title">Amenities</h3>
+					<div class="d-flex flex-wrap gap-2">
+						@for (int j = 0; j < Model.AmenityList.Count; j++)
+						{
+							<span class="amenity-badge">
+								<i class="bi bi-check-circle me-1"></i> @Model.AmenityList[j].Text
+							</span>
+						}
+					</div>
+				</div>
+			</div>
 			<!-- Floor Plans -->
 			@* <div class="detail-card p-3 p-md-4">
 				<h3 class="section-title">Floor Plans</h3>
