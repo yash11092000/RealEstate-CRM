@@ -235,7 +235,8 @@
 
 		.splide__arrow:hover {
 			background: #f8f9fa !important;
-			/* transform: scale(1.1); */
+			
+
 			border: 1px solid lightblue;
 		}
 
@@ -351,14 +352,64 @@
 	}
 
 	/* newly added */
-	.choices__inner{
-		font-weight:700 !important;
+	.choices__inner {
+		font-weight: 700 !important;
 	}
 
-	.choices__list,.myoptions{
-		font-weight:700 !important;
+	.choices__list, .myoptions {
+		font-weight: 700 !important;
 	}
-</style>
+
+	/* newly added */
+
+	/* New primary color variable for easy changes */
+	:root {
+		--property-primary: #38A169; /* A deep, rich green */
+	}
+
+	/* Redefine GreenBorder for a softer look */
+	.GreenBorder {
+		border-color: #e9ecef !important; /* Very light gray border */
+		transition: all 0.2s ease-in-out;
+	}
+
+		/* Enhanced focus state for a modern feel */
+		.GreenBorder:focus {
+			border-color: var(--property-primary) !important;
+			box-shadow: 0 0 0 0.25rem rgba(56, 161, 105, 0.25) !important; /* Colored focus ring */
+			background-color: #ffffff !important;
+		}
+
+	/* Unify the budget input look */
+	.input-group-text {
+		background-color: #f8f9fa !important; /* Keep it light */
+		color: #495057 !important; /* Darker text */
+		border-right: none;
+	}
+
+	.choices {
+		border-radius: 0.5rem; /* Match other inputs' border-radius */
+		border: 1px solid #ced4da; /* Soft border color */
+		min-height: 38px; /* Ensure consistent height with form-control-lg or similar */
+		/* Remove Choice.js default arrow if you want to use a custom one or none */
+		background-image: none;
+	}
+
+		/* 2. Focused State (Crucial for UX) */
+		.choices.is-focused {
+			border-color: var(--property-primary, #38A169); /* Use your accent color */
+			box-shadow: 0 0 0 0.25rem rgba(56, 161, 105, 0.25); /* Accent-colored focus ring */
+		}
+
+	/* 3. Ensure the inner input respects the corner radius */
+	.choices__inner {
+		background-color: transparent;
+		padding: 0.375rem 0.75rem; /* Match padding of other form-controls */
+		min-height: 38px;
+		border: none !important; /* Remove inner border to rely on the .choices wrapper */
+	}
+
+		</style>
 <div class="container-fluid">
 
 	<input type="hidden" id="ConvertedActualPrice" value="" name="ConvertedActualPrice" />
@@ -393,78 +444,8 @@
 							<input type="text" id="location" class="w-100 form-control form-control-lg rounded-3 GreenBorder" placeholder="Enter Location">
 						</div>
 
-						<!-- Property Type -->
-						<div class="col-md-4">
-							<label class="form-label fw-semibold">
-								<i class="bi bi-house-door-fill text-success"></i> Property Type
-							</label>
-							<select multiple class="form-select select2 rounded-3" id="propertyType" name="PropertyType">
-								<option></option>
-								@foreach (var item in Model.PropertyTypeList)
-								{
-									<option value="@item.Value">@item.Text</option>
-								}
-							</select>
-						</div>
-
-						<!-- Bedrooms -->
-						<div class="col-md-4">
-							<label class="form-label fw-semibold">
-								<i class="bi bi-door-open-fill text-success"></i> Bedrooms
-							</label>
-							<select multiple class="form-select select2 rounded-3" id="bedrooms" name="Bedrooms">
-								<option></option>
-								@foreach (var item in Model.BedroomList)
-								{
-									<option value="@item.Value">@item.Text</option>
-								}
-							</select>
-						</div>
-
-						<!-- Rental Type -->
-						<div class="col-md-4">
-							<label class="form-label fw-semibold">
-								<i class="bi bi-key-fill text-success"></i> Rental Type
-							</label>
-							<select multiple class="form-select select2 rounded-3" id="RentalType" name="RentalType">
-								<option></option>
-								@foreach (var item in Model.RentalTypeList)
-								{
-									<option value="@item.Value">@item.Text</option>
-								}
-							</select>
-						</div>
-
-						<!-- Property Category -->
-						<div class="col-md-4">
-							<label class="form-label fw-semibold">
-								<i class="bi bi-grid-fill text-success"></i> Property Category
-							</label>
-							<select multiple class="form-select select2 rounded-3" id="PropertyCategory" name="PropertyCategory">
-								<option></option>
-								@foreach (var item in Model.PropertyCategoryList)
-								{
-									<option value="@item.Value">@item.Text</option>
-								}
-							</select>
-						</div>
-
-						<!-- Amenities -->
-						<div class="col-md-4">
-							<label class="form-label fw-semibold">
-								<i class="bi bi-lightning-charge-fill text-success"></i> Amenities
-							</label>
-							<select multiple class="form-select select2 rounded-3" name="Amenities" id="Amenities">
-								<option></option>
-								@foreach (var item in Model.AmenityList)
-								{
-									<option value="@item.Value">@item.Text</option>
-								}
-							</select>
-						</div>
-
 						<!-- Budget -->
-						<div class="col-md-12">
+						<div class="col-md-8">
 							<label class="form-label fw-semibold">
 								<i class="bi bi-cash-coin text-success"></i> Budget
 							</label>
@@ -494,12 +475,99 @@
 												<option class="myoptions" style="font-weight: 700 !important" value="@item.Value">@item.Text</option>
 											}
 										</select>
+
 									</div>
 									<p id="displayMaxBudget" class="text-success fw-bold text-end pe-1"></p>
 								</div>
 
 							</div>
 						</div>
+						<div class="text-center mt-2 mb-4">
+							<a class="btn btn-link text-decoration-none fw-bold text-success"
+							   data-bs-toggle="collapse" href="#advancedFilters" role="button"
+							   aria-expanded="false" aria-controls="advancedFilters">
+								More Filters <i class="bi bi-chevron-down"></i>
+							</a>
+						</div>
+
+						<div class="collapse" id="advancedFilters">
+							<div class="row">
+
+								<!-- Property Type -->
+								<div class="col-md-4">
+									<label class="form-label fw-semibold">
+										<i class="bi bi-house-door-fill text-success"></i> Property Type
+									</label>
+									<select multiple class="form-select select2 rounded-3" id="propertyType" name="PropertyType">
+										<option></option>
+										@foreach (var item in Model.PropertyTypeList)
+										{
+											<option value="@item.Value">@item.Text</option>
+										}
+									</select>
+								</div>
+
+								<!-- Bedrooms -->
+								<div class="col-md-4">
+									<label class="form-label fw-semibold">
+										<i class="bi bi-door-open-fill text-success"></i> Bedrooms
+									</label>
+									<select multiple class="form-select select2 rounded-3" id="bedrooms" name="Bedrooms">
+										<option></option>
+										@foreach (var item in Model.BedroomList)
+										{
+											<option value="@item.Value">@item.Text</option>
+										}
+									</select>
+								</div>
+
+								<!-- Rental Type -->
+								<div class="col-md-4">
+									<label class="form-label fw-semibold">
+										<i class="bi bi-key-fill text-success"></i> Rental Type
+									</label>
+									<select multiple class="form-select select2 rounded-3" id="RentalType" name="RentalType">
+										<option></option>
+										@foreach (var item in Model.RentalTypeList)
+										{
+											<option value="@item.Value">@item.Text</option>
+										}
+									</select>
+								</div>
+
+								<!-- Property Category -->
+								<div class="col-md-4">
+									<label class="form-label fw-semibold">
+										<i class="bi bi-grid-fill text-success"></i> Property Category
+									</label>
+									<select multiple class="form-select select2 rounded-3" id="PropertyCategory" name="PropertyCategory">
+										<option></option>
+										@foreach (var item in Model.PropertyCategoryList)
+										{
+											<option value="@item.Value">@item.Text</option>
+										}
+									</select>
+								</div>
+
+								<!-- Amenities -->
+								<div class="col-md-4">
+									<label class="form-label fw-semibold">
+										<i class="bi bi-lightning-charge-fill text-success"></i> Amenities
+									</label>
+									<select multiple class="form-select select2 rounded-3" name="Amenities" id="Amenities">
+										<option></option>
+										@foreach (var item in Model.AmenityList)
+										{
+											<option value="@item.Value">@item.Text</option>
+										}
+									</select>
+								</div>
+							</div>
+						</div>
+
+
+
+
 
 						<!-- Submit Button -->
 						<div class="col-md-3 mx-auto text-center mt-4">
@@ -512,10 +580,12 @@
 			</div>
 		</div>
 	</section>
-
 </div>
 
 <div class="container-fluid px-0">
+	<h3 class="text-uppercase text-success fw-bold letter-spacing-1 my-2" style="font-size:1.4rem;text-align:center">
+		Latest Properties
+	</h3>
 	<!-- Splide Carousel with custom arrow position -->
 	<div id="propertyCarousel" class="splide position-relative">
 		<!-- Custom arrows container -->
@@ -527,7 +597,6 @@
 				<i class="fas fa-chevron-right"></i>
 			</button>
 		</div>
-
 		<div class="splide__track">
 			<div class="splide__list">
 				@foreach (var prop in Model.PropertyDetails)
