@@ -1,692 +1,107 @@
 ﻿@model PhysioWeb.Models.MenuMaster
 
 @{
-    ViewBag.Title = "Agency Dashboard";
-    var theme = User.FindFirst("Theme")?.Value ?? "#198754";
+	ViewBag.Title = "Agency Dashboard";
+	var theme = User.FindFirst("Theme")?.Value ?? "#198754";
 }
 
 <style>
-    :root {
-        --theme-color: @theme;
-        --sidebar-width: 280px;
-        --sidebar-collapsed-width: 70px;
-        --transition-speed: 0.3s;
-    }
+	:root {
+		--theme-color: @theme;
+		--sidebar-width: 280px;
+		--sidebar-collapsed-width: 70px;
+		--transition-speed: 0.3s;
+		--primary-color: @theme;
+		--secondary-color: #6c757d;
+		--light-bg: #f8f9fa;
+	}
 
-    /* Sidebar Styles */
-    #agencySidebar {
-        min-height: calc(100vh - 60px);
-        width: var(--sidebar-width);
-        position: fixed;
-        top: 60px;
-        left: 0;
-        transition: all var(--transition-speed) ease;
-        z-index: 1010;
-        box-shadow: 3px 0 10px rgba(0, 0, 0, 0.1);
-        background-color: var(--theme-color);
-        display: flex;
-        flex-direction: column;
-    }
 
-        #agencySidebar.collapsed {
-            width: var(--sidebar-collapsed-width);
-        }
+	/* Card Styles (your existing styles) */
+	.card.custom-card {
+		position: relative;
+		background: #fff;
+		border: 1px solid #ddd;
+		overflow: hidden;
+		clip-path: polygon(0 0, 100% 0, 100% calc(100% - 25px), calc(100% - 25px) 100%, 0 100%);
+		transition: box-shadow 0.3s ease;
+	}
 
-        #agencySidebar .sidebar-header {
-            padding: 20px;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-            transition: all var(--transition-speed) ease;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            flex-shrink: 0; /* Prevent header from shrinking */
-        }
+		.card.custom-card:hover {
+			box-shadow: 0 6px 18px rgba(0, 0, 0, 0.15);
+		}
 
-        #agencySidebar.collapsed .sidebar-header {
-            padding: 20px 10px;
-        }
+		.card.custom-card::before {
+			content: "";
+			position: absolute;
+			bottom: 0;
+			right: 0;
+			border-bottom: 25px solid var(--theme-color);
+			border-left: 25px solid transparent;
+		}
 
-        #agencySidebar .sidebar-header h4 {
-            color: white;
-            margin: 0;
-            white-space: nowrap;
-            overflow: hidden;
-            transition: all var(--transition-speed) ease;
-            font-size: 1.1rem;
-        }
+		.card.custom-card::after {
+			content: "";
+			position: absolute;
+			top: 0;
+			left: 0;
+			width: 0%;
+			height: 3px;
+			background: var(--theme-color);
+			transition: width 0.3s ease;
+		}
 
-        #agencySidebar.collapsed .sidebar-header h4 {
-            opacity: 0;
-            width: 0;
-        }
+		.card.custom-card:hover::after {
+			width: 100%;
+		}
 
-        /* Scrollable menu container */
-        #agencySidebar .sidebar-menu-container {
-            flex: 1;
-            overflow-y: auto;
-            overflow-x: hidden;
-            padding: 0;
-            margin: 0;
-            scrollbar-width: thin;
-            scrollbar-color: rgba(255, 255, 255, 0.3) transparent;
-        }
-
-            /* Custom scrollbar for webkit browsers */
-            #agencySidebar .sidebar-menu-container::-webkit-scrollbar {
-                width: 6px;
-            }
-
-            #agencySidebar .sidebar-menu-container::-webkit-scrollbar-track {
-                background: transparent;
-            }
-
-            #agencySidebar .sidebar-menu-container::-webkit-scrollbar-thumb {
-                background-color: rgba(255, 255, 255, 0.3);
-                border-radius: 3px;
-            }
-
-                #agencySidebar .sidebar-menu-container::-webkit-scrollbar-thumb:hover {
-                    background-color: rgba(255, 255, 255, 0.5);
-                }
-
-        #agencySidebar ul.components {
-            padding: 0;
-            margin: 0;
-            list-style: none;
-            min-height: min-content; /* Ensure proper height calculation */
-        }
-
-        #agencySidebar ul li {
-            position: relative;
-        }
-
-            #agencySidebar ul li a {
-                padding: 12px 20px;
-                display: flex;
-                align-items: center;
-                color: rgba(255, 255, 255, 0.8);
-                text-decoration: none;
-                transition: all 0.2s ease;
-                white-space: nowrap;
-                border-left: 3px solid transparent;
-            }
-
-                #agencySidebar ul li a:hover {
-                    background-color: rgba(255, 255, 255, 0.1);
-                    color: white;
-                }
-
-            #agencySidebar ul li.active > a {
-                background-color: rgba(255, 255, 255, 0.15);
-                color: white;
-                border-left-color: #fff;
-            }
-
-            #agencySidebar ul li a i {
-                margin-right: 15px;
-                font-size: 1.2rem;
-                min-width: 30px;
-                text-align: center;
-                transition: margin-right var(--transition-speed) ease;
-            }
-
-        #agencySidebar.collapsed ul li a i {
-            margin-right: 0;
-        }
-
-        #agencySidebar ul li a span {
-            transition: opacity var(--transition-speed) ease;
-            flex: 1;
-        }
-
-        #agencySidebar.collapsed ul li a span {
-            opacity: 0;
-            width: 0;
-            overflow: hidden;
-        }
-
-    /* Dropdown arrow */
-    .dropdown-arrow {
-        margin-left: auto;
-        transition: transform 0.3s ease;
-    }
-
-    #agencySidebar.collapsed .dropdown-arrow {
-        display: none;
-    }
-
-    /* Child menu items */
-    .child-menu {
-        max-height: 0;
-        overflow: hidden;
-        transition: max-height 0.3s ease;
-        background-color: rgba(0, 0, 0, 0.1);
-    }
-
-        .child-menu.show {
-            max-height: 500px;
-        }
-
-        .child-menu li a {
-            padding-left: 50px !important;
-            font-size: 0.9rem;
-            border-left: 3px solid transparent;
-        }
-
-            .child-menu li a:hover {
-                background-color: rgba(255, 255, 255, 0.05);
-            }
-
-        .child-menu li.active a {
-            border-left-color: rgba(255, 255, 255, 0.7);
-        }
-
-    #agencySidebar.collapsed .child-menu {
-        display: none !important;
-    }
-
-    /* Parent item indicator */
-    .has-children > a::after {
-        content: "";
-        margin-left: auto;
-        border: solid rgba(255, 255, 255, 0.6);
-        border-width: 0 2px 2px 0;
-        display: inline-block;
-        padding: 3px;
-        transform: rotate(45deg);
-        transition: transform 0.3s ease;
-    }
-
-    .has-children.open > a::after {
-        transform: rotate(-135deg);
-    }
-
-    #agencySidebar.collapsed .has-children > a::after {
-        display: none;
-    }
-
-    /* Content Area Styles */
-    .dashboard-content {
-        transition: margin-left var(--transition-speed) ease;
-        min-height: calc(100vh - 60px);
-    }
-
-        .dashboard-content.with-sidebar {
-            margin-left: var(--sidebar-width);
-        }
-
-            .dashboard-content.with-sidebar.collapsed {
-                margin-left: var(--sidebar-collapsed-width);
-            }
-
-    /* Toggle Button */
-    .sidebar-toggle {
-        background-color: transparent;
-        border: none;
-        color: white;
-        font-size: 1.3rem;
-        cursor: pointer;
-        padding: 5px 10px;
-        border-radius: 4px;
-        transition: background-color 0.2s;
-    }
-
-        .sidebar-toggle:hover {
-            background-color: rgba(255, 255, 255, 0.1);
-        }
-
-    /* Mobile Responsive */
-    @@media (max-width: 768px) {
-        #agencySidebar {
-            width: var(--sidebar-collapsed-width);
-            transform: translateX(-100%);
-        }
-
-            #agencySidebar.mobile-open {
-                transform: translateX(0);
-                width: var(--sidebar-width);
-            }
-
-            #agencySidebar .sidebar-header h4,
-            #agencySidebar ul li a span {
-                opacity: 0;
-                width: 0;
-            }
-
-            #agencySidebar ul li a i {
-                margin-right: 0;
-            }
-
-        .dashboard-content.with-sidebar {
-            margin-left: 0;
-        }
-
-        #agencySidebar.mobile-open .sidebar-header h4,
-        #agencySidebar.mobile-open ul li a span {
-            opacity: 1;
-            width: auto;
-        }
-
-        #agencySidebar.mobile-open ul li a i {
-            margin-right: 15px;
-        }
-
-        .mobile-sidebar-toggle {
-            display: block !important;
-        }
-
-        #agencySidebar.mobile-open .child-menu {
-            display: block !important;
-        }
-
-        #agencySidebar.mobile-open .has-children > a::after {
-            display: inline-block;
-        }
-    }
-
-    /* Mobile Sidebar Toggle Button */
-    .mobile-sidebar-toggle {
-        display: none;
-        background: none;
-        border: none;
-        font-size: 1.5rem;
-        color: #6c757d;
-        margin-right: 10px;
-    }
-
-    /* Card Styles (your existing styles) */
-    .card.custom-card {
-        position: relative;
-        background: #fff;
-        border: 1px solid #ddd;
-        overflow: hidden;
-        clip-path: polygon(0 0, 100% 0, 100% calc(100% - 25px), calc(100% - 25px) 100%, 0 100%);
-        transition: box-shadow 0.3s ease;
-    }
-
-        .card.custom-card:hover {
-            box-shadow: 0 6px 18px rgba(0, 0, 0, 0.15);
-        }
-
-        .card.custom-card::before {
-            content: "";
-            position: absolute;
-            bottom: 0;
-            right: 0;
-            border-bottom: 25px solid var(--theme-color);
-            border-left: 25px solid transparent;
-        }
-
-        .card.custom-card::after {
-            content: "";
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 0%;
-            height: 3px;
-            background: var(--theme-color);
-            transition: width 0.3s ease;
-        }
-
-        .card.custom-card:hover::after {
-            width: 100%;
-        }
-
-    .page-header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-bottom: 1.5rem;
-    }
-    /* Fix sidebar scrolling */
-    #agencySidebar {
-        height: calc(100vh - 60px);
-        overflow-y: auto;
-        overflow-x: hidden;
-    }
-
-        /* Custom scrollbar */
-        #agencySidebar::-webkit-scrollbar {
-            width: 6px;
-        }
-
-        #agencySidebar::-webkit-scrollbar-track {
-            background: transparent;
-        }
-
-        #agencySidebar::-webkit-scrollbar-thumb {
-            background-color: rgba(255, 255, 255, 0.3);
-            border-radius: 3px;
-        }
-
-            #agencySidebar::-webkit-scrollbar-thumb:hover {
-                background-color: rgba(255, 255, 255, 0.5);
-            }
+	.page-header {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		margin-bottom: 1.5rem;
+	}
 </style>
 
-<!-- Mobile Sidebar Toggle Button (for navbar) -->
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        const navbarBrand = document.querySelector('.navbar-brand');
-        if (navbarBrand && !document.getElementById('mobileSidebarToggle')) {
-            const mobileToggle = document.createElement('button');
-            mobileToggle.className = 'mobile-sidebar-toggle me-2';
-            mobileToggle.id = 'mobileSidebarToggle';
-            mobileToggle.innerHTML = '<i class="bi bi-list"></i>';
-            navbarBrand.parentNode.insertBefore(mobileToggle, navbarBrand);
-        }
-    });
-</script>
 
-<!-- Agency Sidebar with Scrollable Container -->
-<nav id="agencySidebar" class="collapsed">
-    <div class="sidebar-header">
-        <h4>Agency Menu</h4>
-        <button type="button" id="sidebarToggle" class="sidebar-toggle">
-            <i class="bi bi-chevron-right"></i>
-        </button>
-    </div>
-
-    <div class="sidebar-menu-container">
-        <ul class="components">
-            <li class="active">
-                <a href="/Agent/AgencyDashboard">
-                    <i class="bi bi-speedometer2"></i>
-                    <span>Dashboard</span>
-                </a>
-            </li>
-
-            <!-- Parent menu with children -->
-            <li class="has-children">
-                <a href="#propertiesSubmenu" data-bs-toggle="collapse" aria-expanded="false">
-                    <i class="bi bi-house"></i>
-                    <span>Properties</span>
-                </a>
-                <ul class="child-menu collapse" id="propertiesSubmenu">
-                    <li><a href="/Agent/Properties/All"><i class="bi bi-list-ul"></i> All Properties</a></li>
-                    <li><a href="/Agent/Properties/Active"><i class="bi bi-check-circle"></i> Active Listings</a></li>
-                    <li><a href="/Agent/Properties/Pending"><i class="bi bi-clock"></i> Pending</a></li>
-                    <li><a href="/Agent/Properties/Sold"><i class="bi bi-check-lg"></i> Sold Properties</a></li>
-                    <li><a href="/Agent/Properties/Archived"><i class="bi bi-archive"></i> Archived</a></li>
-                    <li><a href="/Agent/Properties/Drafts"><i class="bi bi-file-earmark"></i> Drafts</a></li>
-                </ul>
-            </li>
-
-            <li>
-                <a href="/Agent/AddProperty">
-                    <i class="bi bi-plus-circle"></i>
-                    <span>Add Property</span>
-                </a>
-            </li>
-
-            <!-- Parent menu with children -->
-            <li class="has-children">
-                <a href="#clientsSubmenu" data-bs-toggle="collapse" aria-expanded="false">
-                    <i class="bi bi-people"></i>
-                    <span>Clients</span>
-                </a>
-                <ul class="child-menu collapse" id="clientsSubmenu">
-                    <li><a href="/Agent/Clients/Buyers"><i class="bi bi-cart"></i> Buyers</a></li>
-                    <li><a href="/Agent/Clients/Sellers"><i class="bi bi-house"></i> Sellers</a></li>
-                    <li><a href="/Agent/Clients/Leads"><i class="bi bi-telephone"></i> Leads</a></li>
-                    <li><a href="/Agent/Clients/Referrals"><i class="bi bi-person-plus"></i> Referrals</a></li>
-                    <li><a href="/Agent/Clients/Import"><i class="bi bi-upload"></i> Import Clients</a></li>
-                </ul>
-            </li>
-
-            <!-- Parent menu with children -->
-            <li class="has-children">
-                <a href="#appointmentsSubmenu" data-bs-toggle="collapse" aria-expanded="false">
-                    <i class="bi bi-calendar"></i>
-                    <span>Appointments</span>
-                </a>
-                <ul class="child-menu collapse" id="appointmentsSubmenu">
-                    <li><a href="/Agent/Appointments/Upcoming"><i class="bi bi-calendar-check"></i> Upcoming</a></li>
-                    <li><a href="/Agent/Appointments/Completed"><i class="bi bi-check-all"></i> Completed</a></li>
-                    <li><a href="/Agent/Appointments/Cancelled"><i class="bi bi-x-circle"></i> Cancelled</a></li>
-                    <li><a href="/Agent/Appointments/Schedule"><i class="bi bi-plus-circle"></i> Schedule New</a></li>
-                    <li><a href="/Agent/Appointments/Calendar"><i class="bi bi-calendar-week"></i> Calendar View</a></li>
-                </ul>
-            </li>
-
-            <!-- Parent menu with children -->
-            <li class="has-children">
-                <a href="#reportsSubmenu" data-bs-toggle="collapse" aria-expanded="false">
-                    <i class="bi bi-bar-chart"></i>
-                    <span>Reports</span>
-                </a>
-                <ul class="child-menu collapse" id="reportsSubmenu">
-                    <li><a href="/Agent/Reports/Sales"><i class="bi bi-graph-up"></i> Sales Report</a></li>
-                    <li><a href="/Agent/Reports/Performance"><i class="bi bi-speedometer"></i> Performance</a></li>
-                    <li><a href="/Agent/Reports/Commission"><i class="bi bi-cash"></i> Commission</a></li>
-                    <li><a href="/Agent/Reports/Listings"><i class="bi bi-house"></i> Listing Report</a></li>
-                    <li><a href="/Agent/Reports/Client"><i class="bi bi-people"></i> Client Report</a></li>
-                    <li><a href="/Agent/Reports/Export"><i class="bi bi-download"></i> Export Data</a></li>
-                </ul>
-            </li>
-
-            <!-- Parent menu with children -->
-            <li class="has-children">
-                <a href="#marketingSubmenu" data-bs-toggle="collapse" aria-expanded="false">
-                    <i class="bi bi-megaphone"></i>
-                    <span>Marketing</span>
-                </a>
-                <ul class="child-menu collapse" id="marketingSubmenu">
-                    <li><a href="/Agent/Marketing/Email"><i class="bi bi-envelope"></i> Email Campaigns</a></li>
-                    <li><a href="/Agent/Marketing/Social"><i class="bi bi-share"></i> Social Media</a></li>
-                    <li><a href="/Agent/Marketing/Flyers"><i class="bi bi-file-image"></i> Property Flyers</a></li>
-                    <li><a href="/Agent/Marketing/Ads"><i class="bi bi-badge-ad"></i> Advertising</a></li>
-                </ul>
-            </li>
-
-            <!-- Parent menu with children -->
-            <li class="has-children">
-                <a href="#financeSubmenu" data-bs-toggle="collapse" aria-expanded="false">
-                    <i class="bi bi-wallet"></i>
-                    <span>Finance</span>
-                </a>
-                <ul class="child-menu collapse" id="financeSubmenu">
-                    <li><a href="/Agent/Finance/Invoices"><i class="bi bi-receipt"></i> Invoices</a></li>
-                    <li><a href="/Agent/Finance/Expenses"><i class="bi bi-currency-dollar"></i> Expenses</a></li>
-                    <li><a href="/Agent/Finance/Commission"><i class="bi bi-percent"></i> Commission Tracking</a></li>
-                    <li><a href="/Agent/Finance/Taxes"><i class="bi bi-calculator"></i> Tax Reports</a></li>
-                </ul>
-            </li>
-
-            <li>
-                <a href="/Agent/Settings">
-                    <i class="bi bi-gear"></i>
-                    <span>Settings</span>
-                </a>
-            </li>
-
-            <li>
-                <a href="/Agent/Help">
-                    <i class="bi bi-question-circle"></i>
-                    <span>Help & Support</span>
-                </a>
-            </li>
-        </ul>
-    </div>
-</nav>
 
 <!-- Main Content -->
 <main class="dashboard-content with-sidebar collapsed">
-    <div class="container-fluid mt-4">
-        <div class="page-header">
-            <h3>Master Pages</h3>
-            <button class="btn btn-outline-secondary d-md-none" id="mobileSidebarToggleBtn">
-                <i class="bi bi-list"></i> Menu
-            </button>
-        </div>
+	<div class="container-fluid mt-4">
+		<div class="page-header">
+			<h3>Master Pages</h3>
+			<button class="btn btn-outline-secondary d-md-none" id="mobileSidebarToggleBtn">
+				<i class="bi bi-list"></i> Menu
+			</button>
+		</div>
 
-        @if (Model.MenuList != null && Model.MenuList.Any())
-        {
-            <div class="row g-3">
-                @foreach (var menu in Model.MenuList)
-                {
-                    <div class="col-xl-3 col-lg-4 col-md-6">
-                        <div class="card custom-card p-3 shadow h-100">
-                            <h5 class="card-title">@menu.MenuName</h5>
-                            <p class="card-text text-muted">Manage @menu.MenuName here.</p>
-                            <a href="@menu.MenuUrl" class="btn mt-auto" style="background-color: var(--theme-color); color: white;">Add</a>
-                        </div>
-                    </div>
-                }
-            </div>
-        }
-        else
-        {
-            <div class="alert alert-info">
-                <p class="text-muted mb-0">No menus available for this role.</p>
-            </div>
-        }
-    </div>
+		@if (Model.MenuList != null && Model.MenuList.Any())
+		{
+			<div class="row g-3">
+				@foreach (var menu in Model.MenuList)
+				{
+					<div class="col-xl-3 col-lg-4 col-md-6">
+						<div class="card custom-card p-3 shadow h-100">
+							<h5 class="card-title">@menu.MenuName</h5>
+							<p class="card-text text-muted">Manage @menu.MenuName here.</p>
+							<a href="@menu.MenuUrl" class="btn mt-auto" style="background-color: var(--theme-color); color: white;">Add</a>
+						</div>
+					</div>
+				}
+			</div>
+		}
+		else
+		{
+			<div class="alert alert-info">
+				<p class="text-muted mb-0">No menus available for this role.</p>
+			</div>
+		}
+	</div>
 </main>
 
 @section Scripts {
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const agencySidebar = document.getElementById('agencySidebar');
-            const dashboardContent = document.querySelector('.dashboard-content');
-            const sidebarToggle = document.getElementById('sidebarToggle');
-            const mobileSidebarToggle = document.getElementById('mobileSidebarToggle');
-            const mobileSidebarToggleBtn = document.getElementById('mobileSidebarToggleBtn');
-            const sidebarMenuContainer = document.querySelector('.sidebar-menu-container');
+	<script>
 
-            // Toggle sidebar on button click
-            if (sidebarToggle) {
-                sidebarToggle.addEventListener('click', function() {
-                    agencySidebar.classList.toggle('collapsed');
-                    dashboardContent.classList.toggle('collapsed');
 
-                    // Change icon based on state
-                    const icon = sidebarToggle.querySelector('i');
-                    if (agencySidebar.classList.contains('collapsed')) {
-                        icon.classList.remove('bi-chevron-left');
-                        icon.classList.add('bi-chevron-right');
-                    } else {
-                        icon.classList.remove('bi-chevron-right');
-                        icon.classList.add('bi-chevron-left');
-                    }
-                });
-            }
-
-            // Mobile sidebar toggle from navbar
-            if (mobileSidebarToggle) {
-                mobileSidebarToggle.addEventListener('click', function() {
-                    agencySidebar.classList.toggle('mobile-open');
-                });
-            }
-
-            // Mobile sidebar toggle from content area
-            if (mobileSidebarToggleBtn) {
-                mobileSidebarToggleBtn.addEventListener('click', function() {
-                    agencySidebar.classList.toggle('mobile-open');
-                });
-            }
-
-            // Handle child menu items in collapsed state
-            const parentMenuItems = document.querySelectorAll('.has-children > a');
-            parentMenuItems.forEach(item => {
-                item.addEventListener('click', function(e) {
-                    if (agencySidebar.classList.contains('collapsed') && !agencySidebar.classList.contains('mobile-open')) {
-                        e.preventDefault();
-                        // When sidebar is collapsed, expand it first
-                        agencySidebar.classList.remove('collapsed');
-                        dashboardContent.classList.remove('collapsed');
-                        sidebarToggle.querySelector('i').classList.replace('bi-chevron-right', 'bi-chevron-left');
-
-                        // Then open the submenu after a slight delay
-                        setTimeout(() => {
-                            const target = this.getAttribute('href');
-                            const submenu = document.querySelector(target);
-                            if (submenu) {
-                                const bsCollapse = new bootstrap.Collapse(submenu, { toggle: true });
-                            }
-                        }, 300);
-                    }
-                });
-            });
-
-            // Auto-collapse on mobile
-            if (window.innerWidth <= 768) {
-                agencySidebar.classList.add('collapsed');
-                dashboardContent.classList.add('collapsed');
-            }
-
-            // Handle window resize
-            window.addEventListener('resize', function() {
-                if (window.innerWidth <= 768) {
-                    agencySidebar.classList.add('collapsed');
-                    dashboardContent.classList.add('collapsed');
-                    agencySidebar.classList.remove('mobile-open');
-                } else {
-                    agencySidebar.classList.remove('collapsed');
-                    dashboardContent.classList.remove('collapsed');
-                    agencySidebar.classList.remove('mobile-open');
-                }
-            });
-
-            // Close mobile sidebar when clicking on a menu item
-            const sidebarLinks = document.querySelectorAll('#agencySidebar ul li a:not([data-bs-toggle="collapse"])');
-            sidebarLinks.forEach(link => {
-                link.addEventListener('click', function() {
-                    if (window.innerWidth <= 768) {
-                        agencySidebar.classList.remove('mobile-open');
-                    }
-                });
-            });
-
-            // Set theme color for sidebar
-            const themeColor = getComputedStyle(document.documentElement).getPropertyValue('--theme-color').trim();
-            if (agencySidebar) {
-                agencySidebar.style.backgroundColor = themeColor;
-            }
-
-            // Initialize Bootstrap collapse for submenus
-            const collapses = document.querySelectorAll('.collapse');
-            collapses.forEach(collapse => {
-                new bootstrap.Collapse(collapse, { toggle: false });
-            });
-
-            // Auto-scroll to active menu item
-            function scrollToActiveMenuItem() {
-                const activeMenuItem = document.querySelector('#agencySidebar .active');
-                if (activeMenuItem && sidebarMenuContainer) {
-                    setTimeout(() => {
-                        activeMenuItem.scrollIntoView({
-                            behavior: 'smooth',
-                            block: 'center',
-                            inline: 'nearest'
-                        });
-                    }, 100);
-                }
-            }
-
-            // Scroll to active item on page load
-            scrollToActiveMenuItem();
-
-            // Handle submenu opening and ensure visibility
-            const submenuTriggers = document.querySelectorAll('[data-bs-toggle="collapse"]');
-            submenuTriggers.forEach(trigger => {
-                trigger.addEventListener('click', function() {
-                    const target = this.getAttribute('href');
-                    const submenu = document.querySelector(target);
-
-                    if (submenu) {
-                        // Wait for the submenu to open, then ensure it's visible
-                        setTimeout(() => {
-                            if (submenu.classList.contains('show')) {
-                                this.closest('.has-children').scrollIntoView({
-                                    behavior: 'smooth',
-                                    block: 'nearest'
-                                });
-                            }
-                        }, 350);
-                    }
-                });
-            });
-        });
-    </script>
+	</script>
 }

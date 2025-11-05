@@ -2,15 +2,18 @@
 
 @{
 	ViewData["Title"] = "Property Master";
-}
-
-
-@{
 	var theme = User.FindFirst("Theme")?.Value ?? "#198754";
 }
+
 <style>
 	:root {
 		--theme-color: @theme;
+		--sidebar-width: 280px;
+		--sidebar-collapsed-width: 70px;
+		--transition-speed: 0.3s;
+		--primary-color: @theme;
+		--secondary-color: #6c757d;
+		--light-bg: #f8f9fa;
 	}
 
 	.stepper {
@@ -150,428 +153,430 @@
 
 
 
-<div class="">
-	<ul class="nav nav-tabs mb-3 mt-1" id="agencyMainTabs" role="tablist">
-		<li class="nav-item" role="presentation">
-			<button class="nav-link active" id="form-tab" data-bs-toggle="tab" data-bs-target="#formSection" type="button" role="tab">
-				📝 Add/Edit Property
-			</button>
-		</li>
-		<li class="nav-item" role="presentation">
-			<button class="nav-link" id="list-tab" data-bs-toggle="tab" data-bs-target="#listSection" type="button" role="tab">
-				📋 Property List
-			</button>
-		</li>
-	</ul>
+<main class="dashboard-content with-sidebar collapsed">
+	<div class="container-fluid mt-4">
+		<ul class="nav nav-tabs mb-3 mt-1" id="agencyMainTabs" role="tablist">
+			<li class="nav-item" role="presentation">
+				<button class="nav-link active" id="form-tab" data-bs-toggle="tab" data-bs-target="#formSection" type="button" role="tab">
+					📝 Add/Edit Property
+				</button>
+			</li>
+			<li class="nav-item" role="presentation">
+				<button class="nav-link" id="list-tab" data-bs-toggle="tab" data-bs-target="#listSection" type="button" role="tab">
+					📋 Property List
+				</button>
+			</li>
+		</ul>
 
-	<div class="tab-content">
-		<div class="tab-pane fade show active" id="formSection" role="tabpanel">
+		<div class="tab-content">
+			<div class="tab-pane fade show active" id="formSection" role="tabpanel">
 
-			<div class="container-fluid my-4 p-3 shadow rounded bg-white">
-				<h3 class="text-success fw-bold mb-3">Add New Property</h3>
+				<div class="container-fluid my-4 p-3 shadow rounded bg-white">
+					<h3 class="text-success fw-bold mb-3">Add New Property</h3>
 
-				<div class="progress mb-4" style="height: 8px;">
-					<div class="progress-bar bg-success" role="progressbar" style="width: 25%;"></div>
-				</div>
+					<div class="progress mb-4" style="height: 8px;">
+						<div class="progress-bar bg-success" role="progressbar" style="width: 25%;"></div>
+					</div>
 
-				<!-- Custom Stepper -->
-				<ul class="stepper d-flex justify-content-between mb-4">
-					<li class="step active" data-target="#step1"><span>1</span> Basic</li>
-					<li class="step" data-target="#step2"><span>2</span> Location</li>
-					<li class="step" data-target="#step3"><span>3</span> Amenities</li>
-					<li class="step" data-target="#step4"><span>4</span> Review</li>
-				</ul>
+					<!-- Custom Stepper -->
+					<ul class="stepper d-flex justify-content-between mb-4">
+						<li class="step active" data-target="#step1"><span>1</span> Basic</li>
+						<li class="step" data-target="#step2"><span>2</span> Location</li>
+						<li class="step" data-target="#step3"><span>3</span> Amenities</li>
+						<li class="step" data-target="#step4"><span>4</span> Review</li>
+					</ul>
 
-				<!-- Form -->
-				<form id="propertyForm" enctype="multipart/form-data">
-					<div class="tab-content">
-						<input type="text" value="0" id="UniquId" name="UniquId" hidden />
-						<!-- Step 1 -->
-						<div class="tab-pane fade show active" id="step1">
-							<div class="row">
-								<div class="col-md-8 mb-3">
+					<!-- Form -->
+					<form id="propertyForm" enctype="multipart/form-data">
+						<div class="tab-content">
+							<input type="text" value="0" id="UniquId" name="UniquId" hidden />
+							<!-- Step 1 -->
+							<div class="tab-pane fade show active" id="step1">
+								<div class="row">
+									<div class="col-md-8 mb-3">
+										<div class="mb-3">
+											<label class="form-label fw-bold">
+												Property Title<span style="color: red;">*</span>
+											</label>
+											<input type="text" class="form-control" name="Title" id="Title" placeholder="Enter property title">
+										</div>
+									</div>
+									<div class="col-md-2 mb-3">
+										<label class="form-label fw-bold">Year Of Construction</label>
+										<input type="number" class="form-control" id="YearOfConstruction" name="YearOfConstruction" placeholder="Enter Year of construction">
+									</div>
+									<div class="col-md-2 d-flex " style="align-items:center">
+										<input class="form-check-input mx-2" type="checkbox" id="IsActive" name="IsActive" value="true" checked />
+										<label class="form-check-label fw-bold" for="IsActive"> Is Active ?</label>
+									</div>
+
+								</div>
+
+								<div class="row">
+									<div class="col-md-4 mb-3">
+										<label class="form-label fw-bold">Property Type<span style="color: red;">*</span></label>
+										<select class="form-select" name="PropertyType" id="PropertyType">
+											<option value="">Select Property Type</option>
+											@foreach (var item in Model.PropertyTypeList)
+											{
+												<option value="@item.Value">@item.Text</option>
+											}
+										</select>
+									</div>
+									<div class="col-md-4 mb-3">
+										<label class="form-label fw-bold">Property Category</label>
+										<select class="form-select" name="PropertyCategory" id="PropertyCategory">
+											<option value="">Select Property Category</option>
+											@foreach (var item in Model.PropertyCategoryList)
+											{
+												<option value="@item.Value">@item.Text</option>
+											}
+										</select>
+									</div>
+									<div class="col-md-4 mb-3">
+										<label class="form-label fw-bold">Transaction Type<span style="color: red;">*</span></label>
+										<select class="form-select" name="TransactionType" id="TransactionType">
+											<option value="">Select Transaction Type</option>
+											@foreach (var item in Model.RentalTypeList)
+											{
+												<option value="@item.Value">@item.Text</option>
+											}
+										</select>
+									</div>
+
+									<div class="col-md-2 mb-3">
+										<label class="form-label fw-bold">Bedrooms<span style="color: red;">*</span></label>
+										<select class="form-select" name="Bedrooms" id="Bedrooms">
+											<option value="">Select Bedrooms</option>
+											@foreach (var item in Model.BedRoomList)
+											{
+												<option value="@item.Value">@item.Text</option>
+											}
+										</select>
+									</div>
+
+									<div class="col-md-2 mb-3">
+										<label class="form-label fw-bold">Bathrooms<span style="color: red;">*</span></label>
+										<select class="form-select" name="Bathrooms" id="Bathrooms">
+											<option value="">Select Bathrooms</option>
+											<option value="1">1</option>
+											<option value="2">2</option>
+											<option value="3">3</option>
+											<option value="4">4+</option>
+										</select>
+									</div>
+									<div class="col-md-4 mb-3">
+										<label class="form-label fw-bold">Property Size (sq. ft.)<span style="color: red;">*</span></label>
+										<input type="number" class="form-control" id="CarpetArea" name="CarpetArea" placeholder="Enter area">
+									</div>
+									<div class="col-md-2 mb-3">
+										<label class="form-label fw-bold">Floor</label>
+										<input type="number" class="form-control" id="Floor" name="Floor" placeholder="Enter Floor">
+									</div>
+									<div class="col-md-2 mb-3">
+										<label class="form-label fw-bold">Total Floor</label>
+										<input type="number" class="form-control" id="TotalFloorBuilding" name="TotalFloorBuilding" placeholder="Enter Total Floor">
+									</div>
+
+									<div class="col-md-4 mb-3">
+										<label class="form-label fw-bold">Furnishing Type<span style="color: red;">*</span></label>
+										<select class="form-select" name="Furnishing" id="FurnishingStatus">
+											<option value="">Select Furnishing Type</option>
+											@foreach (var item in Model.FurnishingTypeList)
+											{
+												<option value="@item.Value">@item.Text</option>
+											}
+										</select>
+									</div>
+									<div class="col-md-4 mb-3">
+										<label class="form-label fw-bold">Vastu</label>
+										<input type="text" class="form-control alphabetic-only" id="Vastu" name="Vastu" placeholder="Enter Vastu Direction">
+									</div>
+									<div class="col-md-4 mb-3">
+										<label class="form-label fw-bold">Preferred Buyer Type</label>
+										<select class="form-select" name="PreferedBuyerType" id="PreferedBuyerType">
+											@foreach (var item in Model.PreferedBuyerTypeList)
+											{
+												<option value="@item.Value">@item.Text</option>
+											}
+										</select>
+									</div>
+								</div>
+
+								<div class="row">
+									<div class="col-md-4 mb-3">
+										<label class="form-label fw-bold">Contact Person Name<span style="color: red;">*</span></label>
+										<input type="text" class="form-control" id="ContactPersonName" name="ContactPersonName" placeholder="Enter Contact Person Name">
+									</div>
+
+									<div class="col-md-4 mb-3">
+										<label class="form-label fw-bold">Contact No<span style="color: red;">*</span></label>
+										<input type="tel" class="form-control" id="ContactPersonNo" name="ContactPersonNo" placeholder="Enter Contact No">
+									</div>
+
+									<div class="col-md-4 mb-3">
+										<label class="form-label fw-bold">Alternate No</label>
+										<input type="text" class="form-control" id="ContactPersonAlternatePhone" name="ContactPersonAlternatePhone" placeholder="Enter Alternate No">
+									</div>
+
+								</div>
+
+								<div class="row">
 									<div class="mb-3">
-										<label class="form-label fw-bold">
-											Property Title<span style="color: red;">*</span>
-										</label>
-										<input type="text" class="form-control" name="Title" id="Title" placeholder="Enter property title">
+										<label class="form-label fw-bold">Description</label>
+										<textarea class="form-control" name="Description" id="Description" rows="3" placeholder="Enter property description"></textarea>
 									</div>
 								</div>
-								<div class="col-md-2 mb-3">
-									<label class="form-label fw-bold">Year Of Construction</label>
-									<input type="number" class="form-control" id="YearOfConstruction" name="YearOfConstruction" placeholder="Enter Year of construction">
-								</div>
-								<div class="col-md-2 d-flex " style="align-items:center">
-									<input class="form-check-input mx-2" type="checkbox" id="IsActive" name="IsActive" value="true" checked />
-									<label class="form-check-label fw-bold" for="IsActive"> Is Active ?</label>
-								</div>
 
+								<button type="button" class="btn btn-success next-step">Next</button>
 							</div>
 
-							<div class="row">
-								<div class="col-md-4 mb-3">
-									<label class="form-label fw-bold">Property Type<span style="color: red;">*</span></label>
-									<select class="form-select" name="PropertyType" id="PropertyType">
-										<option value="">Select Property Type</option>
-										@foreach (var item in Model.PropertyTypeList)
-										{
-											<option value="@item.Value">@item.Text</option>
-										}
-									</select>
+
+							<!-- Step 2 -->
+							<div class="tab-pane fade" id="step2">
+								<div class="row">
+									<div class="col-md-4 mb-3">
+										<label class="form-label fw-bold">Area <span style="color: red;">*</span></label>
+										<select class="form-select" name="Area" id="Area">
+											<option value="">Select Area</option>
+											@foreach (var item in Model.AreaList)
+											{
+												<option value="@item.Value">@item.Text</option>
+											}
+										</select>
+									</div>
+									<div class="col-md-4 mb-3">
+										<label class="form-label fw-bold">SubArea</label>
+										<input type="text" class="form-control" name="SubArea" id="SubArea" placeholder="Enter SubArea">
+									</div>
+									<div class="col-md-4 mb-3">
+										<label class="form-label fw-bold">Pincode<span style="color: red;">*</span></label>
+										<input type="text" class="form-control" name="PinCode" id="PinCode" placeholder="Enter Pincode">
+									</div>
+									<div class="col-md-4 mb-3">
+										<label class="form-label fw-bold">Country</label>
+										<select class="form-select" name="Country" id="Country">
+											<option value="">Select Country</option>
+											@foreach (var item in Model.CountryList)
+											{
+												<option value="@item.Value">@item.Text</option>
+											}
+										</select>
+									</div>
+									<div class="col-md-4 mb-3">
+										<label class="form-label fw-bold">State</label>
+										<select class="form-select" name="State" id="State">
+											<option value="">Select State</option>
+											@foreach (var item in Model.StateList)
+											{
+												<option value="@item.Value">@item.Text</option>
+											}
+										</select>
+									</div>
+									<div class="col-md-4 mb-3">
+										<label class="form-label fw-bold">City</label>
+										<select class="form-select" name="City" id="City">
+											<option value="">Select City</option>
+											@foreach (var item in Model.CityList)
+											{
+												<option value="@item.Value">@item.Text</option>
+											}
+										</select>
+									</div>
+
+
 								</div>
-								<div class="col-md-4 mb-3">
-									<label class="form-label fw-bold">Property Category</label>
-									<select class="form-select" name="PropertyCategory" id="PropertyCategory">
-										<option value="">Select Property Category</option>
-										@foreach (var item in Model.PropertyCategoryList)
-										{
-											<option value="@item.Value">@item.Text</option>
-										}
-									</select>
-								</div>
-								<div class="col-md-4 mb-3">
-									<label class="form-label fw-bold">Transaction Type<span style="color: red;">*</span></label>
-									<select class="form-select" name="TransactionType" id="TransactionType">
-										<option value="">Select Transaction Type</option>
-										@foreach (var item in Model.RentalTypeList)
-										{
-											<option value="@item.Value">@item.Text</option>
-										}
-									</select>
+								<div class="row">
+									<div class="col-md-6 mb-3">
+										<label class="form-label fw-bold">Address</label>
+										<input type="text" class="form-control" name="Address" id="Address" placeholder="Enter full address">
+									</div>
+
+									<div class=" col-md-6 mb-3">
+										<label class="form-label fw-bold">Landmark</label>
+										<input type="text" class="form-control" name="Landmark" id="LandMark" placeholder="Add Schools, metros, hospitals nearby landmark">
+									</div>
 								</div>
 
-								<div class="col-md-2 mb-3">
-									<label class="form-label fw-bold">Bedrooms<span style="color: red;">*</span></label>
-									<select class="form-select" name="Bedrooms" id="Bedrooms">
-										<option value="">Select Bedrooms</option>
-										@foreach (var item in Model.BedRoomList)
-										{
-											<option value="@item.Value">@item.Text</option>
-										}
-									</select>
+								<div class="row mb-3">
+									<div class="col-md-3">
+										<label class="form-label fw-bold">Actual Price</label>
+										<div class="input-group">
+											<span class="input-group-text">₹</span>
+											<input type="number" class="form-control" name="BudgetMax" id="BudgetMax" placeholder="Enter amount">
+											<select id="AmountUnitMaxPrice" class="form-select" style="max-width: 100px;  background-color: #a9a9a96b;">
+												@foreach (var item in Model.AmountUnitList)
+												{
+													<option value="@item.Value">@item.Text</option>
+												}
+											</select>
+										</div>
+										<span id="displayMaxBudget" class="text-success fw-bold"></span>
+									</div>
+
+									<div class="col-md-2 mt-3">
+										<div class="form-check pt-4">
+											<input class="form-check-input" type="checkbox" id="IsNegotiable" name="IsNegotiable" value="true" checked />
+											<label class="form-check-label" for="IsNegotiable">Negotiable</label>
+										</div>
+									</div>
+
+									<div class="col-md-3 negotiableprice fw-bold" style="display: none;">
+										<label class="form-label">Negotiable Price</label>
+										<div class="input-group">
+											<span class="input-group-text">₹</span>
+											<input type="number" class="form-control" name="PriceMin" id="BudgetMin" placeholder="Enter amount">
+											<select id="AmountUnitMinPrice" class="form-select" style="max-width: 100px; background-color: #a9a9a96b;">
+												@foreach (var item in Model.AmountUnitList)
+												{
+													<option value="@item.Value">@item.Text</option>
+												}
+											</select>
+										</div>
+										<span id="displayMinBudget" class="text-success fw-bold"></span>
+
+									</div>
+
 								</div>
 
-								<div class="col-md-2 mb-3">
-									<label class="form-label fw-bold">Bathrooms<span style="color: red;">*</span></label>
-									<select class="form-select" name="Bathrooms" id="Bathrooms">
-										<option value="">Select Bathrooms</option>
-										<option value="1">1</option>
-										<option value="2">2</option>
-										<option value="3">3</option>
-										<option value="4">4+</option>
-									</select>
-								</div>
-								<div class="col-md-4 mb-3">
-									<label class="form-label fw-bold">Property Size (sq. ft.)<span style="color: red;">*</span></label>
-									<input type="number" class="form-control" id="CarpetArea" name="CarpetArea" placeholder="Enter area">
-								</div>
-								<div class="col-md-2 mb-3">
-									<label class="form-label fw-bold">Floor</label>
-									<input type="number" class="form-control" id="Floor" name="Floor" placeholder="Enter Floor">
-								</div>
-								<div class="col-md-2 mb-3">
-									<label class="form-label fw-bold">Total Floor</label>
-									<input type="number" class="form-control" id="TotalFloorBuilding" name="TotalFloorBuilding" placeholder="Enter Total Floor">
-								</div>
-
-								<div class="col-md-4 mb-3">
-									<label class="form-label fw-bold">Furnishing Type<span style="color: red;">*</span></label>
-									<select class="form-select" name="Furnishing" id="FurnishingStatus">
-										<option value="">Select Furnishing Type</option>
-										@foreach (var item in Model.FurnishingTypeList)
-										{
-											<option value="@item.Value">@item.Text</option>
-										}
-									</select>
-								</div>
-								<div class="col-md-4 mb-3">
-									<label class="form-label fw-bold">Vastu</label>
-									<input type="text" class="form-control alphabetic-only" id="Vastu" name="Vastu" placeholder="Enter Vastu Direction">
-								</div>
-								<div class="col-md-4 mb-3">
-									<label class="form-label fw-bold">Preferred Buyer Type</label>
-									<select class="form-select" name="PreferedBuyerType" id="PreferedBuyerType">
-										@foreach (var item in Model.PreferedBuyerTypeList)
-										{
-											<option value="@item.Value">@item.Text</option>
-										}
-									</select>
-								</div>
+								<input type="hidden" id="ConvertedActualPrice" value="0" name="ConvertedActualPrice" />
+								<input type="hidden" id="ConvertedNegotiablePrice" value="0" name="ConvertedNegotiablePrice" />
+								<button type="button" class="btn btn-light prev-step">Back</button>
+								<button type="button" class="btn btn-success next-step">Next</button>
 							</div>
 
-							<div class="row">
-								<div class="col-md-4 mb-3">
-									<label class="form-label fw-bold">Contact Person Name<span style="color: red;">*</span></label>
-									<input type="text" class="form-control" id="ContactPersonName" name="ContactPersonName" placeholder="Enter Contact Person Name">
-								</div>
 
-								<div class="col-md-4 mb-3">
-									<label class="form-label fw-bold">Contact No<span style="color: red;">*</span></label>
-									<input type="tel" class="form-control" id="ContactPersonNo" name="ContactPersonNo" placeholder="Enter Contact No">
-								</div>
-
-								<div class="col-md-4 mb-3">
-									<label class="form-label fw-bold">Alternate No</label>
-									<input type="text" class="form-control" id="ContactPersonAlternatePhone" name="ContactPersonAlternatePhone" placeholder="Enter Alternate No">
-								</div>
-
-							</div>
-
-							<div class="row">
+							<!-- Step 3 -->
+							<div class="tab-pane fade" id="step3">
 								<div class="mb-3">
-									<label class="form-label fw-bold">Description</label>
-									<textarea class="form-control" name="Description" id="Description" rows="3" placeholder="Enter property description"></textarea>
-								</div>
-							</div>
-
-							<button type="button" class="btn btn-success next-step">Next</button>
-						</div>
-
-
-						<!-- Step 2 -->
-						<div class="tab-pane fade" id="step2">
-							<div class="row">
-								<div class="col-md-4 mb-3">
-									<label class="form-label fw-bold">Area <span style="color: red;">*</span></label>
-									<select class="form-select" name="Area" id="Area">
-										<option value="">Select Area</option>
-										@foreach (var item in Model.AreaList)
-										{
-											<option value="@item.Value">@item.Text</option>
-										}
-									</select>
-								</div>
-								<div class="col-md-4 mb-3">
-									<label class="form-label fw-bold">SubArea</label>
-									<input type="text" class="form-control" name="SubArea" id="SubArea" placeholder="Enter SubArea">
-								</div>
-								<div class="col-md-4 mb-3">
-									<label class="form-label fw-bold">Pincode<span style="color: red;">*</span></label>
-									<input type="text" class="form-control" name="PinCode" id="PinCode" placeholder="Enter Pincode">
-								</div>
-								<div class="col-md-4 mb-3">
-									<label class="form-label fw-bold">Country</label>
-									<select class="form-select" name="Country" id="Country">
-										<option value="">Select Country</option>
-										@foreach (var item in Model.CountryList)
-										{
-											<option value="@item.Value">@item.Text</option>
-										}
-									</select>
-								</div>
-								<div class="col-md-4 mb-3">
-									<label class="form-label fw-bold">State</label>
-									<select class="form-select" name="State" id="State">
-										<option value="">Select State</option>
-										@foreach (var item in Model.StateList)
-										{
-											<option value="@item.Value">@item.Text</option>
-										}
-									</select>
-								</div>
-								<div class="col-md-4 mb-3">
-									<label class="form-label fw-bold">City</label>
-									<select class="form-select" name="City" id="City">
-										<option value="">Select City</option>
-										@foreach (var item in Model.CityList)
+									<label class="form-label fw-bold">Amenities</label>
+									<select class="form-select" name="Amenities" id="Amenities" multiple>
+										@foreach (var item in Model.AmenityList)
 										{
 											<option value="@item.Value">@item.Text</option>
 										}
 									</select>
 								</div>
 
-
-							</div>
-							<div class="row">
-								<div class="col-md-6 mb-3">
-									<label class="form-label fw-bold">Address</label>
-									<input type="text" class="form-control" name="Address" id="Address" placeholder="Enter full address">
-								</div>
-
-								<div class=" col-md-6 mb-3">
-									<label class="form-label fw-bold">Landmark</label>
-									<input type="text" class="form-control" name="Landmark" id="LandMark" placeholder="Add Schools, metros, hospitals nearby landmark">
-								</div>
-							</div>
-
-							<div class="row mb-3">
-								<div class="col-md-3">
-									<label class="form-label fw-bold">Actual Price</label>
-									<div class="input-group">
-										<span class="input-group-text">₹</span>
-										<input type="number" class="form-control" name="BudgetMax" id="BudgetMax" placeholder="Enter amount">
-										<select id="AmountUnitMaxPrice" class="form-select" style="max-width: 100px;  background-color: #a9a9a96b;">
-											@foreach (var item in Model.AmountUnitList)
-											{
-												<option value="@item.Value">@item.Text</option>
-											}
-										</select>
+								<!-- Image Upload -->
+								<div class="mb-3">
+									<label class="form-label fw-bold">Upload Images</label>
+									<div id="imageInputs">
+										<input type="file" name="Images" id="Images" class="form-control mb-2 imageInput" accept="image/*">
 									</div>
-									<span id="displayMaxBudget" class="text-success fw-bold"></span>
+									<button type="button" id="addImageInput" class="btn btn-outline-success btn-sm">+ Add More Images</button>
 								</div>
 
-								<div class="col-md-2 mt-3">
-									<div class="form-check pt-4">
-										<input class="form-check-input" type="checkbox" id="IsNegotiable" name="IsNegotiable" value="true" checked />
-										<label class="form-check-label" for="IsNegotiable">Negotiable</label>
+								<div id="imageGallery" class="gallery-container"></div>
+
+								<hr>
+
+								<!-- Video Upload -->
+								<div class="mb-3">
+									<label class="form-label fw-bold">Upload Videos</label>
+									<div id="videoInputs">
+										<input type="file" name="Videos" id="Videos" class="form-control mb-2 videoInput" accept="video/*">
 									</div>
+									<button type="button" id="addVideoInput" class="btn btn-outline-success btn-sm">+ Add More Videos</button>
 								</div>
 
-								<div class="col-md-3 negotiableprice fw-bold" style="display: none;">
-									<label class="form-label">Negotiable Price</label>
-									<div class="input-group">
-										<span class="input-group-text">₹</span>
-										<input type="number" class="form-control" name="PriceMin" id="BudgetMin" placeholder="Enter amount">
-										<select id="AmountUnitMinPrice" class="form-select" style="max-width: 100px; background-color: #a9a9a96b;">
-											@foreach (var item in Model.AmountUnitList)
-											{
-												<option value="@item.Value">@item.Text</option>
-											}
-										</select>
-									</div>
-									<span id="displayMinBudget" class="text-success fw-bold"></span>
+								<div id="videoGallery" class="gallery-container"></div>
 
-								</div>
 
+								<button type="button" class="btn btn-light prev-step">Back</button>
+								<button type="button" class="btn btn-success next-step">Next</button>
 							</div>
 
-							<input type="hidden" id="ConvertedActualPrice" value="0" name="ConvertedActualPrice" />
-							<input type="hidden" id="ConvertedNegotiablePrice" value="0" name="ConvertedNegotiablePrice" />
-							<button type="button" class="btn btn-light prev-step">Back</button>
-							<button type="button" class="btn btn-success next-step">Next</button>
+
+							<!-- Step 4 -->
+							<div class="tab-pane fade" id="step4">
+								<h5 class="text-success">Review Your Property Details</h5>
+								<p class="text-muted">You can review all information before submitting.</p>
+								<button type="button" class="btn btn-light prev-step">Back</button>
+								<button type="button" id="submitProperty" class="btn btn-success">Submit Property</button>
+							</div>
+
 						</div>
-
-
-						<!-- Step 3 -->
-						<div class="tab-pane fade" id="step3">
-							<div class="mb-3">
-								<label class="form-label fw-bold">Amenities</label>
-								<select class="form-select" name="Amenities" id="Amenities" multiple>
-									@foreach (var item in Model.AmenityList)
-									{
-										<option value="@item.Value">@item.Text</option>
-									}
-								</select>
-							</div>
-
-							<!-- Image Upload -->
-							<div class="mb-3">
-								<label class="form-label fw-bold">Upload Images</label>
-								<div id="imageInputs">
-									<input type="file" name="Images" id="Images" class="form-control mb-2 imageInput" accept="image/*">
-								</div>
-								<button type="button" id="addImageInput" class="btn btn-outline-success btn-sm">+ Add More Images</button>
-							</div>
-
-							<div id="imageGallery" class="gallery-container"></div>
-
-							<hr>
-
-							<!-- Video Upload -->
-							<div class="mb-3">
-								<label class="form-label fw-bold">Upload Videos</label>
-								<div id="videoInputs">
-									<input type="file" name="Videos" id="Videos" class="form-control mb-2 videoInput" accept="video/*">
-								</div>
-								<button type="button" id="addVideoInput" class="btn btn-outline-success btn-sm">+ Add More Videos</button>
-							</div>
-
-							<div id="videoGallery" class="gallery-container"></div>
-
-
-							<button type="button" class="btn btn-light prev-step">Back</button>
-							<button type="button" class="btn btn-success next-step">Next</button>
-						</div>
-
-
-						<!-- Step 4 -->
-						<div class="tab-pane fade" id="step4">
-							<h5 class="text-success">Review Your Property Details</h5>
-							<p class="text-muted">You can review all information before submitting.</p>
-							<button type="button" class="btn btn-light prev-step">Back</button>
-							<button type="button" id="submitProperty" class="btn btn-success">Submit Property</button>
-						</div>
-
-					</div>
-				</form>
+					</form>
+				</div>
 			</div>
-		</div>
-		<div class="tab-pane fade" id="listSection" role="tabpanel">
-			<div class="card shadow-sm p-3">
-				<h5>All Properties</h5>
-				<table id="TableList" class="table table-bordered table-striped w-100">
-					<thead>
-						<tr>
-							<th>Property Name</th>
-							<th>Property Type</th>
-							<th>Transaction Type</th>
-							<th>City</th>
-							<th>Contact Person Name</th>
-							<th>IsActive</th>
-							<th>Created By </th>
-							<th><i class="bi bi-eye text-primary fs-5" title="View"></i></th>
-							<th><i class="bi bi-check2-circle text-primary fs-5" title="Sold Out Details"></i></th>
-							<th><i class="bi bi-pencil-square text-primary fs-5" title="Edit"></i></th>
-							<th><i class="bi bi-trash text-danger fs-5" title="Delete"></i></th>
-						</tr>
-					</thead>
-				</table>
+			<div class="tab-pane fade" id="listSection" role="tabpanel">
+				<div class="card shadow-sm p-3">
+					<h5>All Properties</h5>
+					<table id="TableList" class="table table-bordered table-striped w-100">
+						<thead>
+							<tr>
+								<th>Property Name</th>
+								<th>Property Type</th>
+								<th>Transaction Type</th>
+								<th>City</th>
+								<th>Contact Person Name</th>
+								<th>IsActive</th>
+								<th>Created By </th>
+								<th><i class="bi bi-eye text-primary fs-5" title="View"></i></th>
+								<th><i class="bi bi-check2-circle text-primary fs-5" title="Sold Out Details"></i></th>
+								<th><i class="bi bi-pencil-square text-primary fs-5" title="Edit"></i></th>
+								<th><i class="bi bi-trash text-danger fs-5" title="Delete"></i></th>
+							</tr>
+						</thead>
+					</table>
+				</div>
 			</div>
 		</div>
 	</div>
-</div>
 
 
-<!-- ✅ Add Property Type Modal -->
-<div class="modal fade" id="addSoldoutModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1">
-	<div class="modal-dialog">
-		<div class="modal-content">
-			<div class="modal-header bg-success text-white">
-				<h5 class="modal-title">Add Sold Out Details</h5>
-				<button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-			</div>
-			<div class="modal-body">
-				<form id="SoldOutModalForm">
-					<input type="hidden" id="PropUniquId" name="PropUniquId" />
-					<div class="mb-3">
-						<label class="form-label fw-bold">Sold Out To Whome Name<span class="impMark">*</span></label>
-						<input type="text" class="form-control" id="SoldOutToWhome" name="SoldOutToWhome" placeholder="Enter Sold Out To Whome Name" />
-					</div>
-					<div class="mb-3">
-						<label class="form-label fw-bold">Sold Out Contact No</label>
-						<input type="text" class="form-control" id="SoldOutContactNo" name="SoldOutContactNo" placeholder="Enter Sold Out Contact No">
-					</div>
-					<div class="form-check mb-3">
-						<input class="form-check-input" type="checkbox" id="IsSoldOut" name="IsSoldOut" value="false" />
-						<label class="form-check-label fw-bold" for="IsSoldOutLabel">Is Sold Out</label>
-					</div>
-				</form>
-			</div>
-			<div class="modal-footer">
-				<button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
-					<i class="bi bi-x-circle"></i> Cancel
-				</button>
-				<button type="button" class="btn btn-success" id="btnSaveSoldOut">
-					<i class="bi bi-save"></i> Save
-				</button>
+	<!-- ✅ Add Property Type Modal -->
+	<div class="modal fade" id="addSoldoutModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header bg-success text-white">
+					<h5 class="modal-title">Add Sold Out Details</h5>
+					<button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+				</div>
+				<div class="modal-body">
+					<form id="SoldOutModalForm">
+						<input type="hidden" id="PropUniquId" name="PropUniquId" />
+						<div class="mb-3">
+							<label class="form-label fw-bold">Sold Out To Whome Name<span class="impMark">*</span></label>
+							<input type="text" class="form-control" id="SoldOutToWhome" name="SoldOutToWhome" placeholder="Enter Sold Out To Whome Name" />
+						</div>
+						<div class="mb-3">
+							<label class="form-label fw-bold">Sold Out Contact No</label>
+							<input type="text" class="form-control" id="SoldOutContactNo" name="SoldOutContactNo" placeholder="Enter Sold Out Contact No">
+						</div>
+						<div class="form-check mb-3">
+							<input class="form-check-input" type="checkbox" id="IsSoldOut" name="IsSoldOut" value="false" />
+							<label class="form-check-label fw-bold" for="IsSoldOutLabel">Is Sold Out</label>
+						</div>
+					</form>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
+						<i class="bi bi-x-circle"></i> Cancel
+					</button>
+					<button type="button" class="btn btn-success" id="btnSaveSoldOut">
+						<i class="bi bi-save"></i> Save
+					</button>
+				</div>
 			</div>
 		</div>
 	</div>
-</div>
-<!-- View Modal -->
-<div class="modal fade" id="imagesModal" tabindex="-1" aria-labelledby="imagesModalLabel" aria-hidden="true">
-	<div class="modal-dialog modal-lg modal-dialog-centered">
-		<div class="modal-content">
-			<div class="modal-header">
-				<h5 class="modal-title" id="imagesModalLabel">Property Images</h5>
-				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-			</div>
-			<div class="modal-body">
-				<div id="imagesContainer" class="row g-3"></div>
+	<!-- View Modal -->
+	<div class="modal fade" id="imagesModal" tabindex="-1" aria-labelledby="imagesModalLabel" aria-hidden="true">
+		<div class="modal-dialog modal-lg modal-dialog-centered">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="imagesModalLabel">Property Images</h5>
+					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+				</div>
+				<div class="modal-body">
+					<div id="imagesContainer" class="row g-3"></div>
+				</div>
 			</div>
 		</div>
 	</div>
-</div>
+</main>
 @section Scripts {
 	<script src="https://cdn.datatables.net/2.3.2/js/dataTables.min.js"></script>
 	<script>
@@ -1420,7 +1425,7 @@
 				$("#ContactPersonNo ,#ContactPersonAlternatePhone,#SoldOutContactNo").on("change", function () {
 			 validateMobileNo(this);
 		});
-				
+
 	</script>
 
 }

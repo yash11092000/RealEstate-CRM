@@ -2,7 +2,23 @@
 
 @{
 	ViewData["Title"] = "Agent";
+	var theme = User.FindFirst("Theme")?.Value ?? "#198754";
 }
+
+<style>
+	:root {
+		--theme-color: @theme;
+		--sidebar-width: 280px;
+		--sidebar-collapsed-width: 70px;
+		--transition-speed: 0.3s;
+		--primary-color: @theme;
+		--secondary-color: #6c757d;
+		--light-bg: #f8f9fa;
+	}
+
+</style>
+
+<main class="dashboard-content with-sidebar collapsed">
 <div class="container mt-4">
 	<div class="d-flex justify-content-between align-items-center mb-3">
 		<h4 class="mb-0">Agents</h4>
@@ -176,6 +192,7 @@
 	</div>
 </div>
 
+</main>
 
 @section Scripts {
 	<script>

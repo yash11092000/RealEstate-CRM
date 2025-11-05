@@ -31,5 +31,14 @@ namespace PhysioWeb.Controllers
             return View(menuMaster);
         }
         #endregion
+
+
+        #region MenuMaster
+        public async Task<ActionResult> MenuMaster()
+        {
+            return View();
+        }
+
+        #endregion
     }
 }

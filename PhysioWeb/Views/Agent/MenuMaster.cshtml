@@ -1,0 +1,317 @@
+﻿@{
+	ViewBag.Title = "Agency Dashboard";
+	var theme = User.FindFirst("Theme")?.Value ?? "#198754";
+}
+
+<style>
+	:root {
+		--theme-color: @theme;
+		--sidebar-width: 280px;
+		--sidebar-collapsed-width: 70px;
+		--transition-speed: 0.3s;
+		--primary-color: @theme;
+		--secondary-color: #6c757d;
+		--light-bg: #f8f9fa;
+	}
+	/* form */
+	.form-container {
+		background: white;
+		border-radius: 12px;
+		box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+		overflow: hidden;
+	}
+
+	.form-header {
+		background: linear-gradient(135deg, var(--primary-color), #157347);
+		color: white;
+		padding: 2rem;
+	}
+
+	.form-body {
+		padding: 2rem;
+	}
+
+	.form-section {
+		background: var(--light-bg);
+		border-radius: 8px;
+		padding: 1.5rem;
+		margin-bottom: 1.5rem;
+		border-left: 4px solid var(--primary-color);
+	}
+
+		.form-section h6 {
+			color: var(--primary-color);
+			margin-bottom: 1rem;
+			font-weight: 600;
+		}
+
+	.icon-preview-container {
+		background: white;
+		border: 2px dashed #dee2e6;
+		border-radius: 8px;
+		padding: 1.5rem;
+		text-align: center;
+		transition: all 0.3s ease;
+	}
+
+		.icon-preview-container:hover {
+			border-color: var(--primary-color);
+		}
+
+	.icon-display {
+		width: 60px;
+		height: 60px;
+		background: var(--primary-color);
+		border-radius: 50%;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		margin: 0 auto 1rem;
+		color: white;
+		font-size: 1.5rem;
+	}
+
+	.form-control:focus, .form-select:focus {
+		border-color: var(--primary-color);
+		box-shadow: 0 0 0 0.2rem rgba(25, 135, 84, 0.25);
+	}
+
+	.btn-primary {
+		background: var(--primary-color);
+		border-color: var(--primary-color);
+		padding: 0.75rem 2rem;
+		font-weight: 600;
+	}
+
+		.btn-primary:hover {
+			background: #157347;
+			border-color: #146c43;
+		}
+
+	.required-label::after {
+		content: " *";
+		color: #dc3545;
+	}
+
+	.info-text {
+		font-size: 0.875rem;
+		color: var(--secondary-color);
+	}
+
+	.menu-type-badge {
+		background: var(--primary-color);
+		color: white;
+		padding: 0.25rem 0.75rem;
+		border-radius: 20px;
+		font-size: 0.75rem;
+		font-weight: 500;
+	}
+
+	.feature-card {
+		background: white;
+		border: 1px solid #e9ecef;
+		border-radius: 8px;
+		padding: 1rem;
+		text-align: center;
+		transition: transform 0.2s ease;
+	}
+
+		.feature-card:hover {
+			transform: translateY(-2px);
+			box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+		}
+
+	.feature-icon {
+		width: 50px;
+		height: 50px;
+		background: var(--light-bg);
+		border-radius: 50%;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		margin: 0 auto 0.5rem;
+		color: var(--primary-color);
+		font-size: 1.25rem;
+	}
+</style>
+
+<!-- Main Content -->
+<main class="dashboard-content with-sidebar collapsed">
+
+
+	<div class="container py-5">
+		<div class="row justify-content-center">
+			<div class="col-lg-12">
+				<!-- Main Form -->
+				<div class="form-container">
+
+					<!-- Form Body -->
+					<div class="form-body">
+						<form id="menuForm">
+							<!-- Basic Information Section -->
+							<div class="form-section">
+								<h6><i class="bi bi-info-circle me-2"></i>Basic Information</h6>
+								<div class="row">
+									<div class="col-md-6 mb-3">
+										<label class="form-label required-label">Menu Name</label>
+										<input type="text" class="form-control" placeholder="Enter menu name" required>
+										<div class="info-text">This will be displayed in the navigation</div>
+									</div>
+									<div class="col-md-6 mb-3">
+										<label class="form-label required-label">Menu URL</label>
+										<input type="text" class="form-control" placeholder="/page/url" required>
+										<div class="info-text">Relative URL path for the menu item</div>
+									</div>
+								</div>
+							</div>
+
+							<!-- Menu Type Section -->
+							<div class="form-section">
+								<h6><i class="bi bi-diagram-3 me-2"></i>Menu Type & Hierarchy</h6>
+								<div class="row">
+									<div class="col-md-6 mb-3">
+										<label class="form-label required-label">Menu Type</label>
+										<select class="form-select" required>
+											<option value="">Select menu type</option>
+											<option value="parent">Parent Menu</option>
+											<option value="child">Child Menu</option>
+										</select>
+									</div>
+									<div class="col-md-6 mb-3">
+										<label class="form-label">Parent Menu</label>
+										<select class="form-select" disabled>
+											<option value="">Select parent menu</option>
+											<option value="1">Dashboard</option>
+											<option value="2">Properties</option>
+											<option value="3">Clients</option>
+										</select>
+										<div class="info-text">Only applicable for child menus</div>
+									</div>
+								</div>
+							</div>
+
+							<!-- Icon & Appearance Section -->
+							<div class="form-section">
+								<h6><i class="bi bi-palette me-2"></i>Icon & Appearance</h6>
+								<div class="row">
+									<div class="col-md-6 mb-3">
+										<label class="form-label required-label">Icon Class</label>
+										<div class="input-group">
+											<span class="input-group-text">bi</span>
+											<input type="text" class="form-control" placeholder="house" required>
+										</div>
+										<div class="info-text">Bootstrap Icon class name (without 'bi-' prefix)</div>
+									</div>
+									<div class="col-md-6 mb-3">
+										<label class="form-label">Display Order</label>
+										<input type="number" class="form-control" value="0" min="0">
+										<div class="info-text">Lower numbers appear first</div>
+									</div>
+								</div>
+
+								<!-- Icon Preview -->
+								<div class="icon-preview-container mt-3">
+									<div class="icon-display">
+										<i class="bi bi-house"></i>
+									</div>
+									<h6 class="mb-2">Icon Preview</h6>
+									<p class="text-muted small mb-0">This is how your icon will appear in the menu</p>
+								</div>
+							</div>
+
+							<!-- Settings Section -->
+							<div class="form-section">
+								<h6><i class="bi bi-gear me-2"></i>Settings</h6>
+								<div class="row">
+									<div class="col-md-6">
+										<div class="form-check form-switch mb-3">
+											<input class="form-check-input" type="checkbox" checked>
+											<label class="form-check-label fw-medium">Active Menu Item</label>
+										</div>
+										<div class="info-text">Inactive menus won't be displayed</div>
+									</div>
+									<div class="col-md-6">
+										<div class="form-check form-switch mb-3">
+											<input class="form-check-input" type="checkbox">
+											<label class="form-check-label fw-medium">Open in New Tab</label>
+										</div>
+										<div class="info-text">Open link in new browser tab</div>
+									</div>
+								</div>
+							</div>
+
+							<!-- Form Actions -->
+							<div class="row mt-4">
+								<div class="col-12">
+									<div class="d-flex justify-content-between align-items-center">
+										<div>
+											<span class="text-muted">All fields marked with * are required</span>
+										</div>
+										<div>
+											<button type="button" class="btn btn-outline-secondary me-2">
+												<i class="bi bi-x-circle me-1"></i>Cancel
+											</button>
+											<button type="submit" class="btn btn-primary">
+												<i class="bi bi-check-circle me-1"></i>Save Menu Item
+											</button>
+										</div>
+									</div>
+								</div>
+							</div>
+						</form>
+					</div>
+				</div>
+
+				<!-- Quick Tips -->
+				<div class="mt-4 p-4 bg-light rounded">
+					<h6 class="fw-bold mb-3"><i class="bi bi-lightbulb me-2"></i>Quick Tips</h6>
+					<div class="row">
+						<div class="col-md-6">
+							<ul class="list-unstyled text-muted small">
+								<li class="mb-2"><i class="bi bi-check text-success me-2"></i>Use descriptive menu names</li>
+								<li class="mb-2"><i class="bi bi-check text-success me-2"></i>Keep URLs short and meaningful</li>
+							</ul>
+						</div>
+						<div class="col-md-6">
+							<ul class="list-unstyled text-muted small">
+								<li class="mb-2"><i class="bi bi-check text-success me-2"></i>Choose relevant icons</li>
+								<li class="mb-2"><i class="bi bi-check text-success me-2"></i>Organize with parent-child relationships</li>
+							</ul>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</main>
+
+@section Scripts {
+	<script>
+		// Simple form interactivity
+		document.addEventListener('DOMContentLoaded', function() {
+			const menuTypeSelect = document.querySelector('select[required]');
+			const parentMenuSelect = document.querySelector('select[disabled]');
+			const iconInput = document.querySelector('input[placeholder="house"]');
+			const iconDisplay = document.querySelector('.icon-display i');
+
+			// Menu type change handler
+			menuTypeSelect.addEventListener('change', function() {
+				parentMenuSelect.disabled = this.value !== 'child';
+			});
+
+			// Icon preview handler
+			iconInput.addEventListener('input', function() {
+				const iconClass = this.value ? 'bi-' + this.value : 'bi-house';
+				iconDisplay.className = iconClass;
+			});
+
+			// Form submission handler
+			document.getElementById('menuForm').addEventListener('submit', function(e) {
+				e.preventDefault();
+				alert('Menu item saved successfully!');
+				this.reset();
+				iconDisplay.className = 'bi-house';
+			});
+		});
+	</script>
+}

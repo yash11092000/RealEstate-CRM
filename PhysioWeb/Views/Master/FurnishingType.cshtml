@@ -1,212 +1,228 @@
 ﻿@model PhysioWeb.Models.FurnishingTypeMaster
 @{
-    ViewBag.Title = "Furnishing Type";
+	ViewBag.Title = "Furnishing Type";
+	var theme = User.FindFirst("Theme")?.Value ?? "#198754";
 }
 
-
-<div class="container mt-4">
-    <div class="d-flex justify-content-between align-items-center mb-3">
-        <h4 class="mb-0">Furnishing Types</h4>
-        <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#addFurnishingTypeModal">
-            <i class="bi bi-plus-circle"></i> Add Furnishing Type
-        </button>
-    </div>
-
-    <!-- ✅ Property Types Table -->
-    <div class="card shadow-sm border-0">
-        <div class="card-header bg-success text-white">
-            <h5 class="mb-0"><i class="bi bi-building"></i>All Furnishing Types</h5>
-        </div>
-        <div class="card-body">
-            <div class="table-responsive">
-                <table id="TableList" class="table table-hover align-middle">
-                    <thead class="table-light">
-                        <tr>
-                            <th>Furnishing Type</th>
-                            @* <th>Description</th> *@
-                            <th>InActive</th>
-                            <th>Created By</th>
-                            @*  <th><i class="bi bi-clock-history text-success fs-5" title="History"></i></th> *@
-                            <th><i class="bi bi-pencil-square text-primary fs-5" title="Edit"></i></th>
-                            <th><i class="bi bi-trash text-danger fs-5" title="Delete"></i></th>
-                        </tr>
-                    </thead>
-                    <tbody></tbody>
-                </table>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- ✅ Add Property Type Modal -->
-<div class="modal fade" id="addFurnishingTypeModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header bg-success text-white">
-                <h5 class="modal-title">Add New Furnishing Type</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-            </div>
-            <div class="modal-body">
-                <form id="furnishingForm">
-                    <input type="hidden" id="UniquId" name="UniquId" />
-                    <div class="mb-3">
-                        <label class="form-label fw-bold">Furnishing Type<span class="impMark">*</span></label>
-                        <input type="text" class="form-control" id="FurnishingType" name="FurnishingType" placeholder="Enter Furnishing Type" />
-                    </div>
-                   
-                    <div class="form-check mb-3">
-                        <input class="form-check-input" type="checkbox" id="IsActive" name="IsActive" value="true" checked />
-                        <label class="form-check-label fw-bold" for="IsActiveLabel">Is Active</label>
-                    </div>
-                </form>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
-                    <i class="bi bi-x-circle"></i> Cancel
-                </button>
-                <button type="button" class="btn btn-success" id="btnSave">
-                    <i class="bi bi-save"></i> Save
-                </button>
-            </div>
-        </div>
-    </div>
-</div>
+<style>
+	:root {
+		--theme-color: @theme;
+		--sidebar-width: 280px;
+		--sidebar-collapsed-width: 70px;
+		--transition-speed: 0.3s;
+		--primary-color: @theme;
+		--secondary-color: #6c757d;
+		--light-bg: #f8f9fa;
+	}
 
 
+
+</style>
+
+<main class="dashboard-content with-sidebar collapsed">
+	<div class="container-fluid mt-4">
+		<div class="d-flex justify-content-between align-items-center mb-3">
+			<h4 class="mb-0">Furnishing Types</h4>
+			<button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#addFurnishingTypeModal">
+				<i class="bi bi-plus-circle"></i> Add Furnishing Type
+			</button>
+		</div>
+
+		<!-- ✅ Property Types Table -->
+		<div class="card shadow-sm border-0">
+			<div class="card-header bg-success text-white">
+				<h5 class="mb-0"><i class="bi bi-building"></i>All Furnishing Types</h5>
+			</div>
+			<div class="card-body">
+				<div class="table-responsive">
+					<table id="TableList" class="table table-hover align-middle">
+						<thead class="table-light">
+							<tr>
+								<th>Furnishing Type</th>
+								@* <th>Description</th> *@
+								<th>InActive</th>
+								<th>Created By</th>
+								@*  <th><i class="bi bi-clock-history text-success fs-5" title="History"></i></th> *@
+								<th><i class="bi bi-pencil-square text-primary fs-5" title="Edit"></i></th>
+								<th><i class="bi bi-trash text-danger fs-5" title="Delete"></i></th>
+							</tr>
+						</thead>
+						<tbody></tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<!-- ✅ Add Property Type Modal -->
+	<div class="modal fade" id="addFurnishingTypeModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header bg-success text-white">
+					<h5 class="modal-title">Add New Furnishing Type</h5>
+					<button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+				</div>
+				<div class="modal-body">
+					<form id="furnishingForm">
+						<input type="hidden" id="UniquId" name="UniquId" />
+						<div class="mb-3">
+							<label class="form-label fw-bold">Furnishing Type<span class="impMark">*</span></label>
+							<input type="text" class="form-control" id="FurnishingType" name="FurnishingType" placeholder="Enter Furnishing Type" />
+						</div>
+
+						<div class="form-check mb-3">
+							<input class="form-check-input" type="checkbox" id="IsActive" name="IsActive" value="true" checked />
+							<label class="form-check-label fw-bold" for="IsActiveLabel">Is Active</label>
+						</div>
+					</form>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
+						<i class="bi bi-x-circle"></i> Cancel
+					</button>
+					<button type="button" class="btn btn-success" id="btnSave">
+						<i class="bi bi-save"></i> Save
+					</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+</main>
 
 @section Scripts {
 
-    <script>
+	<script>
 
-                   $(document).ready(function () {
+				   $(document).ready(function () {
 
-                        $('#TableList thead tr').clone(true).appendTo('#TableList thead');
+						$('#TableList thead tr').clone(true).appendTo('#TableList thead');
 
-                        $('#TableList thead tr:eq(1) th').each(function (i) {
-                            if ($(this).find('i').length === 0) { // ✅ only add input if no icon
-                                var title = $('#TableList thead tr:eq(0) th').eq(i).text().trim();
-                                $(this).html('<input class="form-control form-control-sm" type="text" placeholder="' + title + '" />');
-                            } else {
-                                $(this).html('');
-                            }
-                        });
-                        var TableList = $("#TableList").DataTable({
-                        orderCellsTop: true,
-                        processing: true,
-                        serverSide: true,
-                        order: [[0, "asc"]],
-                        ajax: {
-                            url: '/Master/ListFurnishingType',
-                            type: 'POST' , // or 'GET' depending on your controller setup
-                        },
-                        columns: [
-                            { data: 'furnishingType' },
-                            { data: 'inActiveText' },
-                            { data: 'createdBy' },
-                        //     {
-                        //     data: null,
-                        //     render: function (data, type, row) {
-                        //         let para = row.uniquId + ',' + '"Master"' + ',' + '"PropertyType"';
-                        //         return `<a href="javascript:void(0)" onclick="ViewHistory(${para})">
-                        //                     <i class="bi bi-clock-history text-success fs-5" title="View History"></i>
-                        //                 </a>`;
-                        //     },
-                        //     orderable: false, searchable: false
-                        // },
-                        {
-                            data: null,
-                            render: function (data, type, row) {
-                                let para = `'${row.uniquId}', 'Master', 'EditFurnishingType'`;
-                                return `<a href="javascript:void(0)" onclick="EditData(${para})">
-                                            <i class="bi bi-pencil-square text-primary fs-5" title="Edit"></i>
-                                        </a>`;
-                            },
-                            orderable: false,
-                            searchable: false
-                        },
+						$('#TableList thead tr:eq(1) th').each(function (i) {
+							if ($(this).find('i').length === 0) { // ✅ only add input if no icon
+								var title = $('#TableList thead tr:eq(0) th').eq(i).text().trim();
+								$(this).html('<input class="form-control form-control-sm" type="text" placeholder="' + title + '" />');
+							} else {
+								$(this).html('');
+							}
+						});
+						var TableList = $("#TableList").DataTable({
+						orderCellsTop: true,
+						processing: true,
+						serverSide: true,
+						order: [[0, "asc"]],
+						ajax: {
+							url: '/Master/ListFurnishingType',
+							type: 'POST' , // or 'GET' depending on your controller setup
+						},
+						columns: [
+							{ data: 'furnishingType' },
+							{ data: 'inActiveText' },
+							{ data: 'createdBy' },
+						//     {
+						//     data: null,
+						//     render: function (data, type, row) {
+						//         let para = row.uniquId + ',' + '"Master"' + ',' + '"PropertyType"';
+						//         return `<a href="javascript:void(0)" onclick="ViewHistory(${para})">
+						//                     <i class="bi bi-clock-history text-success fs-5" title="View History"></i>
+						//                 </a>`;
+						//     },
+						//     orderable: false, searchable: false
+						// },
+						{
+							data: null,
+							render: function (data, type, row) {
+								let para = `'${row.uniquId}', 'Master', 'EditFurnishingType'`;
+								return `<a href="javascript:void(0)" onclick="EditData(${para})">
+											<i class="bi bi-pencil-square text-primary fs-5" title="Edit"></i>
+										</a>`;
+							},
+							orderable: false,
+							searchable: false
+						},
 
-                                {
-                            data: null,
-                            render: function (data, type, row) {
-                                 let para = `'${row.uniquId}', 'Master', 'DeleteFurnishingType'`;
-                                return `<a href="javascript:void(0)" onclick="DeleteData(${para})">
-                                            <i class="bi bi-trash text-danger fs-5" title="Delete"></i>
-                                        </a>`;
-                            },
-                            orderable: false, searchable: false
-                        }
-                        ],
-                        initComplete: function () {
-                                 var table = this.api();
+								{
+							data: null,
+							render: function (data, type, row) {
+								 let para = `'${row.uniquId}', 'Master', 'DeleteFurnishingType'`;
+								return `<a href="javascript:void(0)" onclick="DeleteData(${para})">
+											<i class="bi bi-trash text-danger fs-5" title="Delete"></i>
+										</a>`;
+							},
+							orderable: false, searchable: false
+						}
+						],
+						initComplete: function () {
+								 var table = this.api();
 
-                // ✅ Attach filter inputs to correct column index
-                $('#TableList thead tr:eq(1) th').each(function (i) {
-                    $('input', this).on('keyup change', function () {
-                        if (table.column(i).search() !== this.value) {
-                            table
-                                .column(i)
-                                .search(this.value) // ✅ per-column search
-                                .draw();
-                        }
-                    });
-                });
-                        }
-                    });
+				// ✅ Attach filter inputs to correct column index
+				$('#TableList thead tr:eq(1) th').each(function (i) {
+					$('input', this).on('keyup change', function () {
+						if (table.column(i).search() !== this.value) {
+							table
+								.column(i)
+								.search(this.value) // ✅ per-column search
+								.draw();
+						}
+					});
+				});
+						}
+					});
 
-                });
+				});
 
-                            $("#btnSave").on("click", function () {
-            let FurnishingType = $("#FurnishingType").val();
+							$("#btnSave").on("click", function () {
+			let FurnishingType = $("#FurnishingType").val();
 
-            if (FurnishingType === "") {
-                notyf.error("Please enter Furnishing Type");
-                $("#FurnishingType").focus();
-                return;
-            }
+			if (FurnishingType === "") {
+				notyf.error("Please enter Furnishing Type");
+				$("#FurnishingType").focus();
+				return;
+			}
 
-            $.ajax({
-                url: '/Master/SaveFurnishingType',
-                method: 'POST',
-                data: $("#furnishingForm").serialize(),
-                success: function (response) {
-                    if (response) {
-                        notyf.success("Furnishing Type added successfully");
-                        $("#addFurnishingTypeModal").modal('hide');
-                        ClearData();
-                        $("#TableList").DataTable().ajax.reload(null, false);
-                    } else {
-                        notyf.error(response.message || "Failed to save.");
-                    }
-                },
-                error: function (xhr) {
-                    console.error(xhr);
-                    notyf.error("Server error: " + (xhr.responseText || "Unknown error"));
-                }
-            });
-        });
+			$.ajax({
+				url: '/Master/SaveFurnishingType',
+				method: 'POST',
+				data: $("#furnishingForm").serialize(),
+				success: function (response) {
+					if (response) {
+						notyf.success("Furnishing Type added successfully");
+						$("#addFurnishingTypeModal").modal('hide');
+						ClearData();
+						$("#TableList").DataTable().ajax.reload(null, false);
+					} else {
+						notyf.error(response.message || "Failed to save.");
+					}
+				},
+				error: function (xhr) {
+					console.error(xhr);
+					notyf.error("Server error: " + (xhr.responseText || "Unknown error"));
+				}
+			});
+		});
 
 
-                function OnSuccessOfEdit(data){
-                    $("#addFurnishingTypeModal").modal('show');
-                    $("#UniquId").val(data.uniquId);
-                    $("#FurnishingType").val(data.furnishingType);
-                $("#IsActive").prop("checked", data.isActive);
-                }
+				function OnSuccessOfEdit(data){
+					$("#addFurnishingTypeModal").modal('show');
+					$("#UniquId").val(data.uniquId);
+					$("#FurnishingType").val(data.furnishingType);
+				$("#IsActive").prop("checked", data.isActive);
+				}
 
-          $('.btn-cancel').on('click', function () {
-          $('#furnishingForm')[0].reset();
-          ClearData();
-        });
+		  $('.btn-cancel').on('click', function () {
+		  $('#furnishingForm')[0].reset();
+		  ClearData();
+		});
 
-        function ClearData(){
-             $("#UniquId").val("");
-             $("#FurnishingType").val("");
-             $("#IsActive").prop("checked", true);
-        }
+		function ClearData(){
+			 $("#UniquId").val("");
+			 $("#FurnishingType").val("");
+			 $("#IsActive").prop("checked", true);
+		}
 
-        function OnSuccessOfDelete(){
-            notyf.success("Furnishing Type Deleted");
-        }
-    </script>
+		function OnSuccessOfDelete(){
+			notyf.success("Furnishing Type Deleted");
+		}
+	</script>
 
 }
