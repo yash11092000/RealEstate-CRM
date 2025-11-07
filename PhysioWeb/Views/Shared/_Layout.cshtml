@@ -629,143 +629,145 @@
 				var fullPath = ViewContext.HttpContext?.Request?.Path + ViewContext.HttpContext?.Request?.QueryString;
 				var excludedPaths = new[]
 				{
-			"/",
-			"/propertydetails/property",
-			"/home/searchproperty"
-			};
+					"/",
+					"/propertydetails/property",
+					"/home/searchproperty"
+				};
 				@if (User.IsInRole("Agency") && !excludedPaths.Contains(currentPath))
 				{
-					<!-- Agency Sidebar with Scrollable Container -->
-					<nav id="agencySidebar" class="collapsed">
-						<div class="sidebar-header">
-							<h4>Agency Menu</h4>
-							<button type="button" id="sidebarToggle" class="sidebar-toggle">
-								<i class="bi bi-chevron-right"></i>
-							</button>
-						</div>
+					@await Component.InvokeAsync("SidebarMenu")
 
-						<div class="sidebar-menu-container">
-							<ul class="components">
-								<li class="active">
-									<a href="/Agent/AgencyDashboard">
-										<i class="bi bi-speedometer2"></i>
-										<span>Dashboard</span>
-									</a>
-								</li>
+					// <!-- Agency Sidebar with Scrollable Container -->
+					// <nav id="agencySidebar" class="collapsed">
+					// 	<div class="sidebar-header">
+					// 		<h4>Agency Menu</h4>
+					// 		<button type="button" id="sidebarToggle" class="sidebar-toggle">
+					// 			<i class="bi bi-chevron-right"></i>
+					// 		</button>
+					// 	</div>
 
-								<!-- Parent menu with children -->
-								<li class="has-children">
-									<a href="#propertiesSubmenu" data-bs-toggle="collapse" aria-expanded="false">
-										<i class="bi bi-house"></i>
-										<span>Properties</span>
-									</a>
-									<ul class="child-menu collapse" id="propertiesSubmenu">
-										<li><a href="/Agent/Properties/All"><i class="bi bi-list-ul"></i> All Properties</a></li>
-										<li><a href="/Agent/Properties/Active"><i class="bi bi-check-circle"></i> Active Listings</a></li>
-										<li><a href="/Agent/Properties/Pending"><i class="bi bi-clock"></i> Pending</a></li>
-										<li><a href="/Agent/Properties/Sold"><i class="bi bi-check-lg"></i> Sold Properties</a></li>
-										<li><a href="/Agent/Properties/Archived"><i class="bi bi-archive"></i> Archived</a></li>
-										<li><a href="/Agent/Properties/Drafts"><i class="bi bi-file-earmark"></i> Drafts</a></li>
-									</ul>
-								</li>
+					// 	<div class="sidebar-menu-container">
+					// 		<ul class="components">
+					// 			<li class="active">
+					// 				<a href="/Agent/AgencyDashboard">
+					// 					<i class="bi bi-speedometer2"></i>
+					// 					<span>Dashboard</span>
+					// 				</a>
+					// 			</li>
 
-								<li>
-									<a href="/Agent/AddProperty">
-										<i class="bi bi-plus-circle"></i>
-										<span>Add Property</span>
-									</a>
-								</li>
+					// 			<!-- Parent menu with children -->
+					// 			<li class="has-children">
+					// 				<a href="#propertiesSubmenu" data-bs-toggle="collapse" aria-expanded="false">
+					// 					<i class="bi bi-house"></i>
+					// 					<span>Properties</span>
+					// 				</a>
+					// 				<ul class="child-menu collapse" id="propertiesSubmenu">
+					// 					<li><a href="/Agent/Properties/All"><i class="bi bi-list-ul"></i> All Properties</a></li>
+					// 					<li><a href="/Agent/Properties/Active"><i class="bi bi-check-circle"></i> Active Listings</a></li>
+					// 					<li><a href="/Agent/Properties/Pending"><i class="bi bi-clock"></i> Pending</a></li>
+					// 					<li><a href="/Agent/Properties/Sold"><i class="bi bi-check-lg"></i> Sold Properties</a></li>
+					// 					<li><a href="/Agent/Properties/Archived"><i class="bi bi-archive"></i> Archived</a></li>
+					// 					<li><a href="/Agent/Properties/Drafts"><i class="bi bi-file-earmark"></i> Drafts</a></li>
+					// 				</ul>
+					// 			</li>
 
-								<!-- Parent menu with children -->
-								<li class="has-children">
-									<a href="#clientsSubmenu" data-bs-toggle="collapse" aria-expanded="false">
-										<i class="bi bi-people"></i>
-										<span>Clients</span>
-									</a>
-									<ul class="child-menu collapse" id="clientsSubmenu">
-										<li><a href="/Agent/Clients/Buyers"><i class="bi bi-cart"></i> Buyers</a></li>
-										<li><a href="/Agent/Clients/Sellers"><i class="bi bi-house"></i> Sellers</a></li>
-										<li><a href="/Agent/Clients/Leads"><i class="bi bi-telephone"></i> Leads</a></li>
-										<li><a href="/Agent/Clients/Referrals"><i class="bi bi-person-plus"></i> Referrals</a></li>
-										<li><a href="/Agent/Clients/Import"><i class="bi bi-upload"></i> Import Clients</a></li>
-									</ul>
-								</li>
+					// 			<li>
+					// 				<a href="/Agent/AddProperty">
+					// 					<i class="bi bi-plus-circle"></i>
+					// 					<span>Add Property</span>
+					// 				</a>
+					// 			</li>
 
-								<!-- Parent menu with children -->
-								<li class="has-children">
-									<a href="#appointmentsSubmenu" data-bs-toggle="collapse" aria-expanded="false">
-										<i class="bi bi-calendar"></i>
-										<span>Appointments</span>
-									</a>
-									<ul class="child-menu collapse" id="appointmentsSubmenu">
-										<li><a href="/Agent/Appointments/Upcoming"><i class="bi bi-calendar-check"></i> Upcoming</a></li>
-										<li><a href="/Agent/Appointments/Completed"><i class="bi bi-check-all"></i> Completed</a></li>
-										<li><a href="/Agent/Appointments/Cancelled"><i class="bi bi-x-circle"></i> Cancelled</a></li>
-										<li><a href="/Agent/Appointments/Schedule"><i class="bi bi-plus-circle"></i> Schedule New</a></li>
-										<li><a href="/Agent/Appointments/Calendar"><i class="bi bi-calendar-week"></i> Calendar View</a></li>
-									</ul>
-								</li>
+					// 			<!-- Parent menu with children -->
+					// 			<li class="has-children">
+					// 				<a href="#clientsSubmenu" data-bs-toggle="collapse" aria-expanded="false">
+					// 					<i class="bi bi-people"></i>
+					// 					<span>Clients</span>
+					// 				</a>
+					// 				<ul class="child-menu collapse" id="clientsSubmenu">
+					// 					<li><a href="/Agent/Clients/Buyers"><i class="bi bi-cart"></i> Buyers</a></li>
+					// 					<li><a href="/Agent/Clients/Sellers"><i class="bi bi-house"></i> Sellers</a></li>
+					// 					<li><a href="/Agent/Clients/Leads"><i class="bi bi-telephone"></i> Leads</a></li>
+					// 					<li><a href="/Agent/Clients/Referrals"><i class="bi bi-person-plus"></i> Referrals</a></li>
+					// 					<li><a href="/Agent/Clients/Import"><i class="bi bi-upload"></i> Import Clients</a></li>
+					// 				</ul>
+					// 			</li>
 
-								<!-- Parent menu with children -->
-								<li class="has-children">
-									<a href="#reportsSubmenu" data-bs-toggle="collapse" aria-expanded="false">
-										<i class="bi bi-bar-chart"></i>
-										<span>Reports</span>
-									</a>
-									<ul class="child-menu collapse" id="reportsSubmenu">
-										<li><a href="/Agent/Reports/Sales"><i class="bi bi-graph-up"></i> Sales Report</a></li>
-										<li><a href="/Agent/Reports/Performance"><i class="bi bi-speedometer"></i> Performance</a></li>
-										<li><a href="/Agent/Reports/Commission"><i class="bi bi-cash"></i> Commission</a></li>
-										<li><a href="/Agent/Reports/Listings"><i class="bi bi-house"></i> Listing Report</a></li>
-										<li><a href="/Agent/Reports/Client"><i class="bi bi-people"></i> Client Report</a></li>
-										<li><a href="/Agent/Reports/Export"><i class="bi bi-download"></i> Export Data</a></li>
-									</ul>
-								</li>
+					// 			<!-- Parent menu with children -->
+					// 			<li class="has-children">
+					// 				<a href="#appointmentsSubmenu" data-bs-toggle="collapse" aria-expanded="false">
+					// 					<i class="bi bi-calendar"></i>
+					// 					<span>Appointments</span>
+					// 				</a>
+					// 				<ul class="child-menu collapse" id="appointmentsSubmenu">
+					// 					<li><a href="/Agent/Appointments/Upcoming"><i class="bi bi-calendar-check"></i> Upcoming</a></li>
+					// 					<li><a href="/Agent/Appointments/Completed"><i class="bi bi-check-all"></i> Completed</a></li>
+					// 					<li><a href="/Agent/Appointments/Cancelled"><i class="bi bi-x-circle"></i> Cancelled</a></li>
+					// 					<li><a href="/Agent/Appointments/Schedule"><i class="bi bi-plus-circle"></i> Schedule New</a></li>
+					// 					<li><a href="/Agent/Appointments/Calendar"><i class="bi bi-calendar-week"></i> Calendar View</a></li>
+					// 				</ul>
+					// 			</li>
 
-								<!-- Parent menu with children -->
-								<li class="has-children">
-									<a href="#marketingSubmenu" data-bs-toggle="collapse" aria-expanded="false">
-										<i class="bi bi-megaphone"></i>
-										<span>Marketing</span>
-									</a>
-									<ul class="child-menu collapse" id="marketingSubmenu">
-										<li><a href="/Agent/Marketing/Email"><i class="bi bi-envelope"></i> Email Campaigns</a></li>
-										<li><a href="/Agent/Marketing/Social"><i class="bi bi-share"></i> Social Media</a></li>
-										<li><a href="/Agent/Marketing/Flyers"><i class="bi bi-file-image"></i> Property Flyers</a></li>
-										<li><a href="/Agent/Marketing/Ads"><i class="bi bi-badge-ad"></i> Advertising</a></li>
-									</ul>
-								</li>
+					// 			<!-- Parent menu with children -->
+					// 			<li class="has-children">
+					// 				<a href="#reportsSubmenu" data-bs-toggle="collapse" aria-expanded="false">
+					// 					<i class="bi bi-bar-chart"></i>
+					// 					<span>Reports</span>
+					// 				</a>
+					// 				<ul class="child-menu collapse" id="reportsSubmenu">
+					// 					<li><a href="/Agent/Reports/Sales"><i class="bi bi-graph-up"></i> Sales Report</a></li>
+					// 					<li><a href="/Agent/Reports/Performance"><i class="bi bi-speedometer"></i> Performance</a></li>
+					// 					<li><a href="/Agent/Reports/Commission"><i class="bi bi-cash"></i> Commission</a></li>
+					// 					<li><a href="/Agent/Reports/Listings"><i class="bi bi-house"></i> Listing Report</a></li>
+					// 					<li><a href="/Agent/Reports/Client"><i class="bi bi-people"></i> Client Report</a></li>
+					// 					<li><a href="/Agent/Reports/Export"><i class="bi bi-download"></i> Export Data</a></li>
+					// 				</ul>
+					// 			</li>
 
-								<!-- Parent menu with children -->
-								<li class="has-children">
-									<a href="#financeSubmenu" data-bs-toggle="collapse" aria-expanded="false">
-										<i class="bi bi-wallet"></i>
-										<span>Finance</span>
-									</a>
-									<ul class="child-menu collapse" id="financeSubmenu">
-										<li><a href="/Agent/Finance/Invoices"><i class="bi bi-receipt"></i> Invoices</a></li>
-										<li><a href="/Agent/Finance/Expenses"><i class="bi bi-currency-dollar"></i> Expenses</a></li>
-										<li><a href="/Agent/Finance/Commission"><i class="bi bi-percent"></i> Commission Tracking</a></li>
-										<li><a href="/Agent/Finance/Taxes"><i class="bi bi-calculator"></i> Tax Reports</a></li>
-									</ul>
-								</li>
+					// 			<!-- Parent menu with children -->
+					// 			<li class="has-children">
+					// 				<a href="#marketingSubmenu" data-bs-toggle="collapse" aria-expanded="false">
+					// 					<i class="bi bi-megaphone"></i>
+					// 					<span>Marketing</span>
+					// 				</a>
+					// 				<ul class="child-menu collapse" id="marketingSubmenu">
+					// 					<li><a href="/Agent/Marketing/Email"><i class="bi bi-envelope"></i> Email Campaigns</a></li>
+					// 					<li><a href="/Agent/Marketing/Social"><i class="bi bi-share"></i> Social Media</a></li>
+					// 					<li><a href="/Agent/Marketing/Flyers"><i class="bi bi-file-image"></i> Property Flyers</a></li>
+					// 					<li><a href="/Agent/Marketing/Ads"><i class="bi bi-badge-ad"></i> Advertising</a></li>
+					// 				</ul>
+					// 			</li>
 
-								<li>
-									<a href="/Agent/Settings">
-										<i class="bi bi-gear"></i>
-										<span>Settings</span>
-									</a>
-								</li>
+					// 			<!-- Parent menu with children -->
+					// 			<li class="has-children">
+					// 				<a href="#financeSubmenu" data-bs-toggle="collapse" aria-expanded="false">
+					// 					<i class="bi bi-wallet"></i>
+					// 					<span>Finance</span>
+					// 				</a>
+					// 				<ul class="child-menu collapse" id="financeSubmenu">
+					// 					<li><a href="/Agent/Finance/Invoices"><i class="bi bi-receipt"></i> Invoices</a></li>
+					// 					<li><a href="/Agent/Finance/Expenses"><i class="bi bi-currency-dollar"></i> Expenses</a></li>
+					// 					<li><a href="/Agent/Finance/Commission"><i class="bi bi-percent"></i> Commission Tracking</a></li>
+					// 					<li><a href="/Agent/Finance/Taxes"><i class="bi bi-calculator"></i> Tax Reports</a></li>
+					// 				</ul>
+					// 			</li>
 
-								<li>
-									<a href="/Agent/Help">
-										<i class="bi bi-question-circle"></i>
-										<span>Help & Support</span>
-									</a>
-								</li>
-							</ul>
-						</div>
-					</nav>
+					// 			<li>
+					// 				<a href="/Agent/Settings">
+					// 					<i class="bi bi-gear"></i>
+					// 					<span>Settings</span>
+					// 				</a>
+					// 			</li>
+
+					// 			<li>
+					// 				<a href="/Agent/Help">
+					// 					<i class="bi bi-question-circle"></i>
+					// 					<span>Help & Support</span>
+					// 				</a>
+					// 			</li>
+					// 		</ul>
+					// 	</div>
+					// </nav>
 				}
 			}
 

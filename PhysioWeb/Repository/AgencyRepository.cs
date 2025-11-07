@@ -38,6 +38,31 @@ namespace PhysioWeb.Repository
 
         }
 
+        public async Task<List<SidebarMenu>> GetSideBar()
+        {
+            try
+            {
+                string[] parametersName = { };
+                object[] Values = { };
+
+                string Sp = "FMR_GetSideBar";
+                var data = await _dbHelper.GetDataReaderAsync(Sp, parametersName, Values);
+                List<SidebarMenu> sidebar = new();
+                while (data.Read())
+                {
+                    sidebar.Add(new SidebarMenu(data));
+                }
+                return sidebar;
+            }
+            catch (Exception ex)
+            {
+                // Optional: log error here
+                throw;
+            }
+
+
+        }
+
         public async Task<bool> SaveMenuMaster(SidebarMenu sidebar)
         {
             try

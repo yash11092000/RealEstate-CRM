@@ -1,4 +1,6 @@
-﻿namespace PhysioWeb.Models
+﻿using System.Data;
+
+namespace PhysioWeb.Models
 {
     public class RentalTypeMaster : CommanProp
     {
@@ -11,7 +13,7 @@
         {
 
         }
-        public RentalTypeMaster(System.Data.IDataReader reader, int flag = 0)
+        public RentalTypeMaster(IDataReader reader, int flag = 0)
         {
             if (flag == 0)
             {

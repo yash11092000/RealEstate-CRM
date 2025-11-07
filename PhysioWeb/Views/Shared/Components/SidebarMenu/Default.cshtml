@@ -1,0 +1,50 @@
+﻿@model IEnumerable<SidebarMenu>
+
+
+<nav id="agencySidebar" class="collapsed">
+	<div class="sidebar-header">
+		<h4>Agency Menu</h4>
+		<button type="button" id="sidebarToggle" class="sidebar-toggle">
+			<i class="bi bi-chevron-right"></i>
+		</button>
+	</div>
+
+	<div class="sidebar-menu-container">
+		<ul class="components">
+			@foreach (var parent in Model.Where(m => m.IsParent))
+			{
+				var children = Model.Where(c => c.ParentMenuId == parent.ParentMenuId && !c.IsParent).ToList();
+
+				if (parent.HasChild && children.Any())
+				{
+					var submenuId = $"submenu_{parent.ParentMenuId}";
+					<li class="has-children">
+						<a href="#@submenuId" data-bs-toggle="collapse" aria-expanded="false">
+							<i class="@parent.MenuIcon"></i>
+							<span>@parent.MenuName</span>
+						</a>
+						<ul class="child-menu collapse" id="@submenuId">
+							@foreach (var child in children)
+							{
+								<li>
+									<a href="@child.MenuUrl">
+										<i class="@child.MenuIcon"></i> @child.MenuName
+									</a>
+								</li>
+							}
+						</ul>
+					</li>
+				}
+				else
+				{
+					<li>
+						<a href="@parent.MenuUrl">
+							<i class="@parent.MenuIcon"></i>
+							<span>@parent.MenuName</span>
+						</a>
+					</li>
+				}
+			}
+		</ul>
+	</div>
+</nav>
