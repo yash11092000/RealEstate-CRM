@@ -1,0 +1,346 @@
+﻿@model PhysioWeb.Models.NewLead
+@{
+    // The ViewBag.Title and theme variables from your original code
+    ViewBag.Title = "Lead Management";
+    var theme = User.FindFirst("Theme")?.Value ?? "#198754";
+}
+<style>
+    :root {
+        --theme-color: @theme;
+        --sidebar-width: 280px;
+        --sidebar-collapsed-width: 70px;
+        --transition-speed: 0.3s;
+        --primary-color: @theme;
+        --secondary-color: #6c757d;
+        --light-bg: #f8f9fa;
+    }
+
+    .stepper {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        display: flex;
+        position: relative;
+    }
+
+        .stepper .step {
+            flex: 1;
+            text-align: center;
+            font-weight: 500;
+            color: #777;
+            position: relative;
+        }
+
+            .stepper .step span {
+                display: inline-block;
+                width: 35px;
+                height: 35px;
+                line-height: 35px;
+                border-radius: 50%;
+                background: #dcdcdc;
+                color: #fff;
+                margin-bottom: 5px;
+                transition: all 0.3s ease;
+            }
+
+            .stepper .step.active span {
+                background: var(--theme-color);
+                transform: scale(1.1);
+            }
+
+            .stepper .step.completed span {
+                background: var(--theme-color);
+            }
+
+            .stepper .step::after {
+                content: '';
+                position: absolute;
+                top: 17px;
+                left: 50%;
+                width: 100%;
+                height: 3px;
+                background: #dcdcdc;
+                z-index: -1;
+            }
+
+            .stepper .step:last-child::after {
+                display: none;
+            }
+
+            .stepper .step.completed::after {
+                background: var(--theme-color);
+            }
+
+    .gallery-container {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+        gap: 15px;
+        justify-items: center;
+        margin-top: 15px;
+    }
+
+    .preview-card {
+        position: relative;
+        width: 180px;
+        height: 140px;
+        border-radius: 8px;
+        overflow: hidden;
+        background: #ffffff;
+        border: 1px solid #e0e0e0;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+        transition: transform 0.2s ease-in-out;
+    }
+
+        .preview-card:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+        }
+
+        .preview-card img,
+        .preview-card video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+    .delete-btn {
+        position: absolute;
+        top: 5px;
+        right: 5px;
+        background: rgba(220, 53, 69, 0.9);
+        border: none;
+        color: #fff;
+        font-size: 16px;
+        border-radius: 50%;
+        width: 24px;
+        height: 24px;
+        cursor: pointer;
+        line-height: 20px;
+        text-align: center;
+        padding: 0;
+        z-index: 10;
+        transition: background 0.2s;
+    }
+
+        .delete-btn:hover {
+            background: #ff1a1a;
+        }
+
+    .nav-tabs .nav-link {
+        color: var(--theme-color); /* Bootstrap success green */
+        font-weight: 600;
+        border: 2px solid transparent;
+        border-radius: 0.5rem 0.5rem 0 0;
+        transition: all 0.3s ease-in-out;
+    }
+
+        .nav-tabs .nav-link:hover {
+            background: #e6f4ea; /* light green hover */
+            border-color: var(--theme-color);
+            color: var(--theme-color);
+        }
+
+        .nav-tabs .nav-link.active {
+            background: var(--theme-color);
+            color: white !important;
+            border-color: var(--theme-color);
+        }
+
+</style>
+
+<link rel="stylesheet" href="https://cdn.datatables.net/2.3.2/css/dataTables.dataTables.min.css" />
+
+<div class="container mt-4">
+   
+
+    <ul class="nav nav-tabs" id="leadTabs" role="tablist">
+        <li class="nav-item" role="presentation">
+            <button class="nav-link active" id="new-lead-tab" data-bs-toggle="tab" data-bs-target="#new-lead" type="button" role="tab" aria-controls="new-lead" aria-selected="true">
+                <i class="bi bi-person-plus"></i> Add New Lead
+            </button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" id="all-leads-tab" data-bs-toggle="tab" data-bs-target="#all-leads" type="button" role="tab" aria-controls="all-leads" aria-selected="false">
+                <i class="bi bi-list-stars"></i> All Leads
+            </button>
+        </li>
+    </ul>
+
+    <div class="tab-content border border-top-0 p-4" id="leadTabsContent">
+
+        <div class="tab-pane fade show active" id="new-lead" role="tabpanel" aria-labelledby="new-lead-tab">
+            <div class="row">
+                <div class="col-md-12">
+                    <form asp-action="Create" method="post" id="leadForm">
+                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                        <div class="card p-3 mb-4 shadow-sm">
+                            <h5 class="card-title text-primary"><i class="bi bi-person-fill"></i> Contact Information</h5>
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label asp-for="FirstName" class="form-label"></label>
+                                    <input asp-for="FirstName" class="form-control" placeholder="Jane" />
+                                    <span asp-validation-for="FirstName" class="text-danger"></span>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label asp-for="LastName" class="form-label"></label>
+                                    <input asp-for="LastName" class="form-control" placeholder="Doe" />
+                                    <span asp-validation-for="LastName" class="text-danger"></span>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label asp-for="Email" class="form-label"></label>
+                                    <input asp-for="Email" class="form-control" type="email" placeholder="jane.doe@example.com" />
+                                    <span asp-validation-for="Email" class="text-danger"></span>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label asp-for="PhoneNumber" class="form-label"></label>
+                                    <input asp-for="PhoneNumber" class="form-control" placeholder="123-456-7890" />
+                                    <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="card p-3 mb-4 shadow-sm">
+                            <h5 class="card-title text-primary"><i class="bi bi-info-circle-fill"></i> Lead Details</h5>
+                            @* <div class="row">
+                                <div class="col-md-4 mb-3">
+                                    <label asp-for="LeadSource" class="form-label"></label>
+                                    <select asp-for="LeadSource" asp-items="Model.LeadSourceList" class="form-select">
+                                        <option value="">-- Select Source --</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-4 mb-3">
+                                    <label asp-for="Status" class="form-label"></label>
+                                    <select asp-for="Status" asp-items="Model.StatusList" class="form-select">
+                                        <option value="">-- Select Status --</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-4 mb-3">
+                                    <label asp-for="AssignedAgentID" class="form-label"></label>
+                                    <select asp-for="AssignedAgentID" asp-items="Model.AgentList" class="form-select">
+                                        <option value="0">-- Unassigned --</option>
+                                    </select>
+                                    <span asp-validation-for="AssignedAgentID" class="text-danger"></span>
+                                </div>
+                            </div> *@
+                            <div class="mb-3">
+                                <label asp-for="Notes" class="form-label"></label>
+                                <textarea asp-for="Notes" class="form-control" rows="3" placeholder="Enter specific property requirements or interaction history..."></textarea>
+                            </div>
+                        </div>
+
+                        <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                            <button type="submit" class="btn btn-success btn-lg me-md-2" style="background-color: @theme; border-color: @theme;">
+                                <i class="bi bi-save"></i> Save Lead
+                            </button>
+                            <button type="button" class="btn btn-outline-primary btn-lg" data-bs-toggle="modal" data-bs-target="#bulkImportModal">
+                                <i class="bi bi-file-earmark-arrow-up"></i> Bulk Import
+                            </button>
+                        </div>
+                    </form>
+                </div>
+
+               @*  <div class="col-md-3">
+                    <div class="card bg-light p-3 shadow-sm">
+                        <h6>Lead Entry Tips</h6>
+                        <small class="text-muted">
+                            <ul class="list-unstyled small">
+                                <li><i class="bi bi-check-circle-fill text-success"></i> Fields with **bold labels** are required.</li>
+                                <li><i class="bi bi-check-circle-fill text-success"></i> Use the **Notes** section for details on property type or budget.</li>
+                                <li><i class="bi bi-check-circle-fill text-success"></i> Always assign an agent immediately.</li>
+                            </ul>
+                        </small>
+                    </div>
+                </div> *@
+            </div>
+        </div>
+
+        <div class="tab-pane fade" id="all-leads" role="tabpanel" aria-labelledby="all-leads-tab">
+            <table class="table table-striped table-hover mt-3">
+                <thead class="table-primary">
+                    <tr>
+                        <th>ID</th>
+                        <th>Name</th>
+                        <th>Status</th>
+                        <th>Source</th>
+                        <th>Agent</th>
+                        <th>Date Added</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>1001</td>
+                        <td>Michael Scott</td>
+                        <td><span class="badge bg-warning">Qualified</span></td>
+                        <td>Website Form</td>
+                        <td>Jessica Smith</td>
+                        <td>2025-11-01</td>
+                        <td><button class="btn btn-sm btn-info">View</button></td>
+                    </tr>
+                    <tr>
+                        <td>1002</td>
+                        <td>Pam Beesly</td>
+                        <td><span class="badge bg-success">Hot Prospect</span></td>
+                        <td>Referral</td>
+                        <td>Mark Johnson</td>
+                        <td>2025-11-05</td>
+                        <td><button class="btn btn-sm btn-info">View</button></td>
+                    </tr>
+                    <tr>
+                        <td>1003</td>
+                        <td>Dwight Schrute</td>
+                        <td><span class="badge bg-secondary">New Lead</span></td>
+                        <td>Zillow/Trulia</td>
+                        <td>Chris Lee</td>
+                        <td>2025-11-07</td>
+                        <td><button class="btn btn-sm btn-info">View</button></td>
+                    </tr>
+                </tbody>
+            </table>
+            <div class="d-flex justify-content-between">
+                <span class="text-muted">Showing 1 to 3 of 3 total leads.</span>
+                <button class="btn btn-outline-secondary">Load More</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="bulkImportModal" tabindex="-1" aria-labelledby="bulkImportModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-primary text-white">
+                <h5 class="modal-title" id="bulkImportModalLabel"><i class="bi bi-cloud-upload"></i> Bulk Lead Import (CSV)</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form asp-action="BulkImport" enctype="multipart/form-data" method="post">
+                <div class="modal-body">
+                    <p>Select a CSV file to upload multiple leads.</p>
+                    <div class="mb-3">
+                        <label for="importFile" class="form-label">Upload CSV File</label>
+                        <input class="form-control" type="file" id="importFile" name="importFile" accept=".csv" required>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Start Import</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            var triggerEl = document.querySelector('#leadTabs button[data-bs-target="#new-lead"]');
+            if (triggerEl) {
+                bootstrap.Tab.getInstance(triggerEl).show();
+            }
+        });
+    </script>
+}

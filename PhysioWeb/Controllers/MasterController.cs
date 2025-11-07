@@ -472,7 +472,8 @@ namespace PhysioWeb.Controllers
 
 
         [HttpGet]
-        public async Task<ActionResult> ViewProperty(int id) {
+        public async Task<ActionResult> ViewProperty(int id)
+        {
             var result = await _masterRepository.ViewProperty(id);
             return Json(result);
         }
@@ -959,6 +960,12 @@ namespace PhysioWeb.Controllers
             return Json(result);
         }
 
+        #region Agent
+        public async Task<ActionResult> NewLead()
+        {
+            return View();
+        }
+        #endregion
     }
 
     public class PermissionUpdateModel
@@ -967,4 +974,5 @@ namespace PhysioWeb.Controllers
         public bool ShowLandmark { get; set; }
         public bool ShowAddress { get; set; }
     }
+
 }
