@@ -3,7 +3,7 @@
 
 <nav id="agencySidebar" class="collapsed">
 	<div class="sidebar-header">
-		<h4>Agency Menu</h4>
+		@* <h4>Agency Menu</h4> *@
 		<button type="button" id="sidebarToggle" class="sidebar-toggle">
 			<i class="bi bi-chevron-right"></i>
 		</button>
@@ -23,11 +23,11 @@
 							<i class="@parent.MenuIcon"></i>
 							<span>@parent.MenuName</span>
 						</a>
-						<ul class="child-menu collapse" id="@submenuId">
+						<ul class="child-menu collapse" id="@submenuId" style="list-style-type: none;">
 							@foreach (var child in children)
 							{
 								<li>
-									<a href="@child.MenuUrl">
+									<a href="@child.MenuUrl" style="padding-left:25px !important;">
 										<i class="@child.MenuIcon"></i> @child.MenuName
 									</a>
 								</li>
