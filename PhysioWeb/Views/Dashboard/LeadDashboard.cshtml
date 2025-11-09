@@ -24,12 +24,12 @@
 	}
 
 	/* body {
-								background: linear-gradient(135deg, #f0f9f4 0%, #e4f5ec 100%);
-								color: #333;
-								font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-								min-height: 100vh;
-								padding: 20px;
-							} */
+									background: linear-gradient(135deg, #f0f9f4 0%, #e4f5ec 100%);
+									color: #333;
+									font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+									min-height: 100vh;
+									padding: 20px;
+								} */
 
 	.dashboard-container {
 		max-width: 1400px;
@@ -769,6 +769,9 @@
 									<td>John Smith</td>
 									<td>
 										<div class="action-buttons">
+											<button class="action-btn" data-bs-toggle="modal" data-bs-target="#leadConversionModal">
+												<i class="fas fa-plus-circle"></i>
+											</button>
 											<button class="action-btn"><i class="fas fa-eye"></i></button>
 											<button class="action-btn"><i class="fas fa-edit"></i></button>
 											<button class="action-btn"><i class="fas fa-phone"></i></button>
@@ -796,6 +799,9 @@
 									<td>Sarah Johnson</td>
 									<td>
 										<div class="action-buttons">
+											<button class="action-btn" data-bs-toggle="modal" data-bs-target="#leadConversionModal">
+												<i class="fas fa-plus-circle"></i>
+											</button>
 											<button class="action-btn"><i class="fas fa-eye"></i></button>
 											<button class="action-btn"><i class="fas fa-edit"></i></button>
 											<button class="action-btn"><i class="fas fa-phone"></i></button>
@@ -823,6 +829,9 @@
 									<td>Michael Brown</td>
 									<td>
 										<div class="action-buttons">
+											<button class="action-btn" data-bs-toggle="modal" data-bs-target="#leadConversionModal">
+												<i class="fas fa-plus-circle"></i>
+											</button>
 											<button class="action-btn"><i class="fas fa-eye"></i></button>
 											<button class="action-btn"><i class="fas fa-edit"></i></button>
 											<button class="action-btn"><i class="fas fa-phone"></i></button>
@@ -850,6 +859,9 @@
 									<td>John Smith</td>
 									<td>
 										<div class="action-buttons">
+											<button class="action-btn" data-bs-toggle="modal" data-bs-target="#leadConversionModal">
+												<i class="fas fa-plus-circle"></i>
+											</button>
 											<button class="action-btn"><i class="fas fa-eye"></i></button>
 											<button class="action-btn"><i class="fas fa-edit"></i></button>
 											<button class="action-btn"><i class="fas fa-phone"></i></button>
@@ -877,6 +889,9 @@
 									<td>Sarah Johnson</td>
 									<td>
 										<div class="action-buttons">
+											<button class="action-btn" data-bs-toggle="modal" data-bs-target="#leadConversionModal">
+												<i class="fas fa-plus-circle"></i>
+											</button>
 											<button class="action-btn"><i class="fas fa-eye"></i></button>
 											<button class="action-btn"><i class="fas fa-edit"></i></button>
 											<button class="action-btn"><i class="fas fa-phone"></i></button>
@@ -929,6 +944,159 @@
 								<h3 class="chart-title">Agent Performance</h3>
 								<canvas id="agentChart"></canvas>
 							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<!-- Lead Conversion Modal -->
+			<div class="modal fade" id="leadConversionModal" tabindex="-1" aria-labelledby="leadConversionModalLabel" aria-hidden="true">
+				<div class="modal-dialog modal-lg">
+					<div class="modal-content">
+						<div class="modal-header bg-success text-white">
+							<h5 class="modal-title" id="leadConversionModalLabel">
+								<i class="fas fa-exchange-alt me-2"></i>Convert Lead to Opportunity
+							</h5>
+							<button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+						</div>
+						<div class="modal-body">
+							<form id="leadConversionForm">
+								<div class="row">
+									<div class="col-md-6 mb-3">
+										<label for="leadId" class="form-label fw-semibold">Lead ID <span class="text-danger">*</span></label>
+										<div class="input-group">
+											<span class="input-group-text bg-light"><i class="fas fa-link text-muted"></i></span>
+											<input type="text" class="form-control border-start-0" id="leadId" value="L-2023-00125" readonly>
+											<button class="btn btn-outline-secondary" type="button" id="viewLeadBtn">
+												<i class="fas fa-external-link-alt"></i>
+											</button>
+										</div>
+										<div class="form-text">
+											<a href="#" class="lead-id-link text-success text-decoration-none">
+												<i class="fas fa-eye me-1"></i>View original lead details
+											</a>
+										</div>
+									</div>
+
+									<div class="col-md-6 mb-3">
+										<label for="stage" class="form-label fw-semibold">Stage <span class="text-danger">*</span></label>
+										<select class="form-select" id="stage" required>
+											<option value="">Select Stage</option>
+											<option value="new">New</option>
+											<option value="contacted">Contacted</option>
+											<option value="qualified" selected>Qualified</option>
+											<option value="proposal">Proposal Sent</option>
+											<option value="negotiation">Negotiation</option>
+											<option value="closed-won">Closed Won</option>
+											<option value="closed-lost">Closed Lost</option>
+										</select>
+									</div>
+								</div>
+
+								<div class="row">
+									<div class="col-md-6 mb-3">
+										<label for="followUpDate" class="form-label fw-semibold">Follow-up Date <span class="text-danger">*</span></label>
+										<div class="input-group">
+											<span class="input-group-text bg-light"><i class="fas fa-calendar-alt text-muted"></i></span>
+											<input type="date" class="form-control" id="followUpDate" required>
+										</div>
+									</div>
+
+									<div class="col-md-6 mb-3">
+										<label for="lastContactDate" class="form-label fw-semibold">Last Contact Date</label>
+										<div class="input-group">
+											<span class="input-group-text bg-light"><i class="fas fa-clock text-muted"></i></span>
+											<input type="date" class="form-control" id="lastContactDate">
+										</div>
+									</div>
+								</div>
+
+								<div class="mb-3">
+									<label for="remarks" class="form-label fw-semibold">Remarks / Notes <span class="text-danger">*</span></label>
+									<textarea class="form-control" id="remarks" rows="3" placeholder="Enter communication summary and next steps..." required></textarea>
+								</div>
+
+								<div class="row">
+									<div class="col-md-6 mb-3">
+										<label for="propertyOffered" class="form-label fw-semibold">Property Offered</label>
+										<select class="form-select" id="propertyOffered">
+											<option value="">Select Property</option>
+											<option value="P-1001">P-1001 | 3 BHK Apartment | Downtown</option>
+											<option value="P-1002">P-1002 | 4 BHK Villa | Suburbs</option>
+											<option value="P-1003">P-1003 | 2 BHK Apartment | City Center</option>
+											<option value="P-1004">P-1004 | Office Space | Business District</option>
+											<option value="P-1005">P-1005 | Penthouse | Luxury Tower</option>
+										</select>
+									</div>
+
+									<div class="col-md-6 mb-3">
+										<label for="expectedDealValue" class="form-label fw-semibold">Expected Deal Value</label>
+										<div class="input-group">
+											<span class="input-group-text bg-light">₹</span>
+											<input type="number" class="form-control" id="expectedDealValue" placeholder="Estimated sale amount">
+											<span class="input-group-text bg-light">.00</span>
+										</div>
+									</div>
+								</div>
+
+								<div class="row">
+									<div class="col-md-6 mb-3">
+										<label for="probability" class="form-label fw-semibold">Probability (%)</label>
+										<div class="d-flex align-items-center gap-3">
+											<input type="range" class="form-range flex-grow-1" id="probability" min="0" max="100" value="50">
+											<span class="probability-value text-success bg-light rounded px-2 py-1" id="probabilityValue">50%</span>
+										</div>
+									</div>
+
+									<div class="col-md-6 mb-3">
+										<label for="assignedAgent" class="form-label fw-semibold">Assigned Agent <span class="text-danger">*</span></label>
+										<select class="form-select" id="assignedAgent" required>
+											<option value="">Select Agent</option>
+											<option value="agent-1">John Smith</option>
+											<option value="agent-2" selected>Sarah Johnson</option>
+											<option value="agent-3">Michael Brown</option>
+											<option value="agent-4">Emily Davis</option>
+										</select>
+									</div>
+								</div>
+
+								<div class="mb-3">
+									<label class="form-label fw-semibold">Attachment</label>
+									<div class="file-upload-area border border-2 border-dashed rounded p-4 text-center" id="fileUploadArea">
+										<i class="fas fa-cloud-upload-alt fa-2x text-muted mb-3"></i>
+										<h5 class="text-muted">Upload Quotation / Proposal</h5>
+										<p class="text-muted mb-3">Drag & drop files here or click to browse</p>
+										<input type="file" class="d-none" id="fileInput" accept=".pdf,.doc,.docx,.jpg,.png">
+										<button type="button" class="btn btn-outline-success" id="browseFilesBtn">
+											<i class="fas fa-folder-open me-2"></i>Browse Files
+										</button>
+									</div>
+									<div id="fileList" class="mt-3"></div>
+								</div>
+
+								<div class="row mt-4 pt-3 border-top">
+									<div class="col-md-6">
+										<div class="mb-3">
+											<label class="form-label fw-semibold">Updated By</label>
+											<input type="text" class="form-control bg-light" value="Sarah Johnson" readonly>
+										</div>
+									</div>
+									<div class="col-md-6">
+										<div class="mb-3">
+											<label class="form-label fw-semibold">Updated Date</label>
+											<input type="text" class="form-control bg-light" id="updatedDate" readonly>
+										</div>
+									</div>
+								</div>
+							</form>
+						</div>
+						<div class="modal-footer">
+							<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+								<i class="fas fa-times me-2"></i>Cancel
+							</button>
+							<button type="button" class="btn btn-success" id="saveLeadBtn">
+								<i class="fas fa-save me-2"></i>Save Changes
+							</button>
 						</div>
 					</div>
 				</div>
