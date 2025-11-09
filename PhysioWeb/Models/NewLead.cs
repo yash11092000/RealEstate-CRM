@@ -1,52 +1,226 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Data;
-using System.ComponentModel.DataAnnotations; // Added for basic form validation
 
 namespace PhysioWeb.Models
 {
     // Assuming CommanProp provides properties like UniquId, CreatedBy, TotalCount, etc.
     public class NewLead : CommanProp
     {
-        // --- Lead-Specific Properties ---
+        // --- Lead Information ---
+        [Key]
+        [Display(Name = "Lead ID")]
+        public string LeadId { get; set; } = $"LEAD{Guid.NewGuid().ToString().Substring(0, 8).ToUpper()}";
 
-        [Required(ErrorMessage = "First Name is required.")]
-        public string FirstName { get; set; }
+        [Required(ErrorMessage = "Lead Source is required.")]
+        [Display(Name = "Lead Source")]
+        public string LeadSource { get; set; }
 
-        [Required(ErrorMessage = "Last Name is required.")]
-        public string LastName { get; set; }
+        [Required(ErrorMessage = "Lead Type is required.")]
+        [Display(Name = "Lead Type")]
+        public string LeadType { get; set; }
 
+        [Required(ErrorMessage = "Lead Status is required.")]
+        [Display(Name = "Lead Status")]
+        public string LeadStatus { get; set; }
+
+        // --- Personal / Contact Details ---
+        [Required(ErrorMessage = "Full Name is required.")]
+        [Display(Name = "Full Name")]
+        public string FullName { get; set; }
+
+        [Required(ErrorMessage = "Email is required.")]
         [EmailAddress(ErrorMessage = "Invalid Email Address.")]
+        [Display(Name = "Email")]
         public string Email { get; set; }
 
+        [Required(ErrorMessage = "Phone Number is required.")]
         [RegularExpression(@"^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$", ErrorMessage = "Not a valid Phone Number.")]
+        [Display(Name = "Phone Number")]
         public string PhoneNumber { get; set; }
 
-        public string LeadSource { get; set; } // e.g., Zillow, Website, Referral
+        [RegularExpression(@"^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$", ErrorMessage = "Not a valid Alternate Phone Number.")]
+        [Display(Name = "Alternate Number")]
+        public string AlternateNumber { get; set; }
 
-        public string Status { get; set; } // e.g., New, Contacted, Qualified
+        [Required(ErrorMessage = "Preferred Contact Method is required.")]
+        [Display(Name = "Preferred Contact Method")]
+        public string PreferredContactMethod { get; set; }
 
-        public DateTime DateAdded { get; set; }
+        [Display(Name = "Follow-up Date")]
+        [DataType(DataType.Date)]
+        public DateTime? FollowUpDate { get; set; }
 
-        public int AssignedAgentID { get; set; }
-        public string AssignedAgentName { get; set; }
+        // --- Property Requirements ---
+        [Required(ErrorMessage = "Requirement Type is required.")]
+        [Display(Name = "Requirement Type")]
+        public string RequirementType { get; set; }
 
+        [Required(ErrorMessage = "Property Type is required.")]
+        [Display(Name = "Property Type")]
+        public string PropertyType { get; set; }
+
+        [Display(Name = "Budget Range (Min)")]
+        public decimal? BudgetMin { get; set; }
+
+        [Display(Name = "Budget Range (Max)")]
+        public decimal? BudgetMax { get; set; }
+
+        [Display(Name = "Location Preference")]
+        public string LocationPreference { get; set; }
+
+        [Display(Name = "Bedrooms (BHK)")]
+        public string Bedrooms { get; set; }
+
+        [Display(Name = "Furnishing Type")]
+        public string FurnishingType { get; set; }
+
+        [Display(Name = "Possession Timeframe")]
+        public string PossessionTimeframe { get; set; }
+
+        // --- Broker / Agent Assignment ---
+        [Display(Name = "Assigned Agent")]
+        public string AssignedAgent { get; set; }
+
+        [Display(Name = "Created By")]
+        public string CreatedBy { get; set; } = "System"; // Auto-filled
+
+        [Display(Name = "Created Date")]
+        [DataType(DataType.Date)]
+        public DateTime CreatedDate { get; set; } = DateTime.Now; // Auto-filled
+
+        // --- Additional Fields ---
+        [Display(Name = "Remarks / Notes")]
         public string Notes { get; set; }
 
-        public bool IsActive { get; set; }
-        public string InActiveText { get; set; } // For displaying status in a list view
+        [Display(Name = "Lead Priority")]
+        public string LeadPriority { get; set; }
 
+        [Display(Name = "Lead Rating")]
+        public string LeadRating { get; set; }
+
+        [Display(Name = "Is Active")]
+        public bool IsActive { get; set; } = true;
+
+        [Display(Name = "Inactive Status")]
+        public string InActiveText { get; set; }
 
         // --- Dropdown/Lookup Properties (For View Rendering) ---
-        // These will be populated by the controller before rendering the view.
-        public List<DropDownSource> LeadSourceList { get; set; }
-        public List<DropDownSource> StatusList { get; set; }
-        public List<DropDownSource> AgentList { get; set; }
+        public List<DropDownSource> LeadSourceList { get; set; } = new List<DropDownSource>
+        {
+            new DropDownSource { Value = "Website", Text = "Website" },
+            new DropDownSource { Value = "Walk-in", Text = "Walk-in" },
+            new DropDownSource { Value = "Referral", Text = "Referral" },
+            new DropDownSource { Value = "Facebook", Text = "Facebook" },
+            new DropDownSource { Value = "Google Ads", Text = "Google Ads" },
+            new DropDownSource { Value = "Broker", Text = "Broker" }
+        };
 
+        public List<DropDownSource> LeadTypeList { get; set; } = new List<DropDownSource>
+        {
+            new DropDownSource { Value = "Buyer", Text = "Buyer" },
+            new DropDownSource { Value = "Seller", Text = "Seller" },
+            new DropDownSource { Value = "Tenant", Text = "Tenant" },
+            new DropDownSource { Value = "Landlord", Text = "Landlord" }
+        };
+
+        public List<DropDownSource> LeadStatusList { get; set; } = new List<DropDownSource>
+        {
+            new DropDownSource { Value = "New", Text = "New" },
+            new DropDownSource { Value = "Contacted", Text = "Contacted" },
+            new DropDownSource { Value = "Interested", Text = "Interested" },
+            new DropDownSource { Value = "Not Interested", Text = "Not Interested" },
+            new DropDownSource { Value = "Converted", Text = "Converted" },
+            new DropDownSource { Value = "Lost", Text = "Lost" }
+        };
+
+        public List<DropDownSource> PreferredContactMethodList { get; set; } = new List<DropDownSource>
+        {
+            new DropDownSource { Value = "Call", Text = "Call" },
+            new DropDownSource { Value = "WhatsApp", Text = "WhatsApp" },
+            new DropDownSource { Value = "Email", Text = "Email" }
+        };
+
+        public List<DropDownSource> RequirementTypeList { get; set; } = new List<DropDownSource>
+        {
+            new DropDownSource { Value = "Buy", Text = "Buy" },
+            new DropDownSource { Value = "Sell", Text = "Sell" },
+            new DropDownSource { Value = "Rent", Text = "Rent" }
+        };
+
+        public List<DropDownSource> PropertyTypeList { get; set; } = new List<DropDownSource>
+        {
+            new DropDownSource { Value = "Apartment", Text = "Apartment" },
+            new DropDownSource { Value = "Villa", Text = "Villa" },
+            new DropDownSource { Value = "Plot", Text = "Plot" },
+            new DropDownSource { Value = "Commercial", Text = "Commercial" },
+            new DropDownSource { Value = "Shop", Text = "Shop" }
+        };
+
+        public List<DropDownSource> BedroomsList { get; set; } = new List<DropDownSource>
+        {
+            new DropDownSource { Value = "1BHK", Text = "1BHK" },
+            new DropDownSource { Value = "2BHK", Text = "2BHK" },
+            new DropDownSource { Value = "3BHK", Text = "3BHK" },
+            new DropDownSource { Value = "4BHK", Text = "4BHK" }
+        };
+
+        public List<DropDownSource> FurnishingTypeList { get; set; } = new List<DropDownSource>
+        {
+            new DropDownSource { Value = "Furnished", Text = "Furnished" },
+            new DropDownSource { Value = "Semi-Furnished", Text = "Semi-Furnished" },
+            new DropDownSource { Value = "Unfurnished", Text = "Unfurnished" }
+        };
+
+        public List<DropDownSource> PossessionTimeframeList { get; set; } = new List<DropDownSource>
+        {
+            new DropDownSource { Value = "Immediate", Text = "Immediate" },
+            new DropDownSource { Value = "3 Months", Text = "3 Months" },
+            new DropDownSource { Value = "6 Months", Text = "6 Months" },
+            new DropDownSource { Value = "1 Year", Text = "1 Year" }
+        };
+
+        public List<DropDownSource> LeadPriorityList { get; set; } = new List<DropDownSource>
+        {
+            new DropDownSource { Value = "High", Text = "High" },
+            new DropDownSource { Value = "Medium", Text = "Medium" },
+            new DropDownSource { Value = "Low", Text = "Low" }
+        };
+
+        public List<DropDownSource> LeadRatingList { get; set; } = new List<DropDownSource>
+        {
+            new DropDownSource { Value = "Hot", Text = "Hot" },
+            new DropDownSource { Value = "Warm", Text = "Warm" },
+            new DropDownSource { Value = "Cold", Text = "Cold" }
+        };
+
+        public List<DropDownSource> AgentList { get; set; } = new List<DropDownSource>
+        {
+            new DropDownSource { Value = "Agent 1", Text = "Agent 1" },
+            new DropDownSource { Value = "Agent 2", Text = "Agent 2" },
+            new DropDownSource { Value = "Agent 3", Text = "Agent 3" },
+            new DropDownSource { Value = "Unassigned", Text = "Unassigned" }
+        };
 
         // --- Constructors for Data Mapping ---
+        public NewLead() {
 
-        public NewLead() { }
+            LeadRatingList = new List<DropDownSource>();
+            AgentList = new List<DropDownSource>();
+            LeadPriorityList = new List<DropDownSource>();
+            PossessionTimeframeList = new List<DropDownSource>();
+            FurnishingTypeList = new List<DropDownSource>();
+            BedroomsList = new List<DropDownSource>();
+            LeadSourceList = new List<DropDownSource>();
+            LeadTypeList = new List<DropDownSource>();
+            LeadStatusList = new List<DropDownSource>();
+            PreferredContactMethodList = new List<DropDownSource>();
+            RequirementTypeList = new List<DropDownSource>();
+            PropertyTypeList = new List<DropDownSource>();
+            
+        }
+                
 
         // Constructor for list view (flag = 0)
         public NewLead(IDataReader reader, int flag = 0)
@@ -56,11 +230,14 @@ namespace PhysioWeb.Models
                 // Mapping fields for a list/grid view
                 TotalCount = reader["TotalCount"] != DBNull.Value ? Convert.ToInt32(reader["TotalCount"]) : 0;
                 UniquId = reader["UniquId"] != DBNull.Value ? Convert.ToInt32(reader["UniquId"]) : 0;
-                FirstName = reader["FirstName"]?.ToString();
-                LastName = reader["LastName"]?.ToString();
+                LeadId = reader["LeadId"]?.ToString();
+                FullName = reader["FullName"]?.ToString();
                 Email = reader["Email"]?.ToString();
                 PhoneNumber = reader["PhoneNumber"]?.ToString();
-                Status = reader["StatusName"]?.ToString();
+                LeadStatus = reader["LeadStatus"]?.ToString();
+                LeadSource = reader["LeadSource"]?.ToString();
+                AssignedAgent = reader["AssignedAgent"]?.ToString();
+                CreatedDate = reader["CreatedDate"] != DBNull.Value ? Convert.ToDateTime(reader["CreatedDate"]) : DateTime.Now;
                 InActiveText = reader["IsActive"].ToString();
                 CreatedBy = reader["CreatedBy"]?.ToString();
             }
@@ -74,38 +251,63 @@ namespace PhysioWeb.Models
         private void populateObject(NewLead obj, IDataReader rdr)
         {
             // Utility method to safely read all columns
-            if (!rdr.IsDBNull(rdr.GetOrdinal("UniqueID")))
-                obj.UniquId = rdr.GetInt32(rdr.GetOrdinal("UniqueID"));
-
-            if (!rdr.IsDBNull(rdr.GetOrdinal("FirstName")))
-                obj.FirstName = rdr.GetString(rdr.GetOrdinal("FirstName"));
-
-            if (!rdr.IsDBNull(rdr.GetOrdinal("LastName")))
-                obj.LastName = rdr.GetString(rdr.GetOrdinal("LastName"));
-
-            if (!rdr.IsDBNull(rdr.GetOrdinal("Email")))
-                obj.Email = rdr.GetString(rdr.GetOrdinal("Email"));
-
-            if (!rdr.IsDBNull(rdr.GetOrdinal("PhoneNumber")))
-                obj.PhoneNumber = rdr.GetString(rdr.GetOrdinal("PhoneNumber"));
-
+            if (!rdr.IsDBNull(rdr.GetOrdinal("UniquId")))
+                obj.UniquId = rdr.GetInt32(rdr.GetOrdinal("UniquId"));
+            if (!rdr.IsDBNull(rdr.GetOrdinal("LeadId")))
+                obj.LeadId = rdr.GetString(rdr.GetOrdinal("LeadId"));
             if (!rdr.IsDBNull(rdr.GetOrdinal("LeadSource")))
                 obj.LeadSource = rdr.GetString(rdr.GetOrdinal("LeadSource"));
-
-            if (!rdr.IsDBNull(rdr.GetOrdinal("Status")))
-                obj.Status = rdr.GetString(rdr.GetOrdinal("Status"));
-
-            if (!rdr.IsDBNull(rdr.GetOrdinal("AssignedAgentID")))
-                obj.AssignedAgentID = rdr.GetInt32(rdr.GetOrdinal("AssignedAgentID"));
-
-            if (!rdr.IsDBNull(rdr.GetOrdinal("DateAdded")))
-                obj.DateAdded = rdr.GetDateTime(rdr.GetOrdinal("DateAdded"));
-
+            if (!rdr.IsDBNull(rdr.GetOrdinal("LeadType")))
+                obj.LeadType = rdr.GetString(rdr.GetOrdinal("LeadType"));
+            if (!rdr.IsDBNull(rdr.GetOrdinal("LeadStatus")))
+                obj.LeadStatus = rdr.GetString(rdr.GetOrdinal("LeadStatus"));
+            if (!rdr.IsDBNull(rdr.GetOrdinal("FullName")))
+                obj.FullName = rdr.GetString(rdr.GetOrdinal("FullName"));
+            if (!rdr.IsDBNull(rdr.GetOrdinal("Email")))
+                obj.Email = rdr.GetString(rdr.GetOrdinal("Email"));
+            if (!rdr.IsDBNull(rdr.GetOrdinal("PhoneNumber")))
+                obj.PhoneNumber = rdr.GetString(rdr.GetOrdinal("PhoneNumber"));
+            if (!rdr.IsDBNull(rdr.GetOrdinal("AlternateNumber")))
+                obj.AlternateNumber = rdr.GetString(rdr.GetOrdinal("AlternateNumber"));
+            if (!rdr.IsDBNull(rdr.GetOrdinal("PreferredContactMethod")))
+                obj.PreferredContactMethod = rdr.GetString(rdr.GetOrdinal("PreferredContactMethod"));
+            if (!rdr.IsDBNull(rdr.GetOrdinal("FollowUpDate")))
+                obj.FollowUpDate = rdr.GetDateTime(rdr.GetOrdinal("FollowUpDate"));
+            if (!rdr.IsDBNull(rdr.GetOrdinal("RequirementType")))
+                obj.RequirementType = rdr.GetString(rdr.GetOrdinal("RequirementType"));
+            if (!rdr.IsDBNull(rdr.GetOrdinal("PropertyType")))
+                obj.PropertyType = rdr.GetString(rdr.GetOrdinal("PropertyType"));
+            if (!rdr.IsDBNull(rdr.GetOrdinal("BudgetMin")))
+                obj.BudgetMin = rdr.GetDecimal(rdr.GetOrdinal("BudgetMin"));
+            if (!rdr.IsDBNull(rdr.GetOrdinal("BudgetMax")))
+                obj.BudgetMax = rdr.GetDecimal(rdr.GetOrdinal("BudgetMax"));
+            if (!rdr.IsDBNull(rdr.GetOrdinal("LocationPreference")))
+                obj.LocationPreference = rdr.GetString(rdr.GetOrdinal("LocationPreference"));
+            if (!rdr.IsDBNull(rdr.GetOrdinal("Bedrooms")))
+                obj.Bedrooms = rdr.GetString(rdr.GetOrdinal("Bedrooms"));
+            if (!rdr.IsDBNull(rdr.GetOrdinal("FurnishingType")))
+                obj.FurnishingType = rdr.GetString(rdr.GetOrdinal("FurnishingType"));
+            if (!rdr.IsDBNull(rdr.GetOrdinal("PossessionTimeframe")))
+                obj.PossessionTimeframe = rdr.GetString(rdr.GetOrdinal("PossessionTimeframe"));
+            if (!rdr.IsDBNull(rdr.GetOrdinal("AssignedAgent")))
+                obj.AssignedAgent = rdr.GetString(rdr.GetOrdinal("AssignedAgent"));
+            if (!rdr.IsDBNull(rdr.GetOrdinal("CreatedBy")))
+                obj.CreatedBy = rdr.GetString(rdr.GetOrdinal("CreatedBy"));
+            if (!rdr.IsDBNull(rdr.GetOrdinal("CreatedDate")))
+                obj.CreatedDate = rdr.GetDateTime(rdr.GetOrdinal("CreatedDate"));
             if (!rdr.IsDBNull(rdr.GetOrdinal("Notes")))
                 obj.Notes = rdr.GetString(rdr.GetOrdinal("Notes"));
-
+            if (!rdr.IsDBNull(rdr.GetOrdinal("LeadPriority")))
+                obj.LeadPriority = rdr.GetString(rdr.GetOrdinal("LeadPriority"));
+            if (!rdr.IsDBNull(rdr.GetOrdinal("LeadRating")))
+                obj.LeadRating = rdr.GetString(rdr.GetOrdinal("LeadRating"));
             if (!rdr.IsDBNull(rdr.GetOrdinal("IsActive")))
                 obj.IsActive = rdr.GetBoolean(rdr.GetOrdinal("IsActive"));
+            if (!rdr.IsDBNull(rdr.GetOrdinal("IsActive")))
+                obj.InActiveText = rdr.GetBoolean(rdr.GetOrdinal("IsActive")).ToString();
         }
     }
+
+    // Helper class for dropdowns
+  
 }

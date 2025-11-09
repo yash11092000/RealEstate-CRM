@@ -1,9 +1,10 @@
 ﻿@model PhysioWeb.Models.NewLead
 @{
-    // The ViewBag.Title and theme variables from your original code
-    ViewBag.Title = "Lead Management";
+    ViewBag.Title = "New Lead";
     var theme = User.FindFirst("Theme")?.Value ?? "#198754";
+
 }
+
 <style>
     :root {
         --theme-color: @theme;
@@ -52,82 +53,31 @@
                 background: var(--theme-color);
             }
 
-            .stepper .step::after {
-                content: '';
-                position: absolute;
-                top: 17px;
-                left: 50%;
-                width: 100%;
-                height: 3px;
-                background: #dcdcdc;
-                z-index: -1;
-            }
-
-            .stepper .step:last-child::after {
-                display: none;
-            }
-
-            .stepper .step.completed::after {
-                background: var(--theme-color);
-            }
-
-    .gallery-container {
-        display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-        gap: 15px;
-        justify-items: center;
-        margin-top: 15px;
+    .text-primary {
+        color: var(--theme-color) !important;
     }
 
-    .preview-card {
-        position: relative;
-        width: 180px;
-        height: 140px;
-        border-radius: 8px;
-        overflow: hidden;
-        background: #ffffff;
-        border: 1px solid #e0e0e0;
-        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
-        transition: transform 0.2s ease-in-out;
-    }
-
-        .preview-card:hover {
-            transform: scale(1.05);
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
-        }
-
-        .preview-card img,
-        .preview-card video {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-
-    .delete-btn {
+    .stepper .step::after {
+        content: '';
         position: absolute;
-        top: 5px;
-        right: 5px;
-        background: rgba(220, 53, 69, 0.9);
-        border: none;
-        color: #fff;
-        font-size: 16px;
-        border-radius: 50%;
-        width: 24px;
-        height: 24px;
-        cursor: pointer;
-        line-height: 20px;
-        text-align: center;
-        padding: 0;
-        z-index: 10;
-        transition: background 0.2s;
+        top: 17px;
+        left: 50%;
+        width: 100%;
+        height: 3px;
+        background: #dcdcdc;
+        z-index: -1;
     }
 
-        .delete-btn:hover {
-            background: #ff1a1a;
-        }
+    .stepper .step:last-child::after {
+        display: none;
+    }
+
+    .stepper .step.completed::after {
+        background: var(--theme-color);
+    }
 
     .nav-tabs .nav-link {
-        color: var(--theme-color); /* Bootstrap success green */
+        color: var(--theme-color);
         font-weight: 600;
         border: 2px solid transparent;
         border-radius: 0.5rem 0.5rem 0 0;
@@ -135,7 +85,7 @@
     }
 
         .nav-tabs .nav-link:hover {
-            background: #e6f4ea; /* light green hover */
+            background: #e6f4ea;
             border-color: var(--theme-color);
             color: var(--theme-color);
         }
@@ -145,163 +95,309 @@
             color: white !important;
             border-color: var(--theme-color);
         }
-
 </style>
 
 <link rel="stylesheet" href="https://cdn.datatables.net/2.3.2/css/dataTables.dataTables.min.css" />
+<main class="dashboard-content with-sidebar collapsed">
+    <div class="container mt-4">
+        <ul class="nav nav-tabs" id="leadTabs" role="tablist">
+            <li class="nav-item" role="presentation">
+                <button class="nav-link active" id="new-lead-tab" data-bs-toggle="tab" data-bs-target="#new-lead" type="button" role="tab" aria-controls="new-lead" aria-selected="true">
+                    <i class="bi bi-person-plus"></i> Add New Lead
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="all-leads-tab" data-bs-toggle="tab" data-bs-target="#all-leads" type="button" role="tab" aria-controls="all-leads" aria-selected="false">
+                    <i class="bi bi-list-stars"></i> All Leads
+                </button>
+            </li>
+        </ul>
 
-<div class="container mt-4">
-   
+        <div class="tab-content border border-top-0 p-4" id="leadTabsContent">
+            <div class="tab-pane fade show active" id="new-lead" role="tabpanel" aria-labelledby="new-lead-tab">
+                <div class="row">
+                    <div class="col-md-12">
+                        <form asp-action="Create" method="post" id="leadForm">
+                            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
-    <ul class="nav nav-tabs" id="leadTabs" role="tablist">
-        <li class="nav-item" role="presentation">
-            <button class="nav-link active" id="new-lead-tab" data-bs-toggle="tab" data-bs-target="#new-lead" type="button" role="tab" aria-controls="new-lead" aria-selected="true">
-                <i class="bi bi-person-plus"></i> Add New Lead
-            </button>
-        </li>
-        <li class="nav-item" role="presentation">
-            <button class="nav-link" id="all-leads-tab" data-bs-toggle="tab" data-bs-target="#all-leads" type="button" role="tab" aria-controls="all-leads" aria-selected="false">
-                <i class="bi bi-list-stars"></i> All Leads
-            </button>
-        </li>
-    </ul>
-
-    <div class="tab-content border border-top-0 p-4" id="leadTabsContent">
-
-        <div class="tab-pane fade show active" id="new-lead" role="tabpanel" aria-labelledby="new-lead-tab">
-            <div class="row">
-                <div class="col-md-12">
-                    <form asp-action="Create" method="post" id="leadForm">
-                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-
-                        <div class="card p-3 mb-4 shadow-sm">
-                            <h5 class="card-title text-primary"><i class="bi bi-person-fill"></i> Contact Information</h5>
-                            <div class="row">
-                                <div class="col-md-6 mb-3">
-                                    <label asp-for="FirstName" class="form-label"></label>
-                                    <input asp-for="FirstName" class="form-control" placeholder="Jane" />
-                                    <span asp-validation-for="FirstName" class="text-danger"></span>
-                                </div>
-                                <div class="col-md-6 mb-3">
-                                    <label asp-for="LastName" class="form-label"></label>
-                                    <input asp-for="LastName" class="form-control" placeholder="Doe" />
-                                    <span asp-validation-for="LastName" class="text-danger"></span>
-                                </div>
-                                <div class="col-md-6 mb-3">
-                                    <label asp-for="Email" class="form-label"></label>
-                                    <input asp-for="Email" class="form-control" type="email" placeholder="jane.doe@example.com" />
-                                    <span asp-validation-for="Email" class="text-danger"></span>
-                                </div>
-                                <div class="col-md-6 mb-3">
-                                    <label asp-for="PhoneNumber" class="form-label"></label>
-                                    <input asp-for="PhoneNumber" class="form-control" placeholder="123-456-7890" />
-                                    <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+                            <!-- Lead Information -->
+                            <div class="card p-3 mb-4 shadow-sm">
+                                <h5 class="card-title text-primary"><i class="bi bi-info-circle-fill"></i> Lead Information</h5>
+                                <div class="row">
+                                    <div class="col-md-4 mb-3">
+                                        <label asp-for="LeadId" class="form-label"></label>
+                                        <input asp-for="LeadId" class="form-control" readonly />
+                                        <span asp-validation-for="LeadId" class="text-danger"></span>
+                                    </div>
+                                    <div class="col-md-4 mb-3">
+                                        <label asp-for="LeadSource" class="form-label"></label>
+                                        <select asp-for="LeadSource" asp-items="@(new SelectList(Model.LeadSourceList, "Value", "Text"))" class="form-select">
+                                            <option value="">-- Select Source --</option>
+                                        </select>
+                                        <span asp-validation-for="LeadSource" class="text-danger"></span>
+                                    </div>
+                                    <div class="col-md-4 mb-3">
+                                        <label asp-for="LeadType" class="form-label"></label>
+                                        <select asp-for="LeadType" asp-items="@(new SelectList(Model.LeadTypeList, "Value", "Text"))" class="form-select">
+                                            <option value="">-- Select Type --</option>
+                                        </select>
+                                        <span asp-validation-for="LeadType" class="text-danger"></span>
+                                    </div>
+                                    <div class="col-md-4 mb-3">
+                                        <label asp-for="LeadStatus" class="form-label"></label>
+                                        <select asp-for="LeadStatus" asp-items="@(new SelectList(Model.LeadStatusList, "Value", "Text"))" class="form-select">
+                                            <option value="">-- Select Status --</option>
+                                        </select>
+                                        <span asp-validation-for="LeadStatus" class="text-danger"></span>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
 
-                        <div class="card p-3 mb-4 shadow-sm">
-                            <h5 class="card-title text-primary"><i class="bi bi-info-circle-fill"></i> Lead Details</h5>
-                          
-                            <div class="mb-3">
-                                <label asp-for="Notes" class="form-label"></label>
-                                <textarea asp-for="Notes" class="form-control" rows="3" placeholder="Enter specific property requirements or interaction history..."></textarea>
+                            <!-- Personal / Contact Details -->
+                            <div class="card p-3 mb-4 shadow-sm">
+                                <h5 class="card-title text-primary"><i class="bi bi-person-fill"></i> Personal / Contact Details</h5>
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <label asp-for="FullName" class="form-label"></label>
+                                        <input asp-for="FullName" class="form-control" placeholder="John Doe" />
+                                        <span asp-validation-for="FullName" class="text-danger"></span>
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <label asp-for="Email" class="form-label"></label>
+                                        <input asp-for="Email" class="form-control" type="email" placeholder="john.doe@example.com" />
+                                        <span asp-validation-for="Email" class="text-danger"></span>
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <label asp-for="PhoneNumber" class="form-label"></label>
+                                        <input asp-for="PhoneNumber" class="form-control" placeholder="123-456-7890" />
+                                        <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <label asp-for="AlternateNumber" class="form-label"></label>
+                                        <input asp-for="AlternateNumber" class="form-control" placeholder="Alternate contact number" />
+                                        <span asp-validation-for="AlternateNumber" class="text-danger"></span>
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <label asp-for="PreferredContactMethod" class="form-label"></label>
+                                        <select asp-for="PreferredContactMethod" asp-items="@(new SelectList(Model.PreferredContactMethodList, "Value", "Text"))" class="form-select">
+                                            <option value="">-- Select Method --</option>
+                                        </select>
+                                        <span asp-validation-for="PreferredContactMethod" class="text-danger"></span>
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <label asp-for="FollowUpDate" class="form-label"></label>
+                                        <input asp-for="FollowUpDate" class="form-control" type="date" />
+                                        <span asp-validation-for="FollowUpDate" class="text-danger"></span>
+                                    </div>
+                                </div>
                             </div>
-                        </div>
 
-                        <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-                            <button type="submit" class="btn btn-success btn-lg me-md-2" style="background-color: @theme; border-color: @theme;">
-                                <i class="bi bi-save"></i> Save Lead
-                            </button>
-                            <button type="button" class="btn btn-outline-primary btn-lg" data-bs-toggle="modal" data-bs-target="#bulkImportModal">
-                                <i class="bi bi-file-earmark-arrow-up"></i> Bulk Import
-                            </button>
-                        </div>
-                    </form>
-                </div>
+                            <!-- Property Requirements -->
+                            <div class="card p-3 mb-4 shadow-sm">
+                                <h5 class="card-title text-primary"><i class="bi bi-house-fill"></i> Property Requirements</h5>
+                                <div class="row">
+                                    <div class="col-md-4 mb-3">
+                                        <label asp-for="RequirementType" class="form-label"></label>
+                                        <select asp-for="RequirementType" asp-items="@(new SelectList(Model.RequirementTypeList, "Value", "Text"))" class="form-select">
+                                            <option value="">-- Select Requirement --</option>
+                                        </select>
+                                        <span asp-validation-for="RequirementType" class="text-danger"></span>
+                                    </div>
+                                    <div class="col-md-4 mb-3">
+                                        <label asp-for="PropertyType" class="form-label"></label>
+                                        <select asp-for="PropertyType" asp-items="@(new SelectList(Model.PropertyTypeList, "Value", "Text"))" class="form-select">
+                                            <option value="">-- Select Property Type --</option>
+                                        </select>
+                                        <span asp-validation-for="PropertyType" class="text-danger"></span>
+                                    </div>
+                                    <div class="col-md-4 mb-3">
+                                        <label asp-for="LocationPreference" class="form-label"></label>
+                                        <input asp-for="LocationPreference" class="form-control" placeholder="Preferred area" />
+                                        <span asp-validation-for="LocationPreference" class="text-danger"></span>
+                                    </div>
+                                    <div class="col-md-4 mb-3">
+                                        <label asp-for="BudgetMin" class="form-label"></label>
+                                        <input asp-for="BudgetMin" class="form-control" type="number" step="0.01" placeholder="Min Budget" />
+                                        <span asp-validation-for="BudgetMin" class="text-danger"></span>
+                                    </div>
+                                    <div class="col-md-4 mb-3">
+                                        <label asp-for="BudgetMax" class="form-label"></label>
+                                        <input asp-for="BudgetMax" class="form-control" type="number" step="0.01" placeholder="Max Budget" />
+                                        <span asp-validation-for="BudgetMax" class="text-danger"></span>
+                                    </div>
+                                    <div class="col-md-4 mb-3">
+                                        <label asp-for="Bedrooms" class="form-label"></label>
+                                        <select asp-for="Bedrooms" asp-items="@(new SelectList(Model.BedroomsList, "Value", "Text"))" class="form-select">
+                                            <option value="">-- Select BHK --</option>
+                                        </select>
+                                        <span asp-validation-for="Bedrooms" class="text-danger"></span>
+                                    </div>
+                                    <div class="col-md-4 mb-3">
+                                        <label asp-for="FurnishingType" class="form-label"></label>
+                                        <select asp-for="FurnishingType" asp-items="@(new SelectList(Model.FurnishingTypeList, "Value", "Text"))" class="form-select">
+                                            <option value="">-- Select Furnishing --</option>
+                                        </select>
+                                        <span asp-validation-for="FurnishingType" class="text-danger"></span>
+                                    </div>
+                                    <div class="col-md-4 mb-3">
+                                        <label asp-for="PossessionTimeframe" class="form-label"></label>
+                                        <select asp-for="PossessionTimeframe" asp-items="@(new SelectList(Model.PossessionTimeframeList, "Value", "Text"))" class="form-select">
+                                            <option value="">-- Select Timeframe --</option>
+                                        </select>
+                                        <span asp-validation-for="PossessionTimeframe" class="text-danger"></span>
+                                    </div>
+                                </div>
+                            </div>
 
-               
-            </div>
-        </div>
+                            <!-- Broker / Agent Assignment -->
+                            <div class="card p-3 mb-4 shadow-sm">
+                                <h5 class="card-title text-primary"><i class="bi bi-person-badge"></i> Broker / Agent Assignment</h5>
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <label asp-for="AssignedAgent" class="form-label"></label>
+                                        <select asp-for="AssignedAgent" asp-items="@(new SelectList(Model.AgentList, "Value", "Text"))" class="form-select">
+                                            <option value="">-- Select Agent --</option>
+                                        </select>
+                                        <span asp-validation-for="AssignedAgent" class="text-danger"></span>
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <label asp-for="CreatedBy" class="form-label"></label>
+                                        <input asp-for="CreatedBy" class="form-control" readonly />
+                                        <span asp-validation-for="CreatedBy" class="text-danger"></span>
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <label asp-for="CreatedDate" class="form-label"></label>
+                                        <input asp-for="CreatedDate" class="form-control" type="date" readonly />
+                                        <span asp-validation-for="CreatedDate" class="text-danger"></span>
+                                    </div>
+                                </div>
+                            </div>
 
-        <div class="tab-pane fade" id="all-leads" role="tabpanel" aria-labelledby="all-leads-tab">
-            <table class="table table-striped table-hover mt-3">
-                <thead class="table-primary">
-                    <tr>
-                        <th>ID</th>
-                        <th>Name</th>
-                        <th>Status</th>
-                        <th>Source</th>
-                        <th>Agent</th>
-                        <th>Date Added</th>
-                        <th>Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>1001</td>
-                        <td>Michael Scott</td>
-                        <td><span class="badge bg-warning">Qualified</span></td>
-                        <td>Website Form</td>
-                        <td>Jessica Smith</td>
-                        <td>2025-11-01</td>
-                        <td><button class="btn btn-sm btn-info">View</button></td>
-                    </tr>
-                    <tr>
-                        <td>1002</td>
-                        <td>Pam Beesly</td>
-                        <td><span class="badge bg-success">Hot Prospect</span></td>
-                        <td>Referral</td>
-                        <td>Mark Johnson</td>
-                        <td>2025-11-05</td>
-                        <td><button class="btn btn-sm btn-info">View</button></td>
-                    </tr>
-                    <tr>
-                        <td>1003</td>
-                        <td>Dwight Schrute</td>
-                        <td><span class="badge bg-secondary">New Lead</span></td>
-                        <td>Zillow/Trulia</td>
-                        <td>Chris Lee</td>
-                        <td>2025-11-07</td>
-                        <td><button class="btn btn-sm btn-info">View</button></td>
-                    </tr>
-                </tbody>
-            </table>
-            <div class="d-flex justify-content-between">
-                <span class="text-muted">Showing 1 to 3 of 3 total leads.</span>
-                <button class="btn btn-outline-secondary">Load More</button>
-            </div>
-        </div>
-    </div>
-</div>
+                            <!-- Additional Details -->
+                            <div class="card p-3 mb-4 shadow-sm">
+                                <h5 class="card-title text-primary"><i class="bi bi-sticky"></i> Additional Details</h5>
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <label asp-for="LeadPriority" class="form-label"></label>
+                                        <select asp-for="LeadPriority" asp-items="@(new SelectList(Model.LeadPriorityList, "Value", "Text"))" class="form-select">
+                                            <option value="">-- Select Priority --</option>
+                                        </select>
+                                        <span asp-validation-for="LeadPriority" class="text-danger"></span>
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <label asp-for="LeadRating" class="form-label"></label>
+                                        <select asp-for="LeadRating" asp-items="@(new SelectList(Model.LeadRatingList, "Value", "Text"))" class="form-select">
+                                            <option value="">-- Select Rating --</option>
+                                        </select>
+                                        <span asp-validation-for="LeadRating" class="text-danger"></span>
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <label asp-for="IsActive" class="form-label"></label>
+                                        <select asp-for="IsActive" class="form-select">
+                                            <option value="true">Active</option>
+                                            <option value="false">Inactive</option>
+                                        </select>
+                                        <span asp-validation-for="IsActive" class="text-danger"></span>
+                                    </div>
+                                    <div class="col-md-12 mb-3">
+                                        <label asp-for="Notes" class="form-label"></label>
+                                        <textarea asp-for="Notes" class="form-control" rows="4" placeholder="Enter remarks or additional notes..."></textarea>
+                                        <span asp-validation-for="Notes" class="text-danger"></span>
+                                    </div>
+                                </div>
+                            </div>
 
-<div class="modal fade" id="bulkImportModal" tabindex="-1" aria-labelledby="bulkImportModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header bg-primary text-white">
-                <h5 class="modal-title" id="bulkImportModalLabel"><i class="bi bi-cloud-upload"></i> Bulk Lead Import (CSV)</h5>
-                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-
-
-            <form asp-action="BulkImport" enctype="multipart/form-data" method="post">
-                <div class="modal-body">
-                    <p>Select a CSV file to upload multiple leads.</p>
-                    <div class="mb-3">
-                        <label for="importFile" class="form-label">Upload CSV File</label>
-                        <input class="form-control" type="file" id="importFile" name="importFile" accept=".csv" required>
+                            <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                               
+                                <button type="button" class="btn btn-success btn-lg" data-bs-toggle="modal" data-bs-target="#bulkImportModal">
+                                    <i class="bi bi-file-earmark-arrow-up"></i> Bulk Import
+                                </button>
+                                <button type="submit" class="btn btn-success btn-lg me-md-2" style="background-color: @theme; border-color: @theme;">
+                                    <i class="bi bi-save"></i> Save Lead
+                                </button>
+                            </div>
+                        </form>
                     </div>
                 </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                    <button type="submit" class="btn btn-primary">Start Import</button>
+            </div>
+
+            <!-- All Leads Tab (Static Example) -->
+            <div class="tab-pane fade" id="all-leads" role="tabpanel" aria-labelledby="all-leads-tab">
+                <table class="table table-striped table-hover mt-3">
+                    <thead class="table-primary">
+                        <tr>
+                            <th>Lead ID</th>
+                            <th>Full Name</th>
+                            <th>Lead Status</th>
+                            <th>Lead Source</th>
+                            <th>Assigned Agent</th>
+                            <th>Created Date</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>LEAD001</td>
+                            <td>Michael Scott</td>
+                            <td><span class="badge bg-warning">Interested</span></td>
+                            <td>Website</td>
+                            <td>Agent 1</td>
+                            <td>2025-11-01</td>
+                            <td><button class="btn btn-sm btn-info">View</button></td>
+                        </tr>
+                        <tr>
+                            <td>LEAD002</td>
+                            <td>Pam Beesly</td>
+                            <td><span class="badge bg-success">Converted</span></td>
+                            <td>Referral</td>
+                            <td>Agent 2</td>
+                            <td>2025-11-05</td>
+                            <td><button class="btn btn-sm btn-info">View</button></td>
+                        </tr>
+                        <tr>
+                            <td>LEAD003</td>
+                            <td>Dwight Schrute</td>
+                            <td><span class="badge bg-secondary">New</span></td>
+                            <td>Google Ads</td>
+                            <td>Agent 3</td>
+                            <td>2025-11-07</td>
+                            <td><button class="btn btn-sm btn-info">View</button></td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div class="d-flex justify-content-between">
+                    <span class="text-muted">Showing 1 to 3 of 3 total leads.</span>
+                    <button class="btn btn-outline-secondary">Load More</button>
                 </div>
-            </form>
+            </div>
         </div>
     </div>
-</div>
 
-
+    <!-- Bulk Import Modal -->
+    <div class="modal fade" id="bulkImportModal" tabindex="-1" aria-labelledby="bulkImportModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header bg-primary text-white">
+                    <h5 class="modal-title" id="bulkImportModalLabel"><i class="bi bi-cloud-upload"></i> Bulk Lead Import (CSV)</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form asp-action="BulkImport" enctype="multipart/form-data" method="post">
+                    <div class="modal-body">
+                        <p>Select a CSV file to upload multiple leads.</p>
+                        <div class="mb-3">
+                            <label for="importFile" class="form-label">Upload CSV File</label>
+                            <input class="form-control" type="file" id="importFile" name="importFile" accept=".csv" required>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn btn-primary">Start Import</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</main>
 @section Scripts {
     @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
