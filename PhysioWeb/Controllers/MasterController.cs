@@ -961,9 +961,10 @@ namespace PhysioWeb.Controllers
         }
 
         #region Agent
-        public async Task<ActionResult> NewLead()
+        public ActionResult NewLead()
         {
-            return View();
+            var newLead = new NewLead();
+            return View(newLead);
         }
         #endregion
     }
