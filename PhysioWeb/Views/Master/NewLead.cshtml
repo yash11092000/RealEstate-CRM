@@ -378,12 +378,12 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header bg-primary text-white">
-                    <h5 class="modal-title" id="bulkImportModalLabel"><i class="bi bi-cloud-upload"></i> Bulk Lead Import (CSV)</h5>
+                    <h5 class="modal-title" id="bulkImportModalLabel"><i class="bi bi-cloud-upload"></i> Bulk Lead Import</h5>
                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <form asp-action="BulkImport" enctype="multipart/form-data" method="post">
                     <div class="modal-body">
-                        <p>Select a CSV file to upload multiple leads.</p>
+                        @* <p>Select a CSV file to upload multiple leads.</p> *@
                         <div class="mb-3">
                             <label for="importFile" class="form-label">Upload CSV File</label>
                             <input class="form-control" type="file" id="importFile" name="importFile" accept=".csv" required>
