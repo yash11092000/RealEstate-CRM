@@ -202,27 +202,7 @@
 
                         <div class="card p-3 mb-4 shadow-sm">
                             <h5 class="card-title text-primary"><i class="bi bi-info-circle-fill"></i> Lead Details</h5>
-                            @* <div class="row">
-                                <div class="col-md-4 mb-3">
-                                    <label asp-for="LeadSource" class="form-label"></label>
-                                    <select asp-for="LeadSource" asp-items="Model.LeadSourceList" class="form-select">
-                                        <option value="">-- Select Source --</option>
-                                    </select>
-                                </div>
-                                <div class="col-md-4 mb-3">
-                                    <label asp-for="Status" class="form-label"></label>
-                                    <select asp-for="Status" asp-items="Model.StatusList" class="form-select">
-                                        <option value="">-- Select Status --</option>
-                                    </select>
-                                </div>
-                                <div class="col-md-4 mb-3">
-                                    <label asp-for="AssignedAgentID" class="form-label"></label>
-                                    <select asp-for="AssignedAgentID" asp-items="Model.AgentList" class="form-select">
-                                        <option value="0">-- Unassigned --</option>
-                                    </select>
-                                    <span asp-validation-for="AssignedAgentID" class="text-danger"></span>
-                                </div>
-                            </div> *@
+                          
                             <div class="mb-3">
                                 <label asp-for="Notes" class="form-label"></label>
                                 <textarea asp-for="Notes" class="form-control" rows="3" placeholder="Enter specific property requirements or interaction history..."></textarea>
@@ -240,18 +220,7 @@
                     </form>
                 </div>
 
-               @*  <div class="col-md-3">
-                    <div class="card bg-light p-3 shadow-sm">
-                        <h6>Lead Entry Tips</h6>
-                        <small class="text-muted">
-                            <ul class="list-unstyled small">
-                                <li><i class="bi bi-check-circle-fill text-success"></i> Fields with **bold labels** are required.</li>
-                                <li><i class="bi bi-check-circle-fill text-success"></i> Use the **Notes** section for details on property type or budget.</li>
-                                <li><i class="bi bi-check-circle-fill text-success"></i> Always assign an agent immediately.</li>
-                            </ul>
-                        </small>
-                    </div>
-                </div> *@
+               
             </div>
         </div>
 

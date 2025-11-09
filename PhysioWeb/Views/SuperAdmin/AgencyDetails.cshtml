@@ -198,6 +198,24 @@
 		vertical-align: middle;
 	}
 
+	.theme-btn {
+		width: 32px;
+		height: 32px;
+		border-radius: 50%;
+		border: 2px solid #fff;
+		cursor: pointer;
+		transition: transform 0.2s;
+	}
+
+		.theme-btn:hover {
+			transform: scale(1.15);
+			/* border-color: #00000033; */
+		}
+
+		.theme-btn.selected {
+			border: 3px solid #ddd;
+			box-shadow: inset 0 0 0 2px #fff;
+		}
 </style>
 <link rel="stylesheet" href="https://cdn.datatables.net/2.3.2/css/dataTables.dataTables.min.css" />
 
@@ -281,10 +299,25 @@
 								<label class="form-label fw-bold">Website URL</label>
 								<input type="text" class="form-control" id="WebsiteUrl" name="WebsiteUrl">
 							</div>
-							<div class="col-md-3 mb-3">
+							@* 	<div class="col-md-3 mb-3">
 								<label for="AgencyTheme" class="form-label fw-bold">Choose Theme </label>
 								<input type="color" class="form-control form-control-color" id="AgencyTheme" value="#563d7c" title="Choose your color">
+							</div> *@
+							<input type="color" hidden class="form-control form-control-color" id="AgencyTheme" value="#563d7c" title="Choose your color">
+
+							<div class="col-md-3 mb-3">
+								<label for="AgencyThemeSelfPick" class="form-label fw-bold">Choose Theme</label>
+								<div class="d-flex gap-2 flex-wrap">
+									<button type="button" class="theme-btn" data-color="#198754" style="background-color:#198754;"></button>
+									<button type="button" class="theme-btn" data-color="#0d6efd" style="background-color:#0d6efd;"></button>
+									<button type="button" class="theme-btn" data-color="#dc3545" style="background-color:#dc3545;"></button>
+									<button type="button" class="theme-btn" data-color="#fd7e14" style="background-color:#fd7e14;"></button>
+									<button type="button" class="theme-btn" data-color="#20c997" style="background-color:#20c997;"></button>
+									<button type="button" class="theme-btn" data-color="#6610f2" style="background-color:#6610f2;"></button>
+								</div>
 							</div>
+
+
 							<div class="col-md-12 mb-3">
 								<label class="form-label fw-bold">Street Address</label>
 								<input type="text" class="form-control" id="StreetAddress" name="StreetAddress">
@@ -563,8 +596,29 @@
 				card.remove();        // remove preview
 			});
 		});
+				const themeButtons = document.querySelectorAll('.theme-btn');
+		const agencyThemeInput = document.getElementById('AgencyTheme');
 
+		// Handle click
+		themeButtons.forEach(btn => {
+		  btn.addEventListener('click', () => {
+			const color = btn.dataset.color;
+			agencyThemeInput.value = color;
 
+			// Remove selection from all
+			themeButtons.forEach(b => b.classList.remove('selected'));
+
+			// Add to current
+			btn.classList.add('selected');
+		  });
+		});
+				// Highlight default selected color on page load
+		const selectedColor = agencyThemeInput.value.toLowerCase();
+		themeButtons.forEach(b => {
+		  if (b.dataset.color.toLowerCase() === selectedColor) {
+			b.classList.add('selected');
+		  }
+		});
 				$("#submitAgency").on("click", function () {
 		 if (!validateAgencyForm()) return; // stop if validation fails
 
@@ -852,7 +906,7 @@
 			 $("#MobileNo ,#AlternateMobileNo").on("change", function () {
 			 validateMobileNo(this);
 		});
-		
+
 		$("#EmailAddress").on("change", function () {
 			validateEmailID(this);
 		});

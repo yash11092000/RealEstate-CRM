@@ -1,0 +1,1128 @@
+﻿@{
+	ViewBag.Title = "Lead Dashboard";
+	var theme = User.FindFirst("Theme")?.Value ?? "#198754";
+}
+
+<style>
+	:root {
+		--theme-color: @theme;
+		--sidebar-width: 280px;
+		--sidebar-collapsed-width: 70px;
+		--transition-speed: 0.3s;
+		--primary-color: @theme;
+		--secondary-color: #6c757d;
+		--light-bg: #f8f9fa;
+		--accent: @theme;
+		--dark: #0d3b22;
+		--success: @theme;
+		--warning: #f39c12;
+		--danger: #e74c3c;
+		--info: #3498db;
+		--gray: #7f8c8d;
+		--light-gray: #bdc3c7;
+		--gold: #f1c40f;
+	}
+
+	/* body {
+								background: linear-gradient(135deg, #f0f9f4 0%, #e4f5ec 100%);
+								color: #333;
+								font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+								min-height: 100vh;
+								padding: 20px;
+							} */
+
+	.dashboard-container {
+		max-width: 1400px;
+		margin: 0 auto;
+	}
+
+	.top-bar {
+		background: white;
+		padding: 18px 30px;
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+		border-radius: 12px;
+		margin-bottom: 25px;
+	}
+
+	.brand {
+		display: flex;
+		align-items: center;
+		gap: 12px;
+	}
+
+		.brand i {
+			font-size: 28px;
+			color: var(--accent);
+		}
+
+		.brand h1 {
+			font-size: 24px;
+			color: var(--primary-color);
+			font-weight: 700;
+			margin: 0;
+		}
+
+	.search-bar {
+		display: flex;
+		align-items: center;
+		background: var(--light-bg);
+		border-radius: 30px;
+		padding: 10px 20px;
+		width: 350px;
+		transition: all var(--transition-speed);
+		border: 1px solid transparent;
+	}
+
+		.search-bar:focus-within {
+			border-color: var(--accent);
+			box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 20%, transparent);
+		}
+
+		.search-bar input {
+			border: none;
+			background: transparent;
+			padding: 5px 10px;
+			width: 100%;
+			outline: none;
+			font-size: 15px;
+		}
+
+	.user-info {
+		display: flex;
+		align-items: center;
+		gap: 15px;
+	}
+
+	.notification-icon {
+		position: relative;
+		cursor: pointer;
+	}
+
+	.notification-badge {
+		position: absolute;
+		top: -5px;
+		right: -5px;
+		background: var(--gold);
+		color: var(--dark);
+		border-radius: 50%;
+		width: 18px;
+		height: 18px;
+		font-size: 10px;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		font-weight: bold;
+	}
+
+	.user-details {
+		display: flex;
+		align-items: center;
+		gap: 12px;
+	}
+
+		.user-details img {
+			width: 42px;
+			height: 42px;
+			border-radius: 50%;
+			object-fit: cover;
+			border: 2px solid var(--accent);
+		}
+
+	.dashboard-content {
+		background: white;
+		border-radius: 12px;
+		box-shadow: 0 6px 15px rgba(0, 0, 0, 0.05);
+		padding: 25px;
+		border: 1px solid color-mix(in srgb, var(--accent) 10%, transparent);
+	}
+
+	.page-header {
+		display: flex;
+		justify-content: end;
+		align-items: center;
+		margin-bottom: 30px;
+	}
+
+	.page-title h2 {
+		font-size: 28px;
+		color: var(--primary-color);
+		margin-bottom: 8px;
+		font-weight: 700;
+	}
+
+	.page-title p {
+		color: var(--secondary-color);
+		font-size: 16px;
+		margin: 0;
+	}
+
+	.btn-primary-custom {
+		background: linear-gradient(135deg, var(--accent) 0%, color-mix(in srgb, var(--primary-color) 80%, black) 100%);
+		color: white;
+		border: none;
+		padding: 14px 28px;
+		border-radius: 8px;
+		font-weight: 600;
+		box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+		transition: all var(--transition-speed);
+	}
+
+		.btn-primary-custom:hover {
+			transform: translateY(-2px);
+			box-shadow: 0 6px 12px color-mix(in srgb, var(--accent) 30%, transparent);
+			color: white;
+		}
+
+	.nav-tabs {
+		border-bottom: 2px solid color-mix(in srgb, var(--accent) 20%, transparent);
+		margin-bottom: 25px;
+	}
+
+		.nav-tabs .nav-link {
+			color: var(--secondary-color);
+			font-weight: 600;
+			padding: 12px 24px;
+			border: none;
+			border-bottom: 3px solid transparent;
+			transition: all var(--transition-speed);
+		}
+
+			.nav-tabs .nav-link:hover {
+				color: var(--primary-color);
+				border-color: transparent;
+			}
+
+			.nav-tabs .nav-link.active {
+				color: var(--primary-color);
+				background-color: transparent;
+				border: none;
+				border-bottom: 3px solid var(--accent);
+			}
+
+	.stats-container {
+		display: grid;
+		grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+		gap: 25px;
+		margin-bottom: 40px;
+	}
+
+	.stat-card {
+		background: white;
+		border-radius: 12px;
+		padding: 25px;
+		box-shadow: 0 6px 15px rgba(0, 0, 0, 0.05);
+		transition: transform var(--transition-speed), box-shadow var(--transition-speed);
+		position: relative;
+		overflow: hidden;
+		border: 1px solid color-mix(in srgb, var(--accent) 10%, transparent);
+	}
+
+		.stat-card::before {
+			content: '';
+			position: absolute;
+			top: 0;
+			left: 0;
+			width: 100%;
+			height: 4px;
+		}
+
+		.stat-card:hover {
+			transform: translateY(-7px);
+			box-shadow: 0 12px 20px rgba(0, 0, 0, 0.1);
+		}
+
+		.stat-card.new::before {
+			background: var(--info);
+		}
+
+		.stat-card.contacted::before {
+			background: var(--accent);
+		}
+
+		.stat-card.qualified::before {
+			background: var(--success);
+		}
+
+		.stat-card.converted::before {
+			background: var(--gold);
+		}
+
+		.stat-card.unqualified::before {
+			background: var(--danger);
+		}
+
+	.stat-header {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		margin-bottom: 20px;
+	}
+
+	.stat-title {
+		font-size: 16px;
+		color: var(--secondary-color);
+		font-weight: 500;
+	}
+
+	.stat-icon {
+		width: 54px;
+		height: 54px;
+		border-radius: 12px;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		font-size: 24px;
+	}
+
+	.stat-card.new .stat-icon {
+		background: color-mix(in srgb, var(--info) 15%, transparent);
+		color: var(--info);
+	}
+
+	.stat-card.contacted .stat-icon {
+		background: color-mix(in srgb, var(--accent) 15%, transparent);
+		color: var(--accent);
+	}
+
+	.stat-card.qualified .stat-icon {
+		background: color-mix(in srgb, var(--success) 20%, transparent);
+		color: var(--success);
+	}
+
+	.stat-card.converted .stat-icon {
+		background: color-mix(in srgb, var(--gold) 15%, transparent);
+		color: var(--gold);
+	}
+
+	.stat-card.unqualified .stat-icon {
+		background: color-mix(in srgb, var(--danger) 15%, transparent);
+		color: var(--danger);
+	}
+
+	.stat-value {
+		font-size: 36px;
+		font-weight: 700;
+		margin-bottom: 8px;
+		color: var(--primary-color);
+	}
+
+	.stat-change {
+		font-size: 14px;
+		display: flex;
+		align-items: center;
+	}
+
+		.stat-change.positive {
+			color: var(--success);
+		}
+
+		.stat-change.negative {
+			color: var(--danger);
+		}
+
+	.leads-section {
+		background: white;
+		border-radius: 12px;
+		box-shadow: 0 6px 15px rgba(0, 0, 0, 0.05);
+		overflow: hidden;
+		border: 1px solid color-mix(in srgb, var(--accent) 10%, transparent);
+	}
+
+	.section-header {
+		padding: 22px 28px;
+		border-bottom: 1px solid #eee;
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		background: color-mix(in srgb, var(--accent) 3%, white);
+	}
+
+	.section-title {
+		font-size: 22px;
+		color: var(--primary-color);
+		font-weight: 600;
+	}
+
+	.table-controls {
+		display: flex;
+		gap: 15px;
+	}
+
+	.filter-select {
+		padding: 10px 16px;
+		border: 1px solid #e1e5e9;
+		border-radius: 8px;
+		font-size: 14px;
+		outline: none;
+		background: white;
+		transition: all var(--transition-speed);
+	}
+
+		.filter-select:focus {
+			border-color: var(--accent);
+			box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 20%, transparent);
+		}
+
+	.leads-table {
+		width: 100%;
+		border-collapse: collapse;
+	}
+
+		.leads-table th {
+			background: color-mix(in srgb, var(--accent) 5%, white);
+			padding: 18px 22px;
+			text-align: left;
+			font-weight: 600;
+			color: var(--dark);
+			border-bottom: 1px solid color-mix(in srgb, var(--accent) 10%, transparent);
+			font-size: 15px;
+		}
+
+		.leads-table td {
+			padding: 18px 22px;
+			border-bottom: 1px solid #f0f0f0;
+		}
+
+		.leads-table tr:last-child td {
+			border-bottom: none;
+		}
+
+		.leads-table tr:hover {
+			background: color-mix(in srgb, var(--accent) 3%, white);
+		}
+
+	.lead-name {
+		display: flex;
+		align-items: center;
+	}
+
+	.lead-avatar {
+		width: 40px;
+		height: 40px;
+		border-radius: 50%;
+		background: linear-gradient(135deg, var(--accent) 0%, var(--primary-color) 100%);
+		color: white;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		font-weight: 600;
+		margin-right: 12px;
+		font-size: 15px;
+	}
+
+	.status-badge {
+		padding: 7px 14px;
+		border-radius: 20px;
+		font-size: 13px;
+		font-weight: 600;
+	}
+
+	.status-new {
+		background: color-mix(in srgb, var(--info) 10%, transparent);
+		color: var(--info);
+	}
+
+	.status-contacted {
+		background: color-mix(in srgb, var(--accent) 10%, transparent);
+		color: var(--accent);
+	}
+
+	.status-qualified {
+		background: color-mix(in srgb, var(--success) 20%, transparent);
+		color: var(--success);
+	}
+
+	.status-converted {
+		background: color-mix(in srgb, var(--gold) 10%, transparent);
+		color: #b7950b;
+	}
+
+	.status-unqualified {
+		background: color-mix(in srgb, var(--danger) 10%, transparent);
+		color: var(--danger);
+	}
+
+	.priority-badge {
+		padding: 6px 12px;
+		border-radius: 6px;
+		font-size: 12px;
+		font-weight: 600;
+	}
+
+	.priority-high {
+		background: color-mix(in srgb, var(--danger) 10%, transparent);
+		color: var(--danger);
+	}
+
+	.priority-medium {
+		background: color-mix(in srgb, var(--gold) 10%, transparent);
+		color: #b7950b;
+	}
+
+	.priority-low {
+		background: color-mix(in srgb, var(--success) 10%, transparent);
+		color: var(--success);
+	}
+
+	.action-buttons {
+		display: flex;
+		gap: 8px;
+	}
+
+	.action-btn {
+		width: 36px;
+		height: 36px;
+		border-radius: 8px;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		background: color-mix(in srgb, var(--accent) 5%, white);
+		color: var(--dark);
+		cursor: pointer;
+		transition: all 0.2s;
+		border: none;
+	}
+
+		.action-btn:hover {
+			background: var(--accent);
+			color: white;
+			transform: translateY(-2px);
+		}
+
+	.pagination {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		padding: 22px 28px;
+		border-top: 1px solid #eee;
+		background: color-mix(in srgb, var(--accent) 3%, white);
+	}
+
+	.pagination-info {
+		color: var(--secondary-color);
+		font-size: 14px;
+	}
+
+	.pagination-controls {
+		display: flex;
+		gap: 8px;
+	}
+
+	.pagination-btn {
+		width: 40px;
+		height: 40px;
+		border-radius: 8px;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		background: white;
+		border: 1px solid #e1e5e9;
+		cursor: pointer;
+		transition: all 0.2s;
+		font-weight: 500;
+	}
+
+		.pagination-btn.active {
+			background: var(--accent);
+			color: white;
+			border-color: var(--accent);
+		}
+
+		.pagination-btn:hover:not(.active) {
+			background: color-mix(in srgb, var(--accent) 5%, white);
+			border-color: var(--accent);
+		}
+
+	.chart-container {
+		background: white;
+		border-radius: 12px;
+		padding: 25px;
+		box-shadow: 0 6px 15px rgba(0, 0, 0, 0.05);
+		border: 1px solid color-mix(in srgb, var(--accent) 10%, transparent);
+		margin-bottom: 25px;
+	}
+
+	.chart-title {
+		font-size: 22px;
+		color: var(--primary-color);
+		font-weight: 600;
+		margin-bottom: 20px;
+	}
+
+	.decorative-element {
+		position: absolute;
+		width: 120px;
+		height: 120px;
+		border-radius: 50%;
+		background: color-mix(in srgb, var(--accent) 5%, transparent);
+		z-index: -1;
+	}
+
+	.decorative-1 {
+		top: 10%;
+		right: 5%;
+	}
+
+	.decorative-2 {
+		bottom: 15%;
+		left: 3%;
+		width: 80px;
+		height: 80px;
+	}
+
+	@@media (max-width: 1200px) {
+		.stats-container {
+			grid-template-columns: repeat(2, 1fr);
+		}
+	}
+
+	@@media (max-width: 768px) {
+		.table-controls {
+			flex-direction: column;
+			width: 100%;
+			margin-top: 15px;
+		}
+
+		.leads-table {
+			display: block;
+			overflow-x: auto;
+		}
+
+		.page-header {
+			flex-direction: column;
+			align-items: flex-start;
+			gap: 15px;
+		}
+
+		.search-bar {
+			width: 100%;
+		}
+
+		.top-bar {
+			flex-direction: column;
+			gap: 15px;
+			align-items: flex-start;
+		}
+
+		.brand {
+			margin-bottom: 10px;
+		}
+	}
+
+</style>
+
+<main class="dashboard-content with-sidebar collapsed">
+
+	<div class="dashboard-container">
+
+		<!-- Dashboard Content -->
+		<div class="dashboard-content">
+			<!-- Page Header -->
+			<div class="page-header text-end">
+				<a class="btn btn-primary-custom" href="/Master/NewLead">
+					<i class="fas fa-plus"></i> Add New Lead
+				</a>
+			</div>
+
+			<!-- Bootstrap Tabs -->
+			<ul class="nav nav-tabs" id="dashboardTabs" role="tablist">
+				<li class="nav-item" role="presentation">
+					<button class="nav-link active" id="leads-tab" data-bs-toggle="tab" data-bs-target="#leads" type="button" role="tab" aria-controls="leads" aria-selected="true">
+						<i class="fas fa-users me-2"></i>Lead Management
+					</button>
+				</li>
+				<li class="nav-item" role="presentation">
+					<button class="nav-link" id="stats-tab" data-bs-toggle="tab" data-bs-target="#stats" type="button" role="tab" aria-controls="stats" aria-selected="false">
+						<i class="fas fa-chart-pie me-2"></i>Monthly Statistics
+					</button>
+				</li>
+			</ul>
+
+			<div class="tab-content" id="dashboardTabsContent">
+				<!-- Leads Tab -->
+				<div class="tab-pane fade show active" id="leads" role="tabpanel" aria-labelledby="leads-tab">
+					<!-- Stats Cards -->
+					<div class="stats-container">
+						<div class="stat-card new">
+							<div class="stat-header">
+								<div class="stat-title">New Leads</div>
+								<div class="stat-icon">
+									<i class="fas fa-user-plus"></i>
+								</div>
+							</div>
+							<div class="stat-value">42</div>
+							<div class="stat-change positive">
+								<i class="fas fa-arrow-up"></i> 12% from last month
+							</div>
+						</div>
+
+						<div class="stat-card contacted">
+							<div class="stat-header">
+								<div class="stat-title">Contacted</div>
+								<div class="stat-icon">
+									<i class="fas fa-phone"></i>
+								</div>
+							</div>
+							<div class="stat-value">28</div>
+							<div class="stat-change positive">
+								<i class="fas fa-arrow-up"></i> 5% from last month
+							</div>
+						</div>
+
+						<div class="stat-card qualified">
+							<div class="stat-header">
+								<div class="stat-title">Qualified</div>
+								<div class="stat-icon">
+									<i class="fas fa-check-circle"></i>
+								</div>
+							</div>
+							<div class="stat-value">19</div>
+							<div class="stat-change positive">
+								<i class="fas fa-arrow-up"></i> 8% from last month
+							</div>
+						</div>
+
+						<div class="stat-card converted">
+							<div class="stat-header">
+								<div class="stat-title">Converted</div>
+								<div class="stat-icon">
+									<i class="fas fa-trophy"></i>
+								</div>
+							</div>
+							<div class="stat-value">12</div>
+							<div class="stat-change positive">
+								<i class="fas fa-arrow-up"></i> 3% from last month
+							</div>
+						</div>
+
+						<div class="stat-card unqualified">
+							<div class="stat-header">
+								<div class="stat-title">Unqualified</div>
+								<div class="stat-icon">
+									<i class="fas fa-times-circle"></i>
+								</div>
+							</div>
+							<div class="stat-value">7</div>
+							<div class="stat-change negative">
+								<i class="fas fa-arrow-down"></i> 2% from last month
+							</div>
+						</div>
+					</div>
+
+					<!-- Leads Table -->
+					<div class="leads-section">
+						<div class="section-header">
+							<div class="section-title">Recent Leads</div>
+							<div class="table-controls">
+								<select class="filter-select">
+									<option>All Status</option>
+									<option>New</option>
+									<option>Contacted</option>
+									<option>Qualified</option>
+									<option>Converted</option>
+									<option>Unqualified</option>
+								</select>
+								<select class="filter-select">
+									<option>All Agents</option>
+									<option>John Smith</option>
+									<option>Sarah Johnson</option>
+									<option>Michael Brown</option>
+								</select>
+							</div>
+						</div>
+
+						<table class="leads-table">
+							<thead>
+								<tr>
+									<th>Lead</th>
+									<th>Contact</th>
+									<th>Property Type</th>
+									<th>Budget</th>
+									<th>Status</th>
+									<th>Priority</th>
+									<th>Assigned Agent</th>
+									<th>Actions</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr>
+									<td>
+										<div class="lead-name">
+											<div class="lead-avatar">RJ</div>
+											<div>
+												<div>Robert Johnson</div>
+												<div style="font-size: 13px; color: var(--gray);">L-2023-00125</div>
+											</div>
+										</div>
+									</td>
+									<td>
+										<div>robert.j@email.com</div>
+										<div style="font-size: 13px; color: var(--gray);">+1 (555) 123-4567</div>
+									</td>
+									<td>3 BHK Apartment</td>
+									<td>₹75-90 L</td>
+									<td><span class="status-badge status-new">New</span></td>
+									<td><span class="priority-badge priority-high">High</span></td>
+									<td>John Smith</td>
+									<td>
+										<div class="action-buttons">
+											<button class="action-btn"><i class="fas fa-eye"></i></button>
+											<button class="action-btn"><i class="fas fa-edit"></i></button>
+											<button class="action-btn"><i class="fas fa-phone"></i></button>
+										</div>
+									</td>
+								</tr>
+								<tr>
+									<td>
+										<div class="lead-name">
+											<div class="lead-avatar">MP</div>
+											<div>
+												<div>Michael Peterson</div>
+												<div style="font-size: 13px; color: var(--gray);">L-2023-00124</div>
+											</div>
+										</div>
+									</td>
+									<td>
+										<div>michael.p@email.com</div>
+										<div style="font-size: 13px; color: var(--gray);">+1 (555) 987-6543</div>
+									</td>
+									<td>4 BHK Villa</td>
+									<td>₹1.2-1.5 Cr</td>
+									<td><span class="status-badge status-qualified">Qualified</span></td>
+									<td><span class="priority-badge priority-medium">Medium</span></td>
+									<td>Sarah Johnson</td>
+									<td>
+										<div class="action-buttons">
+											<button class="action-btn"><i class="fas fa-eye"></i></button>
+											<button class="action-btn"><i class="fas fa-edit"></i></button>
+											<button class="action-btn"><i class="fas fa-phone"></i></button>
+										</div>
+									</td>
+								</tr>
+								<tr>
+									<td>
+										<div class="lead-name">
+											<div class="lead-avatar">SW</div>
+											<div>
+												<div>Sarah Williams</div>
+												<div style="font-size: 13px; color: var(--gray);">L-2023-00123</div>
+											</div>
+										</div>
+									</td>
+									<td>
+										<div>sarah.w@email.com</div>
+										<div style="font-size: 13px; color: var(--gray);">+1 (555) 456-7890</div>
+									</td>
+									<td>2 BHK Apartment</td>
+									<td>₹45-60 L</td>
+									<td><span class="status-badge status-contacted">Contacted</span></td>
+									<td><span class="priority-badge priority-high">High</span></td>
+									<td>Michael Brown</td>
+									<td>
+										<div class="action-buttons">
+											<button class="action-btn"><i class="fas fa-eye"></i></button>
+											<button class="action-btn"><i class="fas fa-edit"></i></button>
+											<button class="action-btn"><i class="fas fa-phone"></i></button>
+										</div>
+									</td>
+								</tr>
+								<tr>
+									<td>
+										<div class="lead-name">
+											<div class="lead-avatar">DR</div>
+											<div>
+												<div>David Rodriguez</div>
+												<div style="font-size: 13px; color: var(--gray);">L-2023-00122</div>
+											</div>
+										</div>
+									</td>
+									<td>
+										<div>david.r@email.com</div>
+										<div style="font-size: 13px; color: var(--gray);">+1 (555) 234-5678</div>
+									</td>
+									<td>Office Space</td>
+									<td>₹2.5-3 Cr</td>
+									<td><span class="status-badge status-converted">Converted</span></td>
+									<td><span class="priority-badge priority-low">Low</span></td>
+									<td>John Smith</td>
+									<td>
+										<div class="action-buttons">
+											<button class="action-btn"><i class="fas fa-eye"></i></button>
+											<button class="action-btn"><i class="fas fa-edit"></i></button>
+											<button class="action-btn"><i class="fas fa-phone"></i></button>
+										</div>
+									</td>
+								</tr>
+								<tr>
+									<td>
+										<div class="lead-name">
+											<div class="lead-avatar">EM</div>
+											<div>
+												<div>Emily Martinez</div>
+												<div style="font-size: 13px; color: var(--gray);">L-2023-00121</div>
+											</div>
+										</div>
+									</td>
+									<td>
+										<div>emily.m@email.com</div>
+										<div style="font-size: 13px; color: var(--gray);">+1 (555) 876-5432</div>
+									</td>
+									<td>1 BHK Apartment</td>
+									<td>₹35-45 L</td>
+									<td><span class="status-badge status-unqualified">Unqualified</span></td>
+									<td><span class="priority-badge priority-low">Low</span></td>
+									<td>Sarah Johnson</td>
+									<td>
+										<div class="action-buttons">
+											<button class="action-btn"><i class="fas fa-eye"></i></button>
+											<button class="action-btn"><i class="fas fa-edit"></i></button>
+											<button class="action-btn"><i class="fas fa-phone"></i></button>
+										</div>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+
+						<div class="pagination">
+							<div class="pagination-info">Showing 1 to 5 of 42 leads</div>
+							<div class="pagination-controls">
+								<div class="pagination-btn"><i class="fas fa-chevron-left"></i></div>
+								<div class="pagination-btn active">1</div>
+								<div class="pagination-btn">2</div>
+								<div class="pagination-btn">3</div>
+								<div class="pagination-btn">4</div>
+								<div class="pagination-btn"><i class="fas fa-chevron-right"></i></div>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<!-- Statistics Tab -->
+				<div class="tab-pane fade" id="stats" role="tabpanel" aria-labelledby="stats-tab">
+					<div class="row">
+						<div class="col-md-8">
+							<div class="chart-container">
+								<h3 class="chart-title">Monthly Lead Conversion Ratio</h3>
+								<canvas id="conversionChart"></canvas>
+							</div>
+						</div>
+						<div class="col-md-4">
+							<div class="chart-container">
+								<h3 class="chart-title">Lead Status Distribution</h3>
+								<canvas id="statusChart"></canvas>
+							</div>
+						</div>
+					</div>
+
+					<div class="row mt-4">
+						<div class="col-md-6">
+							<div class="chart-container">
+								<h3 class="chart-title">Monthly Lead Trends</h3>
+								<canvas id="trendChart"></canvas>
+							</div>
+						</div>
+						<div class="col-md-6">
+							<div class="chart-container">
+								<h3 class="chart-title">Agent Performance</h3>
+								<canvas id="agentChart"></canvas>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+</main>
+
+@section Scripts {
+	<script>
+		  // Simple interactivity for the dashboard
+		document.addEventListener('DOMContentLoaded', function() {
+			// Status filter functionality
+			const statusFilter = document.querySelector('.filter-select');
+			statusFilter.addEventListener('change', function() {
+				// In a real application, this would filter the table
+				console.log('Filtering by status:', this.value);
+			});
+
+			// Action buttons
+			const actionButtons = document.querySelectorAll('.action-btn');
+			actionButtons.forEach(btn => {
+				btn.addEventListener('click', function() {
+					// In a real application, this would perform the action
+					const action = this.querySelector('i').className;
+					console.log('Action clicked:', action);
+				});
+			});
+
+			// Add hover effects to stat cards
+			const statCards = document.querySelectorAll('.stat-card');
+			statCards.forEach(card => {
+				card.addEventListener('mouseenter', function() {
+					this.style.transform = 'translateY(-7px)';
+				});
+
+				card.addEventListener('mouseleave', function() {
+					this.style.transform = 'translateY(0)';
+				});
+			});
+
+			// Initialize Charts
+			initializeCharts();
+		});
+
+		function initializeCharts() {
+			// Conversion Ratio Chart
+			const conversionCtx = document.getElementById('conversionChart').getContext('2d');
+			const conversionChart = new Chart(conversionCtx, {
+				type: 'bar',
+				data: {
+					labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+					datasets: [{
+						label: 'Conversion Rate (%)',
+						data: [15, 22, 18, 25, 30, 28],
+						backgroundColor: [
+							'rgba(39, 174, 96, 0.7)',
+							'rgba(52, 152, 219, 0.7)',
+							'rgba(155, 89, 182, 0.7)',
+							'rgba(241, 196, 15, 0.7)',
+							'rgba(230, 126, 34, 0.7)',
+							'rgba(231, 76, 60, 0.7)'
+						],
+						borderColor: [
+							'rgba(39, 174, 96, 1)',
+							'rgba(52, 152, 219, 1)',
+							'rgba(155, 89, 182, 1)',
+							'rgba(241, 196, 15, 1)',
+							'rgba(230, 126, 34, 1)',
+							'rgba(231, 76, 60, 1)'
+						],
+						borderWidth: 1
+					}]
+				},
+				options: {
+					responsive: true,
+					scales: {
+						y: {
+							beginAtZero: true,
+							max: 35,
+							title: {
+								display: true,
+								text: 'Conversion Rate (%)'
+							}
+						}
+					}
+				}
+			});
+
+			// Status Distribution Chart
+			const statusCtx = document.getElementById('statusChart').getContext('2d');
+			const statusChart = new Chart(statusCtx, {
+				type: 'doughnut',
+				data: {
+					labels: ['New', 'Contacted', 'Qualified', 'Converted', 'Unqualified'],
+					datasets: [{
+						data: [42, 28, 19, 12, 7],
+						backgroundColor: [
+							'rgba(52, 152, 219, 0.7)',
+							'rgba(39, 174, 96, 0.7)',
+							'rgba(241, 196, 15, 0.7)',
+							'rgba(46, 204, 113, 0.7)',
+							'rgba(231, 76, 60, 0.7)'
+						],
+						borderColor: [
+							'rgba(52, 152, 219, 1)',
+							'rgba(39, 174, 96, 1)',
+							'rgba(241, 196, 15, 1)',
+							'rgba(46, 204, 113, 1)',
+							'rgba(231, 76, 60, 1)'
+						],
+						borderWidth: 1
+					}]
+				},
+				options: {
+					responsive: true,
+					plugins: {
+						legend: {
+							position: 'bottom',
+						}
+					}
+				}
+			});
+
+			// Monthly Trends Chart
+			const trendCtx = document.getElementById('trendChart').getContext('2d');
+			const trendChart = new Chart(trendCtx, {
+				type: 'line',
+				data: {
+					labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+					datasets: [{
+						label: 'New Leads',
+						data: [35, 42, 38, 45, 50, 42],
+						borderColor: 'rgba(52, 152, 219, 1)',
+						backgroundColor: 'rgba(52, 152, 219, 0.1)',
+						tension: 0.3,
+						fill: true
+					}, {
+						label: 'Converted Leads',
+						data: [5, 9, 7, 11, 15, 12],
+						borderColor: 'rgba(46, 204, 113, 1)',
+						backgroundColor: 'rgba(46, 204, 113, 0.1)',
+						tension: 0.3,
+						fill: true
+					}]
+				},
+				options: {
+					responsive: true,
+					scales: {
+						y: {
+							beginAtZero: true,
+							title: {
+								display: true,
+								text: 'Number of Leads'
+							}
+						}
+					}
+				}
+			});
+
+			// Agent Performance Chart
+			const agentCtx = document.getElementById('agentChart').getContext('2d');
+			const agentChart = new Chart(agentCtx, {
+				type: 'bar',
+				data: {
+					labels: ['John Smith', 'Sarah Johnson', 'Michael Brown', 'Emily Davis'],
+					datasets: [{
+						label: 'Leads Converted',
+						data: [15, 22, 18, 12],
+						backgroundColor: 'rgba(39, 174, 96, 0.7)',
+						borderColor: 'rgba(39, 174, 96, 1)',
+						borderWidth: 1
+					}, {
+						label: 'Total Leads',
+						data: [45, 52, 38, 32],
+						backgroundColor: 'rgba(52, 152, 219, 0.7)',
+						borderColor: 'rgba(52, 152, 219, 1)',
+						borderWidth: 1
+					}]
+				},
+				options: {
+					responsive: true,
+					scales: {
+						y: {
+							beginAtZero: true,
+							title: {
+								display: true,
+								text: 'Number of Leads'
+							}
+						}
+					}
+				}
+			});
+		}
+	</script>
+}

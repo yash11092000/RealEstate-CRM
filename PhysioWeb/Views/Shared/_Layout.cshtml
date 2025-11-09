@@ -109,7 +109,7 @@
 		}
 
 			#TableList thead th {
-				background-color: #e9f5e9;
+				background-color: color-mix(in srgb, var(--theme-color) 10%, white);
 				color: var(--theme-color) !important;
 				font-weight: 600;
 				text-align: center;
@@ -629,10 +629,10 @@
 				var fullPath = ViewContext.HttpContext?.Request?.Path + ViewContext.HttpContext?.Request?.QueryString;
 				var excludedPaths = new[]
 				{
-					"/",
-					"/propertydetails/property",
-					"/home/searchproperty"
-				};
+			"/",
+			"/propertydetails/property",
+			"/home/searchproperty"
+			};
 				@if (User.IsInRole("Agency") && !excludedPaths.Contains(currentPath))
 				{
 					@await Component.InvokeAsync("SidebarMenu")
@@ -804,6 +804,8 @@
 	<script src="https://cdn.datatables.net/2.3.2/js/dataTables.min.js"></script>
 	<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 	<script src="~/js/site.js" asp-append-version="true"></script>
+
+	<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 	<script>
 		 const notyf = new Notyf({
 			duration: 3000,
