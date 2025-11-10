@@ -107,104 +107,37 @@ namespace PhysioWeb.Models
         public string InActiveText { get; set; }
 
         // --- Dropdown/Lookup Properties (For View Rendering) ---
-        public List<DropDownSource> LeadSourceList { get; set; } = new List<DropDownSource>
-        {
-            new DropDownSource { Value = "Website", Text = "Website" },
-            new DropDownSource { Value = "Walk-in", Text = "Walk-in" },
-            new DropDownSource { Value = "Referral", Text = "Referral" },
-            new DropDownSource { Value = "Facebook", Text = "Facebook" },
-            new DropDownSource { Value = "Google Ads", Text = "Google Ads" },
-            new DropDownSource { Value = "Broker", Text = "Broker" }
-        };
 
-        public List<DropDownSource> LeadTypeList { get; set; } = new List<DropDownSource>
-        {
-            new DropDownSource { Value = "Buyer", Text = "Buyer" },
-            new DropDownSource { Value = "Seller", Text = "Seller" },
-            new DropDownSource { Value = "Tenant", Text = "Tenant" },
-            new DropDownSource { Value = "Landlord", Text = "Landlord" }
-        };
+        public List<DropDownSource> LeadTypeList { get; set; }
 
-        public List<DropDownSource> LeadStatusList { get; set; } = new List<DropDownSource>
-        {
-            new DropDownSource { Value = "New", Text = "New" },
-            new DropDownSource { Value = "Contacted", Text = "Contacted" },
-            new DropDownSource { Value = "Interested", Text = "Interested" },
-            new DropDownSource { Value = "Not Interested", Text = "Not Interested" },
-            new DropDownSource { Value = "Converted", Text = "Converted" },
-            new DropDownSource { Value = "Lost", Text = "Lost" }
-        };
 
-        public List<DropDownSource> PreferredContactMethodList { get; set; } = new List<DropDownSource>
-        {
-            new DropDownSource { Value = "Call", Text = "Call" },
-            new DropDownSource { Value = "WhatsApp", Text = "WhatsApp" },
-            new DropDownSource { Value = "Email", Text = "Email" }
-        };
+        public List<DropDownSource> LeadSourceList { get; set; }
 
-        public List<DropDownSource> RequirementTypeList { get; set; } = new List<DropDownSource>
-        {
-            new DropDownSource { Value = "Buy", Text = "Buy" },
-            new DropDownSource { Value = "Sell", Text = "Sell" },
-            new DropDownSource { Value = "Rent", Text = "Rent" }
-        };
 
-        public List<DropDownSource> PropertyTypeList { get; set; } = new List<DropDownSource>
-        {
-            new DropDownSource { Value = "Apartment", Text = "Apartment" },
-            new DropDownSource { Value = "Villa", Text = "Villa" },
-            new DropDownSource { Value = "Plot", Text = "Plot" },
-            new DropDownSource { Value = "Commercial", Text = "Commercial" },
-            new DropDownSource { Value = "Shop", Text = "Shop" }
-        };
+        public List<DropDownSource> LeadStatusList { get; set; } 
 
-        public List<DropDownSource> BedroomsList { get; set; } = new List<DropDownSource>
-        {
-            new DropDownSource { Value = "1BHK", Text = "1BHK" },
-            new DropDownSource { Value = "2BHK", Text = "2BHK" },
-            new DropDownSource { Value = "3BHK", Text = "3BHK" },
-            new DropDownSource { Value = "4BHK", Text = "4BHK" }
-        };
+        public List<DropDownSource> PreferredContactMethodList { get; set; }
 
-        public List<DropDownSource> FurnishingTypeList { get; set; } = new List<DropDownSource>
-        {
-            new DropDownSource { Value = "Furnished", Text = "Furnished" },
-            new DropDownSource { Value = "Semi-Furnished", Text = "Semi-Furnished" },
-            new DropDownSource { Value = "Unfurnished", Text = "Unfurnished" }
-        };
+        public List<DropDownSource> RequirementTypeList { get; set; }
+        //same as LeadType
 
-        public List<DropDownSource> PossessionTimeframeList { get; set; } = new List<DropDownSource>
-        {
-            new DropDownSource { Value = "Immediate", Text = "Immediate" },
-            new DropDownSource { Value = "3 Months", Text = "3 Months" },
-            new DropDownSource { Value = "6 Months", Text = "6 Months" },
-            new DropDownSource { Value = "1 Year", Text = "1 Year" }
-        };
 
-        public List<DropDownSource> LeadPriorityList { get; set; } = new List<DropDownSource>
-        {
-            new DropDownSource { Value = "High", Text = "High" },
-            new DropDownSource { Value = "Medium", Text = "Medium" },
-            new DropDownSource { Value = "Low", Text = "Low" }
-        };
+        public List<DropDownSource> PropertyTypeList { get; set; }
 
-        public List<DropDownSource> LeadRatingList { get; set; } = new List<DropDownSource>
-        {
-            new DropDownSource { Value = "Hot", Text = "Hot" },
-            new DropDownSource { Value = "Warm", Text = "Warm" },
-            new DropDownSource { Value = "Cold", Text = "Cold" }
-        };
+        public List<DropDownSource> BedroomsList { get; set; }
 
-        public List<DropDownSource> AgentList { get; set; } = new List<DropDownSource>
-        {
-            new DropDownSource { Value = "Agent 1", Text = "Agent 1" },
-            new DropDownSource { Value = "Agent 2", Text = "Agent 2" },
-            new DropDownSource { Value = "Agent 3", Text = "Agent 3" },
-            new DropDownSource { Value = "Unassigned", Text = "Unassigned" }
-        };
+        public List<DropDownSource> FurnishingTypeList { get; set; }
 
+        public List<DropDownSource> PossessionTimeframeList { get; set; }
+
+        public List<DropDownSource> LeadPriorityList { get; set; }
+
+        public List<DropDownSource> LeadRatingList { get; set; }
+
+        public List<DropDownSource> AgentList { get; set; }
         // --- Constructors for Data Mapping ---
-        public NewLead() {
+        public NewLead()
+        {
 
             LeadRatingList = new List<DropDownSource>();
             AgentList = new List<DropDownSource>();
@@ -218,9 +151,9 @@ namespace PhysioWeb.Models
             PreferredContactMethodList = new List<DropDownSource>();
             RequirementTypeList = new List<DropDownSource>();
             PropertyTypeList = new List<DropDownSource>();
-            
+
         }
-                
+
 
         // Constructor for list view (flag = 0)
         public NewLead(IDataReader reader, int flag = 0)
@@ -309,5 +242,5 @@ namespace PhysioWeb.Models
     }
 
     // Helper class for dropdowns
-  
+
 }

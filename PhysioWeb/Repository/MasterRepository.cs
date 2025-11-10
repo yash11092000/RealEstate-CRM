@@ -1366,5 +1366,58 @@ namespace PhysioWeb.Repository
                 throw e;
             }
         }
+
+        public async Task<NewLead> GetLeadDropDowndata()
+        {
+
+            try
+            {
+                string[] parameterNames = { };
+                object[] parameterValues = { };
+
+                string Sp = "FMR_NewLeadDropDown";
+                var data = await _dbHelper.GetDataReaderAsync(Sp, parameterNames, parameterValues);
+                var NewLeadDropDown = new NewLead();
+
+                while (data.Read())
+                {
+                    NewLeadDropDown.LeadTypeList.Add(new DropDownSource(data, true));
+                }
+                if (data.NextResult())
+                {
+                    while (data.Read())
+                    {
+                        NewLeadDropDown.RequirementTypeList.Add(new DropDownSource(data, true));
+                    }
+                }
+                if (data.NextResult())
+                {
+                    while (data.Read())
+                    {
+                        NewLeadDropDown.PropertyTypeList.Add(new DropDownSource(data, true));
+                    }
+                }
+                if (data.NextResult())
+                {
+                    while (data.Read())
+                    {
+                        NewLeadDropDown.BedroomsList.Add(new DropDownSource(data, true));
+                    }
+                }
+                if (data.NextResult())
+                {
+                    while (data.Read())
+                    {
+                        NewLeadDropDown.FurnishingTypeList.Add(new DropDownSource(data, true));
+                    }
+                }
+
+                return NewLeadDropDown;
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }
     }
 }

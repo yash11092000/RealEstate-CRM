@@ -50,5 +50,6 @@ namespace PhysioWeb.Repository
         Task<bool> SaveSoldOutDetails(PropertyMaster PropertyMaster);
         Task<bool> UpdateAgentPermission(string id, bool showLandmark, bool showAddress);
         Task<PropertyMaster> ViewProperty(int id);
+        Task<NewLead> GetLeadDropDowndata();
     }
 }

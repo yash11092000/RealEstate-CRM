@@ -961,10 +961,59 @@ namespace PhysioWeb.Controllers
         }
 
         #region Agent
-        public ActionResult NewLead()
+        public async Task<ActionResult> NewLead()
         {
-            var newLead = new NewLead();
-            return View(newLead);
+            NewLead DropDowns = await _masterRepository.GetLeadDropDowndata();
+
+            DropDowns.LeadSourceList = new List<DropDownSource>
+        {
+            new DropDownSource { Value = "Website", Text = "Website" },
+            new DropDownSource { Value = "Walk-in", Text = "Walk-in" },
+            new DropDownSource { Value = "Referral", Text = "Referral" },
+            new DropDownSource { Value = "Facebook", Text = "Facebook" },
+            new DropDownSource { Value = "Google Ads", Text = "Google Ads" },
+            new DropDownSource { Value = "Broker", Text = "Broker" }
+        };
+
+            DropDowns.LeadStatusList = new List<DropDownSource>
+        {
+            new DropDownSource { Value = "New", Text = "New" },
+            new DropDownSource { Value = "Contacted", Text = "Contacted" },
+            new DropDownSource { Value = "Interested", Text = "Interested" },
+            new DropDownSource { Value = "Not Interested", Text = "Not Interested" },
+            new DropDownSource { Value = "Converted", Text = "Converted" },
+            new DropDownSource { Value = "Lost", Text = "Lost" }
+        };
+
+            DropDowns.PreferredContactMethodList = new List<DropDownSource>
+            {
+                new DropDownSource { Value = "Call", Text = "Call" },
+                new DropDownSource { Value = "WhatsApp", Text = "WhatsApp" },
+                new DropDownSource { Value = "Email", Text = "Email" }
+            };
+
+            DropDowns.PossessionTimeframeList = new List<DropDownSource>
+            {
+                new DropDownSource { Value = "Immediate", Text = "Immediate" },
+                new DropDownSource { Value = "3 Months", Text = "3 Months" },
+                new DropDownSource { Value = "6 Months", Text = "6 Months" },
+                new DropDownSource { Value = "1 Year", Text = "1 Year" }
+            };
+
+            DropDowns.LeadPriorityList = new List<DropDownSource>
+            {
+                new DropDownSource { Value = "High", Text = "High" },
+                new DropDownSource { Value = "Medium", Text = "Medium" },
+                new DropDownSource { Value = "Low", Text = "Low" }
+            };
+
+            DropDowns.LeadRatingList = new List<DropDownSource>
+            {
+                new DropDownSource { Value = "Hot", Text = "Hot" },
+                new DropDownSource { Value = "Warm", Text = "Warm" },
+                new DropDownSource { Value = "Cold", Text = "Cold" }
+            };
+            return View(DropDowns);
         }
         #endregion
     }
