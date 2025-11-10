@@ -1016,6 +1016,12 @@ namespace PhysioWeb.Controllers
             return View(DropDowns);
         }
         #endregion
+
+        [HttpGet]
+        public async Task<ActionResult> Quotation()
+        {
+            return View();
+        }
     }
 
     public class PermissionUpdateModel
