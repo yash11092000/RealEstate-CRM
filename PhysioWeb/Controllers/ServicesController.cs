@@ -7,6 +7,18 @@ namespace PhysioWeb.Controllers
 {
     public class ServicesController : Controller
     {
+        #region OC
+        public async Task<ActionResult> OrderConfirm() {
 
+            return View();
+        }
+
+        #endregion
+
+        #region Invoice
+        public async Task<ActionResult> Invoice() {
+            return View();
+        }
+        #endregion
     }
 }
