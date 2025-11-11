@@ -20,5 +20,11 @@ namespace PhysioWeb.Controllers
             return View();
         }
         #endregion
+
+        #region ProformaInvoice
+        public async Task<ActionResult> ProformaInvoice() {
+            return View();
+        }
+        #endregion
     }
 }

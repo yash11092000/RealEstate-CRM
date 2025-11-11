@@ -1,0 +1,183 @@
+﻿@{
+    ViewBag.Title = "Proforma Invoice";
+    var theme = User.FindFirst("Theme")?.Value ?? "#198754";
+}
+
+
+<style>
+    :root {
+        --theme-color: @theme;
+        --sidebar-width: 280px;
+        --sidebar-collapsed-width: 70px;
+        --transition-speed: 0.3s;
+        --primary-color: @theme;
+        --secondary-color: #6c757d;
+        --light-bg: #f8f9fa;
+    }
+
+    .card-title i {
+        color: var(--theme-color);
+    }
+
+    .nav-tabs .nav-link.active {
+        background: var(--theme-color);
+        color: #fff !important;
+    }
+
+    .btn-theme {
+        background-color: var(--theme-color);
+        border-color: var(--theme-color);
+        color: white;
+    }
+
+        .btn-theme:hover {
+            background-color: #166f46;
+            border-color: #166f46;
+        }
+
+    .nav-tabs .nav-link {
+        color: var(--theme-color);
+        font-weight: 600;
+        border: 2px solid transparent;
+        border-radius: 0.5rem 0.5rem 0 0;
+        transition: all 0.3s ease-in-out;
+    }
+
+        .nav-tabs .nav-link:hover {
+            background: #e6f4ea;
+            border-color: var(--theme-color);
+            color: var(--theme-color);
+        }
+
+        .nav-tabs .nav-link.active {
+            background: var(--theme-color);
+            color: white !important;
+            border-color: var(--theme-color);
+        }
+</style>
+    <main class="dashboard-content with-sidebar collapsed">
+    <div class="container-fluid mt-4">
+        <div class="card p-3 shadow-sm">
+            <h4 class="card-title mb-4"><i class="bi bi-file-earmark-text"></i> Proforma Invoice</h4>
+
+            <div class="invoice-box">
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <h5><strong>Real Estate CRM Pvt. Ltd.</strong></h5>
+                        <p class="text-muted mb-1">123 Business Avenue, Mumbai</p>
+                        <p class="text-muted mb-0">GSTIN: 27AAACX1234Z1Z5</p>
+                    </div>
+                    <div class="col-md-6 text-end">
+                        <h6><strong>Proforma Invoice No:</strong> PFI-0001</h6>
+                        <p><strong>Date:</strong> @DateTime.Now.ToString("dd/MM/yyyy")</p>
+                        <p><strong>Quotation Ref:</strong> QTN-001</p>
+                    </div>
+                </div>
+
+                <hr />
+
+                <div class="row mb-4">
+                    <div class="col-md-6">
+                        <h6><strong>Billed To:</strong></h6>
+                        <p>
+                            Mr. Rajesh Kumar<br />
+                            45, Green Valley Apartments<br />
+                            Pune, Maharashtra - 411045<br />
+                            GSTIN: 27AAAPK1234M1Z5
+                        </p>
+                    </div>
+                    <div class="col-md-6">
+                        <h6><strong>Property Details:</strong></h6>
+                        <p>
+                            Property ID: PROP001<br />
+                            Ocean View Apartment<br />
+                            Area: 1200 Sq. Ft.<br />
+                            Location: Bandra, Mumbai
+                        </p>
+                    </div>
+                </div>
+
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Description</th>
+                            <th>Qty</th>
+                            <th>Unit Price (₹)</th>
+                            <th>Total (₹)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>1</td>
+                            <td>Booking Advance for Ocean View Apartment</td>
+                            <td>1</td>
+                            <td>10,00,000.00</td>
+                            <td>10,00,000.00</td>
+                        </tr>
+                        <tr>
+                            <td>2</td>
+                            <td>Property Registration Charges</td>
+                            <td>1</td>
+                            <td>50,000.00</td>
+                            <td>50,000.00</td>
+                        </tr>
+                        <tr>
+                            <td colspan="4" class="text-end"><strong>Sub Total</strong></td>
+                            <td><strong>₹10,50,000.00</strong></td>
+                        </tr>
+                        <tr>
+                            <td colspan="4" class="text-end">CGST (9%)</td>
+                            <td>₹94,500.00</td>
+                        </tr>
+                        <tr>
+                            <td colspan="4" class="text-end">SGST (9%)</td>
+                            <td>₹94,500.00</td>
+                        </tr>
+                        <tr>
+                            <td colspan="4" class="text-end"><strong>Grand Total</strong></td>
+                            <td><strong>₹12,39,000.00</strong></td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="mt-4">
+                    <p><strong>Amount in Words:</strong> Twelve Lakh Thirty-Nine Thousand Only</p>
+                </div>
+
+                <hr />
+
+                <div class="row mt-3">
+                    <div class="col-md-6">
+                        <p><strong>Payment Terms:</strong></p>
+                        <ul>
+                            <li>50% advance at the time of booking</li>
+                            <li>Balance before possession</li>
+                        </ul>
+                    </div>
+                    <div class="col-md-6 text-end">
+                        <p><strong>For Real Estate CRM Pvt. Ltd.</strong></p>
+                        <br /><br />
+                        <p>Authorized Signature</p>
+                    </div>
+                </div>
+
+                <div class="text-center mt-4">
+                    <button class="btn btn-theme btn-lg me-2"><i class="bi bi-download"></i> Download PDF</button>
+                    <button class="btn btn-secondary btn-lg"><i class="bi bi-printer"></i> Print</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+@section Scripts {
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            var triggerEl = document.querySelector('#quotationTabs button[data-bs-target="#new-quotation"]');
+            if (triggerEl) {
+                bootstrap.Tab.getInstance(triggerEl)?.show();
+            }
+        });
+    </script>
+}
