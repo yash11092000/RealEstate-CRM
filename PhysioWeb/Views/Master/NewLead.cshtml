@@ -304,6 +304,27 @@
 										<input asp-for="CreatedDate" class="form-control" type="date" readonly />
 										<span asp-validation-for="CreatedDate" class="text-danger"></span>
 									</div>
+									<div class=" col-md-6 mb-3 form-group">
+										<label class="form-check-label" for="ReminderNotification">
+											Property Interested In
+										</label>
+										<select asp-for="PropertyInterestedIn" class="form-control">
+											<option value="">-- Select Property --</option>
+											<option value="P001">Green Valley Apartments</option>
+											<option value="P002">Sunshine Villas</option>
+											<option value="P003">Lakeview Heights</option>
+											<option value="P004">Downtown Commercial Plaza</option>
+											<option value="P005">Silver Leaf Residency</option>
+										</select>
+										<span asp-validation-for="PropertyInterestedIn" class="text-danger"></span>
+									</div>
+									<div class="col-md-6 mb-3 form-check">
+										<input class="form-check-input" type="checkbox" id="ReminderNotification" name="ReminderNotification">
+										<label class="form-check-label" for="ReminderNotification">
+											Set Reminder / Send Notification
+										</label>
+									</div>
+
 								</div>
 							</div>
 

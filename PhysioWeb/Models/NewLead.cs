@@ -136,6 +136,8 @@ namespace PhysioWeb.Models
 
         public List<DropDownSource> AgentList { get; set; }
         // --- Constructors for Data Mapping ---
+
+        public string PropertyInterestedIn { get; set; }
         public NewLead()
         {
 
