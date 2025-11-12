@@ -1,8 +1,7 @@
 ﻿@{
-    ViewBag.Title = "Proforma Invoice";
+    ViewBag.Title = "Proforma Invoice Management";
     var theme = User.FindFirst("Theme")?.Value ?? "#198754";
 }
-
 
 <style>
     :root {
@@ -55,116 +54,180 @@
             border-color: var(--theme-color);
         }
 </style>
-    <main class="dashboard-content with-sidebar collapsed">
+
+<main class="dashboard-content with-sidebar collapsed">
     <div class="container-fluid mt-4">
-        <div class="card p-3 shadow-sm">
-            <h4 class="card-title mb-4"><i class="bi bi-file-earmark-text"></i> Proforma Invoice</h4>
+        <ul class="nav nav-tabs" id="proformaTabs" role="tablist">
+            <li class="nav-item" role="presentation">
+                <button class="nav-link active" id="new-proforma-tab" data-bs-toggle="tab"
+                        data-bs-target="#new-proforma" type="button" role="tab">
+                    <i class="bi bi-file-earmark-plus"></i> New Proforma
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="all-proforma-tab" data-bs-toggle="tab"
+                        data-bs-target="#all-proforma" type="button" role="tab">
+                    <i class="bi bi-list-ul"></i> All Proformas
+                </button>
+            </li>
+        </ul>
 
-            <div class="invoice-box">
-                <div class="row mb-3">
-                    <div class="col-md-6">
-                        <h5><strong>Real Estate CRM Pvt. Ltd.</strong></h5>
-                        <p class="text-muted mb-1">123 Business Avenue, Mumbai</p>
-                        <p class="text-muted mb-0">GSTIN: 27AAACX1234Z1Z5</p>
-                    </div>
-                    <div class="col-md-6 text-end">
-                        <h6><strong>Proforma Invoice No:</strong> PFI-0001</h6>
-                        <p><strong>Date:</strong> @DateTime.Now.ToString("dd/MM/yyyy")</p>
-                        <p><strong>Quotation Ref:</strong> QTN-001</p>
-                    </div>
-                </div>
+        <div class="tab-content border border-top-0 p-4" id="proformaTabsContent">
+            <!-- ==================== New Proforma ==================== -->
+            <div class="tab-pane fade show active" id="new-proforma" role="tabpanel">
+                <form asp-action="CreateProforma" method="post" id="proformaForm">
+                    <div class="card p-3 mb-4 shadow-sm">
+                        <h5 class="card-title"><i class="bi bi-file-earmark-text"></i> Proforma Invoice Details</h5>
+                        <div class="row">
+                            <div class="col-md-4 mb-3">
+                                <label class="form-label">Proforma Invoice ID</label>
+                                <input class="form-control" value="PFI-@DateTime.Now.ToString("yyyyMMdd")-001" readonly />
+                            </div>
 
-                <hr />
+                            <div class="col-md-4 mb-3">
+                                <label class="form-label">Quotation ID</label>
+                                <select class="form-select" required>
+                                    <option value="">-- Select Quotation --</option>
+                                    <option>QTN-001 - Michael Scott</option>
+                                    <option>QTN-002 - Pam Beesly</option>
+                                </select>
+                            </div>
 
-                <div class="row mb-4">
-                    <div class="col-md-6">
-                        <h6><strong>Billed To:</strong></h6>
-                        <p>
-                            Mr. Rajesh Kumar<br />
-                            45, Green Valley Apartments<br />
-                            Pune, Maharashtra - 411045<br />
-                            GSTIN: 27AAAPK1234M1Z5
-                        </p>
-                    </div>
-                    <div class="col-md-6">
-                        <h6><strong>Property Details:</strong></h6>
-                        <p>
-                            Property ID: PROP001<br />
-                            Ocean View Apartment<br />
-                            Area: 1200 Sq. Ft.<br />
-                            Location: Bandra, Mumbai
-                        </p>
-                    </div>
-                </div>
+                            <div class="col-md-4 mb-3">
+                                <label class="form-label">Proforma Date</label>
+                                <input type="date" class="form-control" value="@DateTime.Now.ToString("yyyy-MM-dd")" required />
+                            </div>
 
-                <table class="table table-bordered">
-                    <thead>
+                            <div class="col-md-4 mb-3">
+                                <label class="form-label">Property</label>
+                                <select class="form-select">
+                                    <option value="">-- Select Property --</option>
+                                    <option>PROP001 - Ocean View Apartment</option>
+                                    <option>PROP002 - Downtown Office</option>
+                                </select>
+                            </div>
+
+                            <div class="col-md-4 mb-3">
+                                <label class="form-label">Basic Amount (₹)</label>
+                                <input type="number" step="0.01" id="baseAmount" class="form-control" placeholder="Enter basic amount" required />
+                            </div>
+
+                            <div class="col-md-4 mb-3">
+                                <label class="form-label">Discount (%)</label>
+                                <input type="number" step="0.1" id="discount" class="form-control" placeholder="Optional" value="0" />
+                            </div>
+
+                            <div class="col-md-4 mb-3">
+                                <label class="form-label">CGST (9%)</label>
+                                <input type="text" id="cgst" class="form-control" readonly />
+                            </div>
+
+                            <div class="col-md-4 mb-3">
+                                <label class="form-label">SGST (9%)</label>
+                                <input type="text" id="sgst" class="form-control" readonly />
+                            </div>
+
+                            <div class="col-md-4 mb-3">
+                                <label class="form-label fw-bold">Total Amount (₹)</label>
+                                <input type="text" id="totalAmount" class="form-control fw-bold" readonly />
+                            </div>
+
+                            <div class="col-md-12 mb-3">
+                                <label class="form-label">Remarks / Notes</label>
+                                <textarea class="form-control" rows="4" placeholder="Add special notes or conditions..."></textarea>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- ==================== Summary Section ==================== -->
+                    <div class="card p-3 mb-4 shadow-sm">
+                        <h5 class="card-title"><i class="bi bi-person-lines-fill"></i> Summary</h5>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="border rounded p-3 bg-light">
+                                    <h6 class="text-theme">Customer Details</h6>
+                                    <small>
+                                        <div><strong>Name:</strong> Michael Scott</div>
+                                        <div><strong>Phone:</strong> +91 9876543210</div>
+                                        <div><strong>Email:</strong> michael@dundermifflin.com</div>
+                                        <div><strong>Address:</strong> 45 Green Avenue, Mumbai</div>
+                                    </small>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="border rounded p-3 bg-light">
+                                    <h6 class="text-theme">Agent Details</h6>
+                                    <small>
+                                        <div><strong>Agent Name:</strong> John Smith</div>
+                                        <div><strong>Contact:</strong> +91 9988776655</div>
+                                        <div><strong>Email:</strong> johnsmith@crm.com</div>
+                                    </small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- ==================== Action Buttons ==================== -->
+                    <div class="d-flex justify-content-end gap-2">
+                        <button type="reset" class="btn btn-secondary btn-lg">
+                            <i class="bi bi-x-circle"></i> Reset
+                        </button>
+                        <button type="submit" class="btn btn-theme btn-lg">
+                            <i class="bi bi-save"></i> Save Proforma
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- ==================== All Proformas ==================== -->
+            <div class="tab-pane fade" id="all-proforma" role="tabpanel">
+                <table class="table table-striped table-hover mt-3">
+                    <thead class="table-primary">
                         <tr>
-                            <th>#</th>
-                            <th>Description</th>
-                            <th>Qty</th>
-                            <th>Unit Price (₹)</th>
-                            <th>Total (₹)</th>
+                            <th>Proforma ID</th>
+                            <th>Quotation</th>
+                            <th>Property</th>
+                            <th>Basic Amount</th>
+                            <th>Total (with GST)</th>
+                            <th>Date</th>
+                            <th>Agent</th>
+                            <th>Actions</th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr>
-                            <td>1</td>
-                            <td>Booking Advance for Ocean View Apartment</td>
-                            <td>1</td>
-                            <td>10,00,000.00</td>
-                            <td>10,00,000.00</td>
+                            <td>PFI-20251111-001</td>
+                            <td>QTN-001</td>
+                            <td>Ocean View Apartment</td>
+                            <td>₹10,00,000</td>
+                            <td>₹11,80,000</td>
+                            <td>2025-11-11</td>
+                            <td>John Smith</td>
+                            <td>
+                                <a href="/Services/ProformaInvoicePrint" class="btn btn-sm btn-info" target="_blank">
+                                    <i class="bi bi-list-ul"></i> View / Print
+                                </a>
+                            </td>
                         </tr>
                         <tr>
-                            <td>2</td>
-                            <td>Property Registration Charges</td>
-                            <td>1</td>
-                            <td>50,000.00</td>
-                            <td>50,000.00</td>
-                        </tr>
-                        <tr>
-                            <td colspan="4" class="text-end"><strong>Sub Total</strong></td>
-                            <td><strong>₹10,50,000.00</strong></td>
-                        </tr>
-                        <tr>
-                            <td colspan="4" class="text-end">CGST (9%)</td>
-                            <td>₹94,500.00</td>
-                        </tr>
-                        <tr>
-                            <td colspan="4" class="text-end">SGST (9%)</td>
-                            <td>₹94,500.00</td>
-                        </tr>
-                        <tr>
-                            <td colspan="4" class="text-end"><strong>Grand Total</strong></td>
-                            <td><strong>₹12,39,000.00</strong></td>
+                            <td>PFI-20251111-002</td>
+                            <td>QTN-002</td>
+                            <td>Downtown Office</td>
+                            <td>₹12,00,000</td>
+                            <td>₹14,16,000</td>
+                            <td>2025-11-11</td>
+                            <td>Sarah Lee</td>
+                            <td>
+                                <a href="/Services/ProformaInvoicePrint" class="btn btn-sm btn-info" target="_blank">
+                                    <i class="bi bi-list-ul"></i> View / Print
+                                </a>
+                            </td>
                         </tr>
                     </tbody>
                 </table>
-
-                <div class="mt-4">
-                    <p><strong>Amount in Words:</strong> Twelve Lakh Thirty-Nine Thousand Only</p>
-                </div>
-
-                <hr />
-
-                <div class="row mt-3">
-                    <div class="col-md-6">
-                        <p><strong>Payment Terms:</strong></p>
-                        <ul>
-                            <li>50% advance at the time of booking</li>
-                            <li>Balance before possession</li>
-                        </ul>
-                    </div>
-                    <div class="col-md-6 text-end">
-                        <p><strong>For Real Estate CRM Pvt. Ltd.</strong></p>
-                        <br /><br />
-                        <p>Authorized Signature</p>
-                    </div>
-                </div>
-
-                <div class="text-center mt-4">
-                    <button class="btn btn-theme btn-lg me-2"><i class="bi bi-download"></i> Download PDF</button>
-                    <button class="btn btn-secondary btn-lg"><i class="bi bi-printer"></i> Print</button>
+                <div class="d-flex justify-content-between">
+                    <span class="text-muted">Showing 1 of 1 record.</span>
+                    <button class="btn btn-outline-secondary">Load More</button>
                 </div>
             </div>
         </div>
@@ -174,10 +237,27 @@
 @section Scripts {
     <script>
         document.addEventListener('DOMContentLoaded', function () {
-            var triggerEl = document.querySelector('#quotationTabs button[data-bs-target="#new-quotation"]');
-            if (triggerEl) {
-                bootstrap.Tab.getInstance(triggerEl)?.show();
+            const baseAmount = document.getElementById('baseAmount');
+            const discount = document.getElementById('discount');
+            const cgst = document.getElementById('cgst');
+            const sgst = document.getElementById('sgst');
+            const total = document.getElementById('totalAmount');
+
+            function calcGST() {
+                let base = parseFloat(baseAmount.value) || 0;
+                let disc = parseFloat(discount.value) || 0;
+                let net = base - (base * disc / 100);
+                let cgstVal = net * 0.09;
+                let sgstVal = net * 0.09;
+                let totalVal = net + cgstVal + sgstVal;
+
+                cgst.value = cgstVal.toFixed(2);
+                sgst.value = sgstVal.toFixed(2);
+                total.value = totalVal.toFixed(2);
             }
+
+            baseAmount.addEventListener('input', calcGST);
+            discount.addEventListener('input', calcGST);
         });
     </script>
 }
