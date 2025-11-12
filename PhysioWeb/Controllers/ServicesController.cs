@@ -26,6 +26,13 @@ namespace PhysioWeb.Controllers
             return View();
         }
         #endregion
+        #region ProformaInvoicePrint
+        public async Task<ActionResult> ProformaInvoicePrint()
+        {
+            return View();
+        }
+        #endregion
+
 
         #region Lead profile
         public async Task<ActionResult> LeadProfile() {
