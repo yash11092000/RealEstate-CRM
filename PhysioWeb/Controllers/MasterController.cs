@@ -1017,11 +1017,21 @@ namespace PhysioWeb.Controllers
         }
         #endregion
 
+        #region Quotation
         [HttpGet]
         public async Task<ActionResult> Quotation()
         {
             return View();
         }
+        #endregion
+
+        #region Customer
+        public async Task<ActionResult> Customer()
+        {
+            return View();
+        }
+
+        #endregion
     }
 
     public class PermissionUpdateModel
