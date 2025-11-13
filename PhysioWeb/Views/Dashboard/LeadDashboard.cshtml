@@ -4,6 +4,95 @@
 }
 
 <style>
+	.pipeline-container {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		position: relative;
+		margin: 50px auto;
+		padding: 0 30px;
+		flex-wrap: wrap;
+	}
+
+	.pipeline-step {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		text-align: center;
+		position: relative;
+		z-index: 1;
+		width: 120px;
+	}
+
+	.pipeline-icon {
+		width: 70px;
+		height: 70px;
+		border-radius: 50%;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		background: #dee2e6;
+		color: #6c757d;
+		font-size: 26px;
+		font-weight: bold;
+		box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+		transition: all 0.3s ease;
+	}
+
+	.pipeline-step.completed .pipeline-icon {
+		background: linear-gradient(135deg, #198754, #28a745);
+		color: #fff;
+		transform: scale(1.05);
+		box-shadow: 0 4px 15px rgba(25, 135, 84, 0.4);
+	}
+
+	.pipeline-step.active .pipeline-icon {
+		background: linear-gradient(135deg, #ffc107, #ffca2c);
+		color: #fff;
+		transform: scale(1.1);
+		box-shadow: 0 4px 15px rgba(255, 193, 7, 0.4);
+	}
+
+	.pipeline-label {
+		margin-top: 10px;
+		font-weight: 600;
+		font-size: 15px;
+		color: #495057;
+	}
+
+	.pipeline-line {
+		flex: 1;
+		height: 6px;
+		background: #dee2e6;
+		position: relative;
+		top: -10px;
+		margin: 0 5px;
+		border-radius: 3px;
+		transition: background 0.3s ease;
+	}
+
+	.pipeline-line.completed {
+		background: linear-gradient(90deg, #198754, #28a745);
+	}
+
+	.pipeline-line.active {
+		background: linear-gradient(90deg, #ffc107, #ffca2c);
+	}
+
+	@@media (max-width: 768px) {
+		.pipeline-container {
+			flex-direction: column;
+			align-items: center;
+		}
+
+		.pipeline-line {
+			width: 6px;
+			height: 50px;
+			margin: 15px 0;
+		}
+	}
+
+
 	:root {
 		--theme-color: @theme;
 		--sidebar-width: 280px;
@@ -629,6 +718,11 @@
 					</button>
 				</li>
 				<li class="nav-item" role="presentation">
+					<button class="nav-link" id="pipeline-tab" data-bs-toggle="tab" data-bs-target="#pipeline" type="button" role="tab" aria-controls="pipeline" aria-selected="false">
+						<i class="fas fa-project-diagram me-2"></i>Visual Pipeline
+					</button>
+				</li>
+				<li class="nav-item" role="presentation">
 					<button class="nav-link" id="stats-tab" data-bs-toggle="tab" data-bs-target="#stats" type="button" role="tab" aria-controls="stats" aria-selected="false">
 						<i class="fas fa-chart-pie me-2"></i>Monthly Statistics
 					</button>
@@ -908,6 +1002,48 @@
 								<div class="pagination-btn">3</div>
 								<div class="pagination-btn">4</div>
 								<div class="pagination-btn"><i class="fas fa-chevron-right"></i></div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<!-- 🔹 Visual Pipeline Tab -->
+				<div class="tab-pane fade" id="pipeline" role="tabpanel" aria-labelledby="pipeline-tab">
+					<div class="card p-4 shadow-sm mt-3">
+						<h5 class="card-title mb-4"><i class="bi bi-diagram-3"></i> Lead Progress</h5>
+
+						<div class="pipeline-container">
+							<div class="pipeline-step completed">
+								<div class="pipeline-icon">
+									<i class="bi bi-person-plus"></i>
+								</div>
+								<p class="pipeline-label">New</p>
+							</div>
+
+							<div class="pipeline-line completed"></div>
+
+							<div class="pipeline-step completed">
+								<div class="pipeline-icon">
+									<i class="bi bi-telephone-forward"></i>
+								</div>
+								<p class="pipeline-label">Contacted</p>
+							</div>
+
+							<div class="pipeline-line active"></div>
+
+							<div class="pipeline-step active">
+								<div class="pipeline-icon">
+									<i class="bi bi-building"></i>
+								</div>
+								<p class="pipeline-label">Visit</p>
+							</div>
+
+							<div class="pipeline-line"></div>
+
+							<div class="pipeline-step">
+								<div class="pipeline-icon">
+									<i class="bi bi-hand-thumbs-up"></i>
+								</div>
+								<p class="pipeline-label">Booking</p>
 							</div>
 						</div>
 					</div>
