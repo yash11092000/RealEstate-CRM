@@ -82,5 +82,24 @@ namespace PhysioWeb.Repository
             }
 
         }
+
+        public async Task<int> GetNextOrder(int ParentId)
+        {
+            try
+            {
+                string[] parametersName = { "ParentId" };
+                object[] Values = { ParentId };
+
+                string Sp = "GetNextOrder";
+                var data = await _dbHelper.ExecuteScalarAsync(Sp, parametersName, Values);
+                return Convert.ToInt32(data);
+            }
+            catch (Exception ex)
+            {
+                // Optional: log error here
+                throw;
+            }
+
+        }
     }
 }

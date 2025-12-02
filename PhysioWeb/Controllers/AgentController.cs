@@ -49,6 +49,12 @@ namespace PhysioWeb.Controllers
             return Json(result);
         }
 
+        [HttpGet]
+        public async Task<ActionResult> GetNextOrder(int ParentId)
+        {
+            var result = await _agencyRepository.GetNextOrder(ParentId);
+            return Json(result);
+        }
         //[HttpPost]
         //public async Task<ActionResult> ListRentalType()
         //{

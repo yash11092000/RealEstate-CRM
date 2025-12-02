@@ -227,7 +227,7 @@
 										</div>
 										<div class="col-md-6 mb-3">
 											<label class="form-label fw-bold">Display Order</label>
-											<input type="number" class="form-control" id="DisplayOrder" name="DisplayOrder" value="0" min="0" />
+											<input type="number" class="form-control" readonly id="DisplayOrder" name="DisplayOrder" value="0" min="0" />
 										</div>
 
 										<!-- Icon Preview -->
@@ -276,33 +276,7 @@
 
 @section Scripts {
 	<script>
-		// // Simple form interactivity
-		// document.addEventListener('DOMContentLoaded', function() {
-		// 	const menuTypeSelect = document.querySelector('select[required]');
-		// 	const parentMenuSelect = document.querySelector('select[disabled]');
-		// 	const iconInput = document.querySelector('input[placeholder="house"]');
-		// 	const iconDisplay = document.querySelector('.icon-display i');
-
-		// 	// Menu type change handler
-		// 	menuTypeSelect.addEventListener('change', function() {
-		// 		parentMenuSelect.disabled = this.value !== 'child';
-		// 	});
-
-		// 	// Icon preview handler
-		// 	iconInput.addEventListener('input', function() {
-		// 		const iconClass = this.value ? 'bi-' + this.value : 'bi-house';
-		// 		iconDisplay.className = iconClass;
-		// 	});
-
-		// 	// Form submission handler
-		// 	document.getElementById('menuForm').addEventListener('submit', function(e) {
-		// 		e.preventDefault();
-		// 		alert('Menu item saved successfully!');
-		// 		this.reset();
-		// 		iconDisplay.className = 'bi-house';
-		// 	});
-		// });
-			// Live icon preview
+		// Live icon preview
 		$("#MenuIcon").on("input", function () {
 			let iconName = $(this).val().trim();
 			$("#IconPreview").attr("class", `bi bi-${iconName} fs-1 text-primary`);
@@ -355,5 +329,25 @@
 				}
 			});
 		});
+
+		$("#ParentMenuId").on("change",function(){
+			if($(this).val() != ""){
+				$.ajax({
+					url: '/Agent/GetNextOrder',
+					type: 'GET',
+					data: {ParentId : $(this).val()},
+					beforeSend: function () {
+						notyf.dismissAll();
+					},
+					success: function (response) {
+						console.log(response);
+						$("#DisplayOrder").val(response);
+					},
+					error: function () {
+						notyf.error('Server error occurred. Please try again.');
+					}
+				});
+			}
+		})
 	</script>
 }
