@@ -47,6 +47,7 @@ builder.WebHost.ConfigureKestrel(serverOptions =>
 
 
 builder.Services.AddAuthorization(); // required for [Authorize(Roles = "...")]
+builder.Services.AddMemoryCache(); 
 
 var app = builder.Build();
 
