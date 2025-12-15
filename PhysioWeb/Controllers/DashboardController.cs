@@ -8,5 +8,15 @@ namespace PhysioWeb.Controllers
         {
             return View();
         }
+
+        public async Task<ActionResult> SalesDashboard()
+        {
+            return View();
+        }
+
+        public async Task<ActionResult> AgentDashboard()
+        {
+            return View();
+        }
     }
 }

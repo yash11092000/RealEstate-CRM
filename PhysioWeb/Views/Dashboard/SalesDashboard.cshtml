@@ -1,0 +1,367 @@
+﻿@* @model PhysioWeb.Models.Invoice *@
+@{
+	ViewBag.Title = "Invoice Management";
+	var theme = User.FindFirst("Theme")?.Value ?? "#198754";
+}
+
+<style>
+	:root {
+		--theme-color: @theme;
+		--sidebar-width: 280px;
+		--sidebar-collapsed-width: 70px;
+		--transition-speed: 0.3s;
+		--primary-color: @theme;
+		--secondary-color: #6c757d;
+		--card-bg: #FFFFFF;
+		--body-bg: #F8F9FA;
+		--light-bg: #f8f9fa;
+	}
+
+	.card {
+		border: none;
+		border-radius: 12px;
+		box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+		transition: transform 0.2s;
+		background-color: var(--card-bg);
+	}
+
+		.card:hover {
+			transform: translateY(-3px);
+			box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+		}
+
+	.card-header-icon {
+		color: var(--primary-color);
+		font-size: 1.5rem;
+	}
+
+
+	.metric-value {
+		font-size: 2rem;
+		font-weight: 600;
+		color: #343A40;
+	}
+
+	.metric-label {
+		color: #6C757D;
+		font-size: 0.9rem;
+	}
+
+	.chart-container {
+		height: 300px;
+	}
+
+	.chart-container-lg {
+		height: 350px;
+	}
+
+	.text-teal {
+		color: var(--primary-color) !important;
+	}
+
+	.bg-gold {
+		background-color: var(--secondary-color) !important;
+	}
+
+	.progress-bar-custom {
+		background-color: var(--primary-color);
+	}
+
+	/* Card Stretching Fix for consistent heights */
+	.card-stretch {
+		display: flex;
+		flex-direction: column;
+	}
+
+	.card-body-flex {
+		flex-grow: 1; /* Allows the content area to expand and fill the remaining height */
+	}
+
+	/* Updated Chart Container Heights for Stability */
+	.chart-container {
+		height: 250px; /* Small charts (Pie/Doughnut) */
+	}
+
+	.chart-container-lg {
+		height: 350px; /* Large charts (Line/Bar) */
+	}
+</style>
+
+<main class="dashboard-content with-sidebar collapsed">
+	<div class="container-fluid mt-4">
+		<div class="row mb-4">
+
+			<div class="col-lg-3 col-md-6 mb-4">
+				<div class="card p-3">
+					<div class="d-flex align-items-center">
+						<i class="bi bi-currency-rupee card-header-icon me-3"></i>
+						<div>
+							<div class="metric-label">Total Booking Value (Current Month)</div>
+							<div class="metric-value">₹ 12.8 <small class="fw-normal">Cr</small></div>
+							<small class="text-success"><i class="bi bi-arrow-up"></i> 15.2% MoM</small>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<div class="col-lg-3 col-md-6 mb-4">
+				<div class="card p-3">
+					<div class="d-flex align-items-center">
+						<i class="bi bi-house-door card-header-icon me-3"></i>
+						<div>
+							<div class="metric-label">Units Booked (Current Month)</div>
+							<div class="metric-value">45 <small class="fw-normal">Units</small></div>
+							<small class="text-danger"><i class="bi bi-arrow-down"></i> 3.1% MoM</small>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<div class="col-lg-3 col-md-6 mb-4">
+				<div class="card p-3">
+					<div class="d-flex align-items-center">
+						<i class="bi bi-bar-chart-steps card-header-icon me-3"></i>
+						<div>
+							<div class="metric-label">Available Inventory Value</div>
+							<div class="metric-value">₹ 85.5 <small class="fw-normal">Cr</small></div>
+							<small class="text-muted">65% of Total Units</small>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<div class="col-lg-3 col-md-6 mb-4">
+				<div class="card p-3 bg-light border-start border-4 border-info">
+					<div class="d-flex align-items-center">
+						<i class="bi bi-receipt card-header-icon me-3"></i>
+						<div>
+							<div class="metric-label">Collection Efficiency (Last 30 Days)</div>
+							<div class="metric-value text-info">88.5%</div>
+							<small class="text-muted">Target: 95%</small>
+						</div>
+					</div>
+				</div>
+			</div>
+
+		</div> <div class="row mb-4 d-flex align-items-stretch">
+
+			<div class="col-lg-7 mb-4">
+				<div class="card p-3 h-100">
+					<h5 class="card-title text-teal"><i class="bi bi-graph-up me-2"></i> Monthly Booking Value Trend</h5>
+					<div class="chart-container-lg">
+						<canvas id="monthlySalesChart"></canvas>
+					</div>
+				</div>
+			</div>
+
+			<div class="col-lg-5 mb-4">
+				<div class="card p-3 h-100">
+					<h5 class="card-title text-teal"><i class="bi bi-stack me-2"></i> Inventory Status by Project (Units Available)</h5>
+					<div class="chart-container-lg">
+						<canvas id="executivePerformanceChart"></canvas>
+					</div>
+				</div>
+			</div>
+
+		</div> <div class="row mb-4 d-flex">
+
+			<div class="col-lg-6 mb-4">
+				<div class="card p-3 h-100">
+					<h5 class="card-title text-teal"><i class="bi bi-map-fill me-2"></i> Sales By Project Phase (Units Booked)</h5>
+					<div class="table-responsive">
+						<table class="table table-sm table-borderless caption-top">
+							<caption>Units Booked This Quarter</caption>
+							<thead class="bg-light">
+								<tr>
+									<th>Project/Phase</th>
+									<th>Units Booked</th>
+									<th>Total Units</th>
+									<th>% Booked</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr>
+									<td>Elite Towers - Phase II</td>
+									<td>120</td>
+									<td>150</td>
+									<td>
+										<div class="progress" style="height: 10px;">
+											<div class="progress-bar bg-success" role="progressbar" style="width: 80%;" aria-valuenow="80" aria-valuemin="0" aria-valuemax="100"></div>
+										</div>
+									</td>
+								</tr>
+								<tr>
+									<td>Palm Greens Villa Plots</td>
+									<td>45</td>
+									<td>50</td>
+									<td>
+										<div class="progress" style="height: 10px;">
+											<div class="progress-bar progress-bar-custom" role="progressbar" style="width: 90%;" aria-valuenow="90" aria-valuemin="0" aria-valuemax="100"></div>
+										</div>
+									</td>
+								</tr>
+								<tr>
+									<td>Commercial Hub - Retail</td>
+									<td>15</td>
+									<td>25</td>
+									<td>
+										<div class="progress" style="height: 10px;">
+											<div class="progress-bar bg-warning" role="progressbar" style="width: 60%;" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100"></div>
+										</div>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+
+			<div class="col-lg-3 col-md-6 mb-4">
+				<div class="card p-3 h-100">
+					<h5 class="card-title text-teal"><i class="bi bi-bounding-box-circles me-2"></i> Unit Type Booking Mix</h5>
+					<div class="chart-container d-flex align-items-center justify-content-center">
+						<canvas id="productShareChart"></canvas>
+					</div>
+				</div>
+			</div>
+
+			<div class="col-lg-3 col-md-6 mb-4">
+				<div class="card p-3 h-100">
+					<h5 class="card-title text-teal"><i class="bi bi-funnel-fill me-2"></i> Active Lead Funnel Stage</h5>
+					<div class="chart-container d-flex align-items-center justify-content-center">
+						<canvas id="leadStatusChart"></canvas>
+					</div>
+				</div>
+			</div>
+
+		</div>
+	</div>
+</main>
+
+@section Scripts {
+	<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.2/dist/chart.umd.min.js"></script>
+
+	<script>
+		document.addEventListener('DOMContentLoaded', function() {
+			const primaryColor = getComputedStyle(document.documentElement).getPropertyValue('--primary-color').trim();
+			const infoColor = '#0DCAF0'; // Bootstrap info
+			const successColor = '#198754'; // Bootstrap success
+			const warningColor = '#FFC107'; // Bootstrap warning
+
+			// 1. Monthly Booking Value Trend Chart (Line)
+			const monthlySalesCtx = document.getElementById('monthlySalesChart').getContext('2d');
+			new Chart(monthlySalesCtx, {
+				type: 'line',
+				data: {
+					labels: ['Oct', 'Nov', 'Dec', 'Jan', 'Feb', 'Mar'],
+					datasets: [{
+						label: 'Booking Value (₹ Cr)',
+						data: [9.5, 11.0, 10.5, 13.0, 11.5, 12.8],
+						borderColor: primaryColor,
+						backgroundColor: 'rgba(0, 128, 128, 0.2)',
+						borderWidth: 3,
+						tension: 0.4,
+						pointBackgroundColor: primaryColor,
+						fill: true
+					}]
+				},
+				options: {
+					responsive: true,
+					maintainAspectRatio: false,
+					plugins: { legend: { display: false } },
+					scales: {
+						y: {
+							beginAtZero: true,
+							title: { display: true, text: 'Booking Value (₹ Cr)' }
+						}
+					}
+				}
+			});
+
+			// 2. Inventory Status by Project (Horizontal Bar)
+			const executivePerformanceCtx = document.getElementById('executivePerformanceChart').getContext('2d');
+			new Chart(executivePerformanceCtx, {
+				type: 'bar',
+				data: {
+					labels: ['Elite Towers', 'Palm Greens', 'Commercial Hub', 'Eco Residencies'],
+					datasets: [{
+						label: 'Available Units',
+						data: [30, 5, 10, 55],
+						backgroundColor: [
+							infoColor, // Elite Towers
+							successColor, // Palm Greens (Low Inventory - good)
+							warningColor, // Commercial Hub
+							primaryColor // Eco Residencies
+						],
+						borderWidth: 1
+					}]
+				},
+				options: {
+					responsive: true,
+					maintainAspectRatio: false,
+					indexAxis: 'y',
+					plugins: { legend: { display: false } },
+					scales: {
+						x: {
+							beginAtZero: true,
+							title: { display: true, text: 'Available Units' }
+						}
+					}
+				}
+			});
+
+
+			// 3. Unit Type Booking Mix (Doughnut)
+			const productShareCtx = document.getElementById('productShareChart').getContext('2d');
+			new Chart(productShareCtx, {
+				type: 'doughnut',
+				data: {
+					labels: ['2 BHK Flats', '3 BHK Flats', 'Villa Plots', 'Commercial'],
+					datasets: [{
+						label: 'Booked Units Share',
+						data: [40, 35, 15, 10],
+						backgroundColor: [
+							primaryColor,
+							'#36A2EB',
+							'#FF6384',
+							'#FFCE56'
+						],
+						hoverOffset: 10
+					}]
+				},
+				options: {
+					responsive: true,
+					maintainAspectRatio: false,
+					plugins: { legend: { position: 'bottom', labels: { usePointStyle: true } } }
+				}
+			});
+
+			// 4. Lead Funnel Stage (Pie)
+			const leadStatusCtx = document.getElementById('leadStatusChart').getContext('2d');
+			new Chart(leadStatusCtx, {
+				type: 'pie',
+				data: {
+					labels: ['New Inquiry', 'Site Visit Done', 'Negotiation/L.O.I.', 'Booking Closed'],
+					datasets: [{
+						label: 'Active Leads',
+						data: [35, 30, 20, 15],
+						backgroundColor: [
+							'#FFCE56', // New Inquiry (Yellow/Gold)
+							'#36A2EB', // Site Visit (Blue/Info)
+							'#FF6384', // Negotiation (Pink/Warning)
+							primaryColor // Booking Closed (Teal/Primary)
+						],
+						hoverOffset: 10
+					}]
+				},
+				options: {
+					responsive: true,
+					maintainAspectRatio: false,
+					plugins: { legend: { position: 'bottom', labels: { usePointStyle: true } } }
+				}
+			});
+		});
+	</script>
+
+
+ }
