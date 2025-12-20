@@ -10,7 +10,7 @@
 		--sidebar-width: 280px;
 		--sidebar-collapsed-width: 70px;
 		--transition-speed: 0.3s;
-		--primary-color: @theme;	
+		--primary-color: @theme;
 		--secondary-color: #6c757d;
 		--light-bg: #f8f9fa;
 	}
@@ -53,7 +53,7 @@
 
 	<!-- ✅ Modal -->
 	<div class="modal fade" id="addAreaModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1">
-		<div class="modal-dialog">
+		<div class="modal-dialog modal-lg">
 			<div class="modal-content">
 				<div class="modal-header bg-success text-white">
 					<h5 class="modal-title">Add Area</h5>
@@ -62,63 +62,68 @@
 				<div class="modal-body">
 					<form id="areaForm">
 						<input type="hidden" id="UniquId" name="UniquId" />
+						<div class="row">
+							<div class="col-md-4 mb-3">
+								<label class="form-label fw-bold">Area Name<span class="impMark">*</span></label>
+								<input type="text" class="form-control" id="AreaName" name="AreaName" placeholder="Enter area name" />
+							</div>
 
-						<div class="mb-3">
-							<label class="form-label fw-bold">Area Name<span class="impMark">*</span></label>
-							<input type="text" class="form-control" id="AreaName" name="AreaName" placeholder="Enter area name" />
+							<div class="col-md-4 mb-3">
+								<label class="form-label fw-bold">Sub Area Name</label>
+								<input type="text" class="form-control" id="SubAreaName" name="SubAreaName" placeholder="Enter sub area name" />
+							</div>
+
+							<div class="col-md-4 mb-3">
+								<label class="form-label fw-bold">Pincode</label>
+								<input type="text" class="form-control" id="Pincode" name="Pincode" placeholder="Enter pincode" />
+							</div>
+
+							<div class="col-md-4 mb-3">
+								<label class="form-label fw-bold">Country</label>
+								<select class="form-select" id="CountryID" name="Country">
+									<option value="">-- Select Country --</option>
+									@foreach (var item in Model.CountryList)
+									{
+										<option value="@item.Value">@item.Text</option>
+									}
+								</select>
+							</div>
+							<div class="col-md-4 mb-3">
+								<label class="form-label fw-bold">State</label>
+								<select class="form-select" id="StateID" name="State">
+									<option value="">-- Select State --</option>
+									@foreach (var item in Model.StateList)
+									{
+										<option value="@item.Value">@item.Text</option>
+									}
+								</select>
+							</div>
+
+
+							<div class="col-md-4 mb-3">
+								<label class="form-label fw-bold">City</label>
+								<select class="form-select" id="CityID" name="City">
+									<option value="">-- Select City --</option>
+									@foreach (var item in Model.CityList)
+									{
+										<option value="@item.Value">@item.Text</option>
+									}
+
+								</select>
+							</div>
+
+							<div class="col-md-2 ms-auto">
+								<div class="form-check mb-3">
+									<input class="form-check-input" type="checkbox" id="IsActive" name="IsActive" value="true" checked />
+									@* <input class="form-check-input" type="checkbox" id="IsActive" name="IsActive" /> *@
+									<label class="form-check-label fw-bold" for="IsActive">Is Active</label>
+								</div>
+							</div>
+
+
+
 						</div>
 
-						<div class="mb-3">
-							<label class="form-label fw-bold">Sub Area Name</label>
-							<input type="text" class="form-control" id="SubAreaName" name="SubAreaName" placeholder="Enter sub area name" />
-						</div>
-						<div class="mb-3">
-							<label class="form-label fw-bold">Country</label>
-							<select class="form-select" id="CountryID" name="Country">
-								<option value="">-- Select Country --</option>
-								@foreach (var item in Model.CountryList)
-								{
-									<option value="@item.Value">@item.Text</option>
-								}
-							</select>
-						</div>
-						<div class="mb-3">
-							<label class="form-label fw-bold">State</label>
-							<select class="form-select" id="StateID" name="State">
-								<option value="">-- Select State --</option>
-								@foreach (var item in Model.StateList)
-								{
-									<option value="@item.Value">@item.Text</option>
-								}
-							</select>
-						</div>
-
-
-						<div class="mb-3">
-							<label class="form-label fw-bold">City</label>
-							<select class="form-select" id="CityID" name="City">
-								<option value="">-- Select City --</option>
-								@foreach (var item in Model.CityList)
-								{
-									<option value="@item.Value">@item.Text</option>
-								}
-
-							</select>
-						</div>
-
-
-
-
-						<div class="mb-3">
-							<label class="form-label fw-bold">Pincode</label>
-							<input type="text" class="form-control" id="Pincode" name="Pincode" placeholder="Enter pincode" />
-						</div>
-
-						<div class="form-check mb-3">
-							<input class="form-check-input" type="checkbox" id="IsActive" name="IsActive" value="true" checked />
-							@* <input class="form-check-input" type="checkbox" id="IsActive" name="IsActive" /> *@
-							<label class="form-check-label fw-bold" for="IsActive">Is Active</label>
-						</div>
 					</form>
 				</div>
 				<div class="modal-footer">

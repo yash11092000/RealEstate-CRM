@@ -21,6 +21,12 @@
 		var theme = User.FindFirst("Theme")?.Value ?? "#198754";
 	}
 	<style>
+		* {
+			margin:0;
+			padding:0;
+			box-sizing:border-box;
+		}
+
 
 		:root {
 			--theme-color: @theme;
@@ -652,7 +658,7 @@
 				background: rgba(255,255,255,0.9);
 				display: flex; justify-content: center;
 				align-items: center; z-index: 9999;">
-		<img src="~/time hourglass.gif" alt="Loading..." style="width:120px; height:auto;">
+		<img src="~/Loader2.gif" alt="Loading..." style="width:120px; height:auto;">
 
 	</div>
 	<!-- Footer -->
@@ -707,7 +713,9 @@
 		$(document).ajaxStart(function () {
 			showLoader();
 		}).ajaxStop(function () {
+			setTimeout(()=>{
 			hideLoader();
+			},500)
 		});
 
 

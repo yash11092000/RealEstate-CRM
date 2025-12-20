@@ -1,6 +1,9 @@
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Http.Features;
+using PdfSharp.Fonts;
 using PhysioWeb.Data;
+using PhysioWeb.Helpers;
+using PhysioWeb.Models;
 using PhysioWeb.Repository;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -10,6 +13,7 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddSignalR();
 
 // Add services to the container.
+GlobalFontSettings.FontResolver = new FontResolver();
 builder.Services.AddScoped<DbHelper>();
 
 
@@ -19,8 +23,11 @@ builder.Services.AddScoped<ISuperAdminRepository, SuperAdminRepository>();
 builder.Services.AddScoped<IAgencyRepository, AgencyRepository>();
 builder.Services.AddScoped<IPropertyRepository, PropertyRepository>();
 builder.Services.AddScoped<IWhatsAppService, WhatsAppService>();
+builder.Services.AddScoped<IEmailService, EmailServiceRepository>();
+builder.Services.AddScoped<IPdfServices, PdfServices>();
 builder.Services.AddScoped<FileUploadService>();
-
+builder.Services.Configure<EmailSettings>(
+    builder.Configuration.GetSection("EmailSettings"));
 
 
 
@@ -47,7 +54,7 @@ builder.WebHost.ConfigureKestrel(serverOptions =>
 
 
 builder.Services.AddAuthorization(); // required for [Authorize(Roles = "...")]
-builder.Services.AddMemoryCache(); 
+builder.Services.AddMemoryCache();
 
 var app = builder.Build();
 

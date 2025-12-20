@@ -163,6 +163,8 @@
 							<th>Status</th>
 							<th>Date</th>
 							<th><i class="bi bi-eye text-primary fs-5" title="View"></i></th>
+							<td><i class="bi bi-file-earmark-pdf text-primary fs-5" onclick="DownloadQuotation()" title="Download Pdf"></i></td>
+
 							@* <th><i class="bi bi-check2-circle text-primary fs-5" title="Sold Out Details"></i></th> *@
 							<th><i class="bi bi-pencil-square text-primary fs-5" title="Edit"></i></th>
 							<th><i class="bi bi-trash text-danger fs-5" title="Delete"></i></th>
@@ -178,6 +180,8 @@
 							<td><span class="badge bg-warning">Sent</span></td>
 							<td>2025-11-05</td>
 							<td><i class="bi bi-eye text-primary fs-5" title="View"></i></td>
+							<td><i class="bi bi-file-earmark-pdf text-primary fs-5" onclick="DownloadQuotation()" title="Download Pdf"></i></td>
+
 							@* <td><i class="bi bi-check2-circle text-primary fs-5" title="Sold Out Details"></i></td> *@
 							<td><i class="bi bi-pencil-square text-primary fs-5" title="Edit"></i></td>
 							<td><i class="bi bi-trash text-danger fs-5" title="Delete"></i></td>
@@ -191,7 +195,10 @@
 							<td><span class="badge bg-success">Accepted</span></td>
 							<td>2025-11-07</td>
 							<td><i class="bi bi-eye text-primary fs-5" title="View"></i></td>
-							@* <td><i class="bi bi-check2-circle text-primary fs-5" title="Sold Out Details"></i></td> *@
+
+							<td><i class="bi bi-file-earmark-pdf text-primary fs-5" onclick="DownloadQuotation()" title="Download Pdf"></i></td>
+
+
 							<td><i class="bi bi-pencil-square text-primary fs-5" title="Edit"></i></td>
 							<td><i class="bi bi-trash text-danger fs-5" title="Delete"></i></td>
 						</tr>
@@ -214,5 +221,32 @@
 				bootstrap.Tab.getInstance(triggerEl)?.show();
 			}
 		});
+
+		function DownloadQuotation(){
+				$.ajax({
+				url: "/ExternalServices/DownloadQuotation",   // adjust if route has controller prefix
+				type: "GET",
+				xhrFields: {
+					responseType: 'blob'   // IMPORTANT for PDF
+				},
+				success: function (blob, status, xhr) {
+					console.log(blob)
+
+					const fileName = "Quotation.pdf";
+
+					const url = window.URL.createObjectURL(blob);
+					const a = document.createElement("a");
+					a.href = url;
+					a.download = fileName;
+					document.body.appendChild(a);
+					a.click();
+					a.remove();
+					window.URL.revokeObjectURL(url);
+				},
+				error: function () {
+					alert("Failed to download quotation");
+				}
+			});
+		}
 	</script>
 }
