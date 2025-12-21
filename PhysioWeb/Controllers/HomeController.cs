@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using System.Diagnostics;
 using System.Reflection;
 using System.Security.Claims;
+using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Pages.Manage;
 
 
 namespace PhysioWeb.Controllers
@@ -155,6 +156,7 @@ namespace PhysioWeb.Controllers
             }
             return View();
         }
+
         #endregion
 
 

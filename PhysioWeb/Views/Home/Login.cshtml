@@ -115,15 +115,16 @@
 			const emailRegex = /^[^\s@@]+@@[^\s@@]+\.[^\s@@]+$/;
 
 
-			if (!emailRegex.test(email)) {
-				notyf.error("Enter a valid Email address.");
-				return;
-			}
-			// else if (mobile && !mobileRegex.test(mobile)) {
-			// 	notyf.error("Enter a valid 10-digit Mobile Number.");
+			// if (!emailRegex.test(email)) {
+			// 	notyf.error("Enter a valid Email address.");
 			// 	return;
 			// }
-			else if (password.length < 6) {
+			// // else if (mobile && !mobileRegex.test(mobile)) {
+			// // 	notyf.error("Enter a valid 10-digit Mobile Number.");
+			// // 	return;
+			// // }
+			// else 
+			if (password.length < 6) {
 				notyf.error("Password must be at least 6 characters.");
 				return;
 			}

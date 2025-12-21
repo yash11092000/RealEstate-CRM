@@ -74,7 +74,7 @@
 
 				<!-- Email -->
 				<div class="form-floating mb-3">
-					<input type="email" class="form-control" id="Email" placeholder="name@example.com">
+					<input type="email" class="form-control" id="Email" name="" placeholder="name@example.com">
 					<label for="Email">Email address</label>
 				</div>
 
@@ -117,7 +117,7 @@
 
 
 @section Scripts {
-	<script>
+	<script type="text/javascript">
 		$("#Register").on("click",function(){
 
 			let fullName = $("#Name").val().trim();
@@ -170,7 +170,7 @@
 				data: formData,
 				success: function (response) {
 					if (response) {
-						notyf.success("Registration successful!");
+						 notyf.success("Registration successful!");
 						setTimeout(function () {
 							window.location.href = "/Home/Login";
 						}, 2000);
@@ -185,25 +185,61 @@
 		});
 
 		 $("#Mobile").on("change", function () {
-            var mobile = $(this).val().trim();
-            var mobileRegex = /^[6-9]\d{9}$/; 
+			var mobile = $(this).val().trim();
+			var mobileRegex = /^[6-9]\d{9}$/;
 
-            if (!mobileRegex.test(mobile)) {
+			if (!mobileRegex.test(mobile)) {
 				notyf.error("Please enter a valid mobile number");
-                $(this).val(""); 
-                $(this).focus(); 
-            }
-        });
+				$(this).val("");
+				$(this).focus();
+			}
+		});
 
-        $("#Email").on("change", function () {
-            var email = $(this).val().trim();
-          
-			const emailRegex = /^[^\s@@]+@@[^\s@@]+\.[^\s@@]+$/;
-            if (!emailRegex.test(email)) {
-                notyf.error("Please enter a valid email address");
-                $(this).val("");
-                $(this).focus();
-            }
-        });
+		var emailRegex = /^[^\s@@]+@@[^\s@@]+\.[^\s@@]+$/;
+
+		 const validateAndCheckEmail = debounce(function () {
+			var email = $("#Email").val().trim();
+
+			if (email === "") return;
+
+			if (!emailRegex.test(email)) {
+				notyf.error("Please enter a valid email address");
+				$("#Email").val("").focus();
+				return;
+			}
+
+			// ✅ AJAX call
+			$.ajax({
+				url: "/Home/CheckEmailExists",   // change as per your controller
+				type: "GET",
+				data: { Email: email },
+				success: function (response) {
+					if (response > 0) {
+						notyf.error("Already Used..");
+						$("#Email").focus();
+						$("#Email").val("");
+					}
+				},
+				error: function () {
+					notyf.error("Something went wrong while checking email");
+				}
+			});
+
+		}, 600); // ⏱️ 600ms debounce
+
+		// 🔹 Trigger on typing instead of change
+		$("#Email").on("change", validateAndCheckEmail);
+
+
+		function debounce(fn, delay) {
+				let timer;
+				return function (...args) {
+					clearTimeout(timer);
+					timer = setTimeout(() => {
+						fn.apply(this, args);
+					}, delay);
+				};
+		}
+
 	</script>
 }

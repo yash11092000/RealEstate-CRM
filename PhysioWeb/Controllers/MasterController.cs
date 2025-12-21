@@ -17,7 +17,7 @@ using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace PhysioWeb.Controllers
 {
-    [Authorize(Roles = "Agency")]
+    [Authorize]
     public class MasterController : Controller
     {
         private readonly IMasterRepository _masterRepository;
@@ -961,6 +961,7 @@ namespace PhysioWeb.Controllers
         }
 
         #region Agent
+        [Authorize(Roles = "Agency,Agent")]
         public async Task<ActionResult> NewLead()
         {
             NewLead DropDowns = await _masterRepository.GetLeadDropDowndata();
