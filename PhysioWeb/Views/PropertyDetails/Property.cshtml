@@ -1198,5 +1198,43 @@
 			});
 			}
 		})
+
+
+				function shareViaEmail() {
+
+			const email = $("#senderEmail").val().trim();
+			if (!email) {
+				alert("Please enter recipient email");
+				return;
+			}
+
+			const selectedPaths = $(".image-checkbox:checked, .video-checkbox:checked")
+				.map(function () {
+					return $(this).val();
+				})
+				.get();
+
+			if (selectedPaths.length === 0) {
+				alert("Select at least one file");
+				return;
+			}
+
+			$.ajax({
+				url: "/ExternalServices/SendMail",
+				type: "POST",
+				contentType: "application/json",
+				data: JSON.stringify({
+					SenderEmail: email,
+					mediaPaths: selectedPaths
+				}),
+				success: function (res) {
+					alert(res);
+					$("#shareModal2").modal("hide");
+				},
+				error: function () {
+					alert("Failed to send email");
+				}
+			});
+		}
 	</script>
 }
