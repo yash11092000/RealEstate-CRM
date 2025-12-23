@@ -436,7 +436,12 @@
 										<span id="displayMinBudget" class="text-success fw-bold"></span>
 
 									</div>
-
+									<div class="col-md-3 negotiableprice fw-bold" style="display: none;">
+										<label class="form-label">Qty</label>
+										<div class="input-group">
+											<input type="text" class="form-control" name="Qty" id="Qty" placeholder="Add number of avaibility">
+										</div>
+									</div>
 								</div>
 
 								<input type="hidden" id="ConvertedActualPrice" value="0" name="ConvertedActualPrice" />
@@ -905,6 +910,7 @@
 					ConvertedNegotiablePrice : $("#ConvertedNegotiablePrice").val(),
 					TotalFloorBuilding : $("#TotalFloorBuilding").val(),
 					IsNegotiable : $("#IsNegotiable").is(":checked"),
+					Qty : $("#Qty").val(),
 
 				};
 

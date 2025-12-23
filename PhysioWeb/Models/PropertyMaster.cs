@@ -95,7 +95,7 @@ namespace PhysioWeb.Models
         public string SoldOutToWhome { get; set; }
         public string SoldOutContactNo { get; set; }
         public List<PropertyDetails> PropertyDetails { get; set; }
-
+        public int Qty { get; set; }
         public PropertyMaster()
         {
             CountryList = new List<DropDownSource>();
@@ -537,6 +537,11 @@ namespace PhysioWeb.Models
             {
                 obj.IsActive = rdr.GetBoolean(rdr.GetOrdinal("IsActive"));
             }
+            if (!rdr.IsDBNull(rdr.GetOrdinal("Qty")))
+            {
+                obj.Qty = rdr.GetInt32(rdr.GetOrdinal("Qty"));
+            }
+
         }
 
         private void populateObjectEditOfSoldOUtDetails(PropertyMaster obj, IDataReader rdr)
