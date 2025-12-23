@@ -782,7 +782,7 @@ namespace PhysioWeb.Repository
                     "Floor", "ContactPersonName", "ContactPersonNo", "AlternateNo", "Area",
                     "SubArea", "Country", "Amenities","UserID" ,"AgencyID" ,"Vastu" , "YearOfConstruction" , "PropertyCategory",
                     "PreferedBuyerType" , "AmountUnitMinPrice" , "AmountUnitMaxPrice" ,"ConvertedActualPrice" , "ConvertedNegotiablePrice",
-                    "TotalFloorBuilding" ,"IsNegotiable"
+                    "TotalFloorBuilding" ,"IsNegotiable","Qty"
                 };
 
                 object[] parameterValues = { propertyMaster.UniquId, propertyMaster.Title,
@@ -799,7 +799,7 @@ namespace PhysioWeb.Repository
                     propertyMaster.Vastu , propertyMaster.YearOfConstruction , propertyMaster.PropertyCategory,
                     propertyMaster.PreferedBuyerType ,propertyMaster.AmountUnitMinPrice ,propertyMaster.AmountUnitMaxPrice,
                     propertyMaster.ConvertedActualPrice ,propertyMaster.ConvertedNegotiablePrice,
-                    propertyMaster.TotalFloorBuilding,propertyMaster.IsNegotiable
+                    propertyMaster.TotalFloorBuilding,propertyMaster.IsNegotiable,propertyMaster.Qty
                 };
 
                 string Sp = "FMR_SavePropertyDetails";
