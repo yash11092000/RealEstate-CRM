@@ -69,7 +69,7 @@ function validateMobileNo(MobNo) {
 function validateEmailID(emailid) {
     var email = $(emailid).val().trim();
 
-    const emailRegex = /^[^\s@@]+@@[^\s@@]+\.[^\s@@]+$/;
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) {
         notyf.error("Please enter a valid email address");
         $(emailid).val("");

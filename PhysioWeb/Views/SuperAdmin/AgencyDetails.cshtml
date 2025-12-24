@@ -308,12 +308,12 @@
 							<div class="col-md-3 mb-3">
 								<label for="AgencyThemeSelfPick" class="form-label fw-bold">Choose Theme</label>
 								<div class="d-flex gap-2 flex-wrap">
-									<button type="button" class="theme-btn" data-color="#198754" style="background-color:#198754;"></button>
-									<button type="button" class="theme-btn" data-color="#0d6efd" style="background-color:#0d6efd;"></button>
-									<button type="button" class="theme-btn" data-color="#dc3545" style="background-color:#dc3545;"></button>
-									<button type="button" class="theme-btn" data-color="#fd7e14" style="background-color:#fd7e14;"></button>
-									<button type="button" class="theme-btn" data-color="#20c997" style="background-color:#20c997;"></button>
-									<button type="button" class="theme-btn" data-color="#6610f2" style="background-color:#6610f2;"></button>
+									<button type="button" class="theme-btn" data-color="#3FA66A" style="background:#3FA66A;"></button>
+									<button type="button" class="theme-btn" data-color="#3B82F6" style="background:#3B82F6;"></button>
+									<button type="button" class="theme-btn" data-color="#E5533D" style="background:#E5533D;"></button>
+									<button type="button" class="theme-btn" data-color="#F59E0B" style="background:#F59E0B;"></button>
+									<button type="button" class="theme-btn" data-color="#2CB1A6" style="background:#2CB1A6;"></button>
+									<button type="button" class="theme-btn" data-color="#7C6EE6" style="background:#7C6EE6;"></button>
 								</div>
 							</div>
 
@@ -619,7 +619,7 @@
 			b.classList.add('selected');
 		  }
 		});
-				$("#submitAgency").on("click", function () {
+		$("#submitAgency").on("click", function () {
 		 if (!validateAgencyForm()) return; // stop if validation fails
 
 			let fd = new FormData();
@@ -676,6 +676,8 @@
 				contentType: false,
 				success: function (res) {
 					res.success ? notyf.success("Agency saved!") : notyf.error(res.message);
+					$("#TableList").DataTable().ajax.reload(null, false);
+
 				},
 				error: function () {
 					notyf.error("Error while saving agency");
@@ -831,8 +833,7 @@
 			}
 		}
 
-				function showFilePreview(file, previewEl) {
-		  // Remove any previously created PDF link
+		function showFilePreview(file, previewEl) {
 		  const linkId = previewEl.id + '_link';
 		  const existingLink = document.getElementById(linkId);
 		  if (existingLink) existingLink.remove();
