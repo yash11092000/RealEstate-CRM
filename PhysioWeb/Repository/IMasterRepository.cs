@@ -14,6 +14,7 @@ namespace PhysioWeb.Repository
         Task<DataTableResult> ListPropertyType(DataTablePara dataTablePara);
         Task<bool> SaveRentalType(RentalTypeMaster RentalTypeMaster);
         Task<PropertyTypeMaster> EditPropertyType(int UniqueID, string UserID);
+        Task<UserRole> EditUserRole(int UniqueID, string UserID);
         Task<DataTableResult> ListRentalType(DataTablePara dataTablePara);
         Task<RentalTypeMaster> EditRentalType(int UniqueID, string UserID);
         Task<bool> DeleteRentalType(RentalTypeMaster RentalTypeMaster);
@@ -51,5 +52,9 @@ namespace PhysioWeb.Repository
         Task<bool> UpdateAgentPermission(string id, bool showLandmark, bool showAddress);
         Task<PropertyMaster> ViewProperty(int id);
         Task<NewLead> GetLeadDropDowndata();
+        Task<Agent> GetAgentDropDown();
+        Task<DataTableResult> ListUserRole(DataTablePara dataTablePara);
+        Task<bool> SaveUserRole(UserRole userRole);
+        Task<bool> DeleteUserRole(UserRole userRole);
     }
 }

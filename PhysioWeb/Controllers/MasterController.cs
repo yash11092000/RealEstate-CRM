@@ -43,6 +43,9 @@ namespace PhysioWeb.Controllers
             propertyCategoryMaster.UserID = User.FindFirst(ClaimTypes.PrimarySid)?.Value;
             propertyCategoryMaster.AgencyId = User.FindFirst(ClaimTypes.GroupSid)?.Value;
             var result = await _masterRepository.SavePropCategory(propertyCategoryMaster);
+            if (result) {
+                await _hubContext.Clients.Group("SuperAdmin").SendAsync("ReceiveNotification", $"Category Added : {propertyCategoryMaster.CategoryName}");
+            }
             return Json(result);
         }
 
@@ -132,6 +135,10 @@ namespace PhysioWeb.Controllers
             propertyTypeMaster.UserID = User.FindFirst(ClaimTypes.PrimarySid)?.Value;
             propertyTypeMaster.AgencyId = User.FindFirst(ClaimTypes.GroupSid)?.Value;
             var result = await _masterRepository.SavePropType(propertyTypeMaster);
+            if (result)
+            {
+                await _hubContext.Clients.Group("SuperAdmin").SendAsync("ReceiveNotification", $"{propertyTypeMaster.UserID} Added: {propertyTypeMaster.PropertyType} In PropertyType");
+            }
             return Json(result);
         }
 
@@ -145,6 +152,7 @@ namespace PhysioWeb.Controllers
             };
             propertyTypeMaster.UserID = User.FindFirst(ClaimTypes.PrimarySid)?.Value;
             var result = await _masterRepository.DeletePropertyType(propertyTypeMaster);
+            await _hubContext.Clients.Group("SuperAdmin").SendAsync("ReceiveNotification", $"PropertyType Added : {propertyTypeMaster.PropertyType}");
             return Json(new { success = result });
         }
 
@@ -207,6 +215,105 @@ namespace PhysioWeb.Controllers
         }
 
         #endregion
+
+
+        #region UserRole Master
+        [HttpGet]
+        public async Task<ActionResult> UserRole()
+        {
+            return View();
+        }
+
+
+        [HttpPost]
+        public async Task<ActionResult> SaveUserRole(UserRole UserRole)
+        {
+            UserRole.UserID = User.FindFirst(ClaimTypes.PrimarySid)?.Value;
+            UserRole.AgencyId = User.FindFirst(ClaimTypes.GroupSid)?.Value;
+            var result = await _masterRepository.SaveUserRole(UserRole);
+            if (result)
+            {
+                await _hubContext.Clients.Group("SuperAdmin").SendAsync("ReceiveNotification", $"{UserRole.UserID} Added: {UserRole.Role} In UserRole");
+            }
+            return Json(result);
+        }
+
+
+        [HttpPost]
+        public async Task<ActionResult> DeleteUserRole(int UniqueID)
+        {
+            var UserRole = new UserRole
+            {
+                UniquId = UniqueID
+            };
+            UserRole.UserID = User.FindFirst(ClaimTypes.PrimarySid)?.Value;
+            var result = await _masterRepository.DeleteUserRole(UserRole);
+            await _hubContext.Clients.Group("SuperAdmin").SendAsync("ReceiveNotification", $"PropertyType Added : {UserRole.Role}");
+            return Json(new { success = result });
+        }
+
+
+        [HttpPost]
+        public async Task<ActionResult> ListUserRole()
+        {
+            var form = Request.Form;
+
+            // ✅ Map DataTables default parameters
+            var dataTablePara = new DataTablePara
+            {
+                iDisplayStart = Convert.ToInt32(form["start"]),
+                iDisplayLength = Convert.ToInt32(form["length"]),
+                iSortCol_0 = Convert.ToInt32(form["order[0][column]"]),
+                sSortDir_0 = form["order[0][dir]"],
+                sSearch = form["search[value]"]
+            };
+
+            // ✅ Map column filters dynamically (for first 10 columns)
+            for (int i = 0; i < 30; i++)
+            {
+                string key = $"columns[{i}][search][value]";
+                if (Request.Form.ContainsKey(key))
+                {
+                    typeof(DataTablePara)
+                        .GetProperty($"sSearch_{i}")
+                        ?.SetValue(dataTablePara, Request.Form[key].ToString());
+                }
+            }
+            dataTablePara.UserID = User.FindFirst(ClaimTypes.PrimarySid)?.Value;
+            dataTablePara.AgencyId = User.FindFirst(ClaimTypes.GroupSid)?.Value;
+            var result = await _masterRepository.ListUserRole(dataTablePara);
+            var requestForm = Request.Form;
+            return Json(new
+            {
+                draw = requestForm["draw"],                     
+                recordsTotal = result.iTotalRecords,           
+                recordsFiltered = result.iTotalDisplayRecords, 
+                data = result.aaData                           
+            });
+
+        }
+
+        [HttpPost]
+        public async Task<ActionResult> EditUserRole(int UniqueID)
+        {
+            try
+            {
+                string UserID = User.FindFirst(ClaimTypes.PrimarySid)?.Value;
+                var data = await _masterRepository.EditUserRole(UniqueID, UserID);
+
+                return Json(data);
+
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, message = ex.Message });
+            }
+        }
+
+        #endregion
+
+
+
 
         #region Rental Type Master
 
@@ -315,8 +422,7 @@ namespace PhysioWeb.Controllers
             var result = await _masterRepository.SaveProperty(PropertyMaster);
 
             // 2. Send notification to SuperAdmin group
-            await _hubContext.Clients.Group("SuperAdmin")
-                .SendAsync("ReceiveNotification", $"Property Added : {PropertyMaster.Title}");
+            await _hubContext.Clients.Group("SuperAdmin").SendAsync("ReceiveNotification", $"Property Added : {PropertyMaster.Title}");
 
             return Json(new { success = true, propertyId = result });
         }
@@ -775,7 +881,8 @@ namespace PhysioWeb.Controllers
         #region Agent
         public async Task<ActionResult> Agent()
         {
-            return View();
+            Agent agent= await _masterRepository.GetAgentDropDown();
+            return View(agent);
         }
 
         [HttpPost]

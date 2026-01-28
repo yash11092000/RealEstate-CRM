@@ -146,6 +146,24 @@ namespace PhysioWeb.Repository
                 throw;
             }
         }
+        public async Task<bool> SaveUserRole(UserRole UserRole)
+        {
+            try
+            {
+                string[] parametersName = { "UniquId", "Role", "Description", "IsActive", "AgencyID", "UserID" };
+                object[] Values = { UserRole.UniquId,UserRole.Role, UserRole.Description,
+                UserRole.IsActive ,UserRole.AgencyId ,UserRole.UserID };
+
+                string Sp = "FMR_SaveUserRole";
+                int RecordAffected = await _dbHelper.ExecuteNonQueryAsync(Sp, parametersName, Values);
+                return RecordAffected > 0;
+            }
+            catch (Exception ex)
+            {
+                // Optional: log error here
+                throw;
+            }
+        }
         public async Task<bool> DeletePropertyType(PropertyTypeMaster PropertyTypeMaster)
         {
             try
@@ -242,6 +260,30 @@ namespace PhysioWeb.Repository
                 {
                     PropertyTypeMaster PropertyTypeMaster = new PropertyTypeMaster(data, 1);
                     return PropertyTypeMaster;
+                }
+                return null;
+
+                //bind 
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }
+        
+        public async Task<UserRole> EditUserRole(int UniqueID, string UserID)
+        {
+            try
+            {
+                string[] parameterNames = { "UniqueID", "UserID" };
+                object[] parameterValues = { UniqueID, UserID };
+
+                string Sp = "FMR_EditUserRole";
+                var data = await _dbHelper.GetDataReaderAsync(Sp, parameterNames, parameterValues);
+                while (data.Read())
+                {
+                    UserRole UserRole= new UserRole(data, 1);
+                    return UserRole;
                 }
                 return null;
 
@@ -1225,7 +1267,6 @@ namespace PhysioWeb.Repository
             }
             catch (Exception ex)
             {
-                // Optional: log error here
                 throw;
             }
         }
@@ -1238,6 +1279,24 @@ namespace PhysioWeb.Repository
                 object[] Values = { agent.UniquId, agent.UserID };
 
                 string Sp = "FMR_DeleteAgent";
+                int RecordAffected = await _dbHelper.ExecuteNonQueryAsync(Sp, parametersName, Values);
+                return RecordAffected > 0;
+            }
+            catch (Exception ex)
+            {
+                // Optional: log error here
+                throw;
+            }
+        }
+        
+        public async Task<bool> DeleteUserRole(UserRole userRole)
+        {
+            try
+            {
+                string[] parametersName = { "UniquId", "UserID" };
+                object[] Values = { userRole.UniquId, userRole.UserID };
+
+                string Sp = "FMR_DeleteUserRole";
                 int RecordAffected = await _dbHelper.ExecuteNonQueryAsync(Sp, parametersName, Values);
                 return RecordAffected > 0;
             }
@@ -1417,6 +1476,93 @@ namespace PhysioWeb.Repository
             catch (Exception e)
             {
                 throw e;
+            }
+        }
+
+        public async Task<Agent> GetAgentDropDown()
+        {
+
+            try
+            {
+                string[] parameterNames = { };
+                object[] parameterValues = { };
+
+                string Sp = "FMR_UserDropDown";
+                var data = await _dbHelper.GetDataReaderAsync(Sp, parameterNames, parameterValues);
+                var Agent = new Agent();
+
+                while (data.Read())
+                {
+                    Agent.UserRoles.Add(new DropDownSource(data, true));
+                }
+                if (data.NextResult())
+                {
+                    while (data.Read())
+                    {
+                        Agent.Designations.Add(new DropDownSource(data, true));
+                    }
+                }
+                //if (data.NextResult())
+                //{
+                //    while (data.Read())
+                //    {
+                //        Agent.ManagerList.Add(new DropDownSource(data, true));
+                //    }
+                //}
+
+
+                return Agent;
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }
+
+        public async Task<DataTableResult> ListUserRole(DataTablePara dataTablePara)
+        {
+            try
+            {
+                string[] parameterName = new string[]
+                {
+                    "DisplayLength", "DisplayStart", "SortCol", "SortDir", "Search",
+                    "Role", "Description", "IsActive", "CreatedBy", "AgencyId"
+                };
+
+                object[] parameterValue = new object[]
+                {
+                    dataTablePara.iDisplayLength,dataTablePara.iDisplayStart,dataTablePara.iSortCol_0,
+                    dataTablePara.sSortDir_0,dataTablePara.sSearch,dataTablePara.sSearch_0,
+                    dataTablePara.sSearch_1,dataTablePara.sSearch_2,dataTablePara.sSearch_3,dataTablePara.AgencyId
+                };
+
+                var reader = await _dbHelper.GetDataReaderAsync("[FMR_DataListUserRole]", parameterName, parameterValue);
+
+                var result = new DataTableResult();
+                var list = new List<UserRole>();
+
+                while (reader.Read())
+                {
+                    list.Add(new UserRole(reader));
+                }
+
+                if (reader.NextResult())
+                {
+                    while (reader.Read())
+                    {
+                        result.iTotalRecords = Convert.ToInt32(reader[0]);
+                    }
+                }
+
+                result.iTotalDisplayRecords = result.iTotalRecords;
+                result.aaData = list;
+
+                return result;
+            }
+            catch (Exception ex)
+            {
+                // Optional: log error here
+                throw;
             }
         }
     }
