@@ -56,5 +56,9 @@ namespace PhysioWeb.Repository
         Task<DataTableResult> ListUserRole(DataTablePara dataTablePara);
         Task<bool> SaveUserRole(UserRole userRole);
         Task<bool> DeleteUserRole(UserRole userRole);
+        Task<bool> SaveDesignation(Designation Designation);
+        Task<bool> DeleteDesignation(Designation Designation);
+        Task<DataTableResult> ListDesignation(DataTablePara dataTablePara);
+        Task<Designation> EditDesignation(int UniqueID, string UserID);
     }
 }

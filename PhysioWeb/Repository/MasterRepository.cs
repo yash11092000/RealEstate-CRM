@@ -1565,5 +1565,114 @@ namespace PhysioWeb.Repository
                 throw;
             }
         }
+        public async Task<bool> SaveDesignation(Designation Designation)
+        {
+            try
+            {
+                string[] parametersName = { "UniquId", "Role", "Description", "IsActive", "AgencyID", "UserID" };
+                object[] Values = { Designation.UniquId,Designation.Designation, Designation.Description,
+                Designation.IsActive ,Designation.AgencyId ,Designation.UserID };
+
+                string Sp = "FMR_SaveDesignation";
+                int RecordAffected = await _dbHelper.ExecuteNonQueryAsync(Sp, parametersName, Values);
+                return RecordAffected > 0;
+            }
+            catch (Exception ex)
+            {
+                // Optional: log error here
+                throw;
+            }
+        }
+
+
+        public async Task<bool> DeleteDesignation(Designation Designation)
+        {
+            try
+            {
+                string[] parametersName = { "UniquId", "UserID" };
+                object[] Values = { Designation.UniquId, Designation.UserID };
+
+                string Sp = "FMR_DeleteDesignation";
+                int RecordAffected = await _dbHelper.ExecuteNonQueryAsync(Sp, parametersName, Values);
+                return RecordAffected > 0;
+            }
+            catch (Exception ex)
+            {
+                // Optional: log error here
+                throw;
+            }
+        }
+
+        public async Task<DataTableResult> ListDesignation(DataTablePara dataTablePara)
+        {
+            try
+            {
+                string[] parameterName = new string[]
+                {
+                    "DisplayLength", "DisplayStart", "SortCol", "SortDir", "Search",
+                    "Designation", "Description", "IsActive", "CreatedBy", "AgencyId"
+                };
+
+                object[] parameterValue = new object[]
+                {
+                    dataTablePara.iDisplayLength,dataTablePara.iDisplayStart,dataTablePara.iSortCol_0,
+                    dataTablePara.sSortDir_0,dataTablePara.sSearch,dataTablePara.sSearch_0,
+                    dataTablePara.sSearch_1,dataTablePara.sSearch_2,dataTablePara.sSearch_3,dataTablePara.AgencyId
+                };
+
+                var reader = await _dbHelper.GetDataReaderAsync("[FMR_DataListDesignation]", parameterName, parameterValue);
+
+                var result = new DataTableResult();
+                var list = new List<Designation>();
+
+                while (reader.Read())
+                {
+                    list.Add(new Designation(reader));
+                }
+
+                if (reader.NextResult())
+                {
+                    while (reader.Read())
+                    {
+                        result.iTotalRecords = Convert.ToInt32(reader[0]);
+                    }
+                }
+
+                result.iTotalDisplayRecords = result.iTotalRecords;
+                result.aaData = list;
+
+                return result;
+            }
+            catch (Exception ex)
+            {
+                // Optional: log error here
+                throw;
+            }
+        }
+
+        public async Task<Designation> EditDesignation(int UniqueID, string UserID)
+        {
+            try
+            {
+                string[] parameterNames = { "UniqueID", "UserID" };
+                object[] parameterValues = { UniqueID, UserID };
+
+                string Sp = "FMR_EditDesignation";
+                var data = await _dbHelper.GetDataReaderAsync(Sp, parameterNames, parameterValues);
+                while (data.Read())
+                {
+                    Designation Designation = new Designation(data, 1);
+                    return Designation;
+                }
+                return null;
+
+                //bind 
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }
+
     }
 }
