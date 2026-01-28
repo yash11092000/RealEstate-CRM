@@ -312,9 +312,6 @@ namespace PhysioWeb.Controllers
 
         #endregion
 
-
-
-
         #region Rental Type Master
 
         [HttpGet]
@@ -1139,6 +1136,13 @@ namespace PhysioWeb.Controllers
             return View();
         }
 
+        #endregion
+
+
+        #region Hierarchy View
+        public async Task<ActionResult> OrgHierarchy() {
+            return View();
+        }
         #endregion
     }
 
