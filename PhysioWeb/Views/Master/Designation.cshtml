@@ -65,7 +65,7 @@
 						<input type="hidden" id="UniquId" name="UniquId" />
 						<div class="mb-3">
 							<label class="form-label fw-bold">Designation<span class="impMark">*</span></label>
-							<input type="text" class="form-control" id="Designation" name="Designation" placeholder="Enter Designation" />
+							<input type="text" class="form-control" id="DesignationName" name="DesignationName" placeholder="Enter Designation" />
 						</div>
 						<div class="mb-3">
 							<label class="form-label fw-bold">Description</label>
@@ -117,7 +117,7 @@
 										type: 'POST' ,
 									},
 									columns: [
-										{ data: 'designation' },
+										{ data: 'designationName' },
 										{ data: 'description' },
 										{ data: 'inActiveText' },
 										{ data: 'createdBy' },
@@ -173,11 +173,11 @@
 
 							});
 					$("#btnSave").on("click", function () {
-						let Designation = $("#Designation").val();
+						let Designation = $("#DesignationName").val();
 
 						if (Designation === "") {
 							notyf.error("Please Enter Designation");
-							$("#Designation").focus();
+							$("#DesignationName").focus();
 							return;
 						}
 
@@ -206,7 +206,7 @@
 						function OnSuccessOfEdit(data){
 							$("#addPropertyModal").modal('show');
 							$("#UniquId").val(data.uniquId);
-							$("#Designation").val(data.designation);
+							$("#DesignationName").val(data.designationName);
 							$("#Description").val(data.description);
 							$("#IsActive").prop("checked", data.isActive);
 						}
@@ -218,7 +218,7 @@
 
 				function ClearData(){
 					 $("#UniquId").val("");
-					 $("#Designation").val("");
+					 $("#DesignationName").val("");
 					 $("#Description").val("");
 					  $("#IsActive").prop("checked", true);
 				}
