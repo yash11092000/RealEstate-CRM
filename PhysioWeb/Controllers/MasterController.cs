@@ -1141,7 +1141,27 @@ namespace PhysioWeb.Controllers
 
         #region Hierarchy View
         public async Task<ActionResult> OrgHierarchy() {
-            return View();
+            return View();   
+        }
+
+        [HttpGet]
+        public async Task<ActionResult> GetOrgChart()
+        {
+            List<OrgData> data = await _masterRepository.GetOrgData();
+            var tree = BuildTree(data, null);
+            return Json(tree);
+        }
+
+        private List<OrgNode> BuildTree(List<OrgData> list, int? parentId)
+        {
+            return list
+                .Where(x => x.ParentId == parentId)
+                .Select(x => new OrgNode
+                {
+                    Id = x.Id,
+                    Name = x.Name,
+                    Children = BuildTree(list, x.Id) 
+                }).ToList();
         }
         #endregion
 

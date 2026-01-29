@@ -1674,5 +1674,28 @@ namespace PhysioWeb.Repository
             }
         }
 
+        public async Task<List<OrgData>> GetOrgData()
+        {
+            try
+            {
+                string[] parameterNames = {  };
+                object[] parameterValues = {  };
+
+                string Sp = "FMR_GetOrgData";
+                var data = await _dbHelper.GetDataReaderAsync(Sp, parameterNames, parameterValues);
+                List<OrgData> OrgData = new List<OrgData>();
+                while (data.Read())
+                {
+                    OrgData.Add(new OrgData(data));
+                }
+                return OrgData;
+
+                //bind 
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }
     }
 }

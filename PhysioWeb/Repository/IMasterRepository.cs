@@ -60,5 +60,6 @@ namespace PhysioWeb.Repository
         Task<bool> DeleteDesignation(Designation Designation);
         Task<DataTableResult> ListDesignation(DataTablePara dataTablePara);
         Task<Designation> EditDesignation(int UniqueID, string UserID);
+        Task<List<OrgData>> GetOrgData();
     }
 }
