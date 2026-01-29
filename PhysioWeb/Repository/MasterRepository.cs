@@ -1569,8 +1569,8 @@ namespace PhysioWeb.Repository
         {
             try
             {
-                string[] parametersName = { "UniquId", "Role", "Description", "IsActive", "AgencyID", "UserID" };
-                object[] Values = { Designation.UniquId,Designation.Designation, Designation.Description,
+                string[] parametersName = { "UniquId", "DesignationName", "Description", "IsActive", "AgencyID", "UserID" };
+                object[] Values = { Designation.UniquId,Designation.DesignationName, Designation.Description,
                 Designation.IsActive ,Designation.AgencyId ,Designation.UserID };
 
                 string Sp = "FMR_SaveDesignation";

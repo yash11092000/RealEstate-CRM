@@ -1161,7 +1161,7 @@ namespace PhysioWeb.Controllers
             var result = await _masterRepository.SaveDesignation(Designation);
             if (result)
             {
-                await _hubContext.Clients.Group("SuperAdmin").SendAsync("ReceiveNotification", $"{Designation.UserID} Added: {Designation.Designation} In Designation");
+                await _hubContext.Clients.Group("SuperAdmin").SendAsync("ReceiveNotification", $"{Designation.UserID} Added: {Designation.DesignationName} In Designation");
             }
             return Json(result);
         }
@@ -1176,7 +1176,7 @@ namespace PhysioWeb.Controllers
             };
             Designation.UserID = User.FindFirst(ClaimTypes.PrimarySid)?.Value;
             var result = await _masterRepository.DeleteDesignation(Designation);
-            await _hubContext.Clients.Group("SuperAdmin").SendAsync("ReceiveNotification", $"Designation Added : {Designation.Designation}");
+            await _hubContext.Clients.Group("SuperAdmin").SendAsync("ReceiveNotification", $"Designation Added : {Designation.DesignationName}");
             return Json(new { success = result });
         }
 
