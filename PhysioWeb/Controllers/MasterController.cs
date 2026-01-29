@@ -1141,7 +1141,27 @@ namespace PhysioWeb.Controllers
 
         #region Hierarchy View
         public async Task<ActionResult> OrgHierarchy() {
-            return View();
+            return View();   
+        }
+
+        [HttpGet]
+        public async Task<ActionResult> GetOrgChart()
+        {
+            List<OrgData> data = await _masterRepository.GetOrgData();
+            var tree = BuildTree(data, null);
+            return Json(tree);
+        }
+
+        private List<OrgNode> BuildTree(List<OrgData> list, int? parentId)
+        {
+            return list
+                .Where(x => x.ParentId == parentId)
+                .Select(x => new OrgNode
+                {
+                    Id = x.Id,
+                    Name = x.Name,
+                    Children = BuildTree(list, x.Id) 
+                }).ToList();
         }
         #endregion
 
@@ -1161,7 +1181,7 @@ namespace PhysioWeb.Controllers
             var result = await _masterRepository.SaveDesignation(Designation);
             if (result)
             {
-                await _hubContext.Clients.Group("SuperAdmin").SendAsync("ReceiveNotification", $"{Designation.UserID} Added: {Designation.Designation} In Designation");
+                await _hubContext.Clients.Group("SuperAdmin").SendAsync("ReceiveNotification", $"{Designation.UserID} Added: {Designation.DesignationName} In Designation");
             }
             return Json(result);
         }
@@ -1176,7 +1196,7 @@ namespace PhysioWeb.Controllers
             };
             Designation.UserID = User.FindFirst(ClaimTypes.PrimarySid)?.Value;
             var result = await _masterRepository.DeleteDesignation(Designation);
-            await _hubContext.Clients.Group("SuperAdmin").SendAsync("ReceiveNotification", $"Designation Added : {Designation.Designation}");
+            await _hubContext.Clients.Group("SuperAdmin").SendAsync("ReceiveNotification", $"Designation Added : {Designation.DesignationName}");
             return Json(new { success = result });
         }
 

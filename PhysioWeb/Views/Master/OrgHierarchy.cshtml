@@ -12,10 +12,10 @@
 	}
 
 	/*   * {
-		  margin: 0;
-		  padding: 0;
-		  box-sizing: border-box;
-		} */
+						  margin: 0;
+						  padding: 0;
+						  box-sizing: border-box;
+						} */
 
 	.org-chart * {
 		box-sizing: border-box;
@@ -141,91 +141,54 @@
 		min-width: 140px;
 	}
 
-	
 </style>
-<main class="dashboard-content with-sidebar collapsed">			
+<main class="dashboard-content with-sidebar collapsed">
 	<div class="container-fluid mt-4">
 		<div style="width: 100%; overflow-x: auto;">
-			<div class="org-chart">
-				<ul>
-					<li>
-						<div class="node">CEO</div>
-						<ul>
-							<li>
-								<div class="node">Design</div>
-								<ul>
-									<li>
-
-										<div class="node">UI/UX</div>
-										<ul>
-											<li><div class="node">Chicha</div>
-												<ul>
-													<li><div class="node">Bheem</div>
-													<ul>
-														<li><div class="node">Dholu</div></li>
-														<li><div class="node">Bholu</div></li>
-													</ul>	
-													</li>
-													<li><div class="node">Chutki</div></li>
-												</ul>	
-											</li>
-											<li><div class="node">Bicha</div></li>
-										</ul>
-									</li>
-									<li>
-										<div class="node">Branding</div>
-									</li>
-								</ul>
-							</li>
-							<li>
-								<div class="node">Engineering</div>
-								<ul>
-									<li>
-										<div class="node">Frontend</div>
-									</li>
-									<li>
-										<div class="node">Backend</div>
-										<ul>
-											<li>
-												<div class="node">Store Procedure</div>
-											</li>
-											<li>
-												<div class="node">Store Procedure</div>
-											</li>
-											<li>
-												<div class="node">Store Procedure</div>
-											</li>
-										</ul>
-									</li>
-									<li>
-										<div class="node">Database</div>
-										<ul>
-											<li>
-												<div class="node">Store Procedure</div>
-											</li>
-											<li>
-												<div class="node">Store Procedure</div>
-											</li>
-											<li>
-												<div class="node">Store Procedure</div>
-											</li>
-											<li>
-												<div class="node">Store Procedure</div>
-											</li>
-											<li>
-												<div class="node">Store Procedure</div>
-											</li>
-											<li>
-												<div class="node">Store Procedure</div>
-											</li>
-										</ul>
-									</li>
-								</ul>
-							</li>
-						</ul>
-					</li>
-				</ul>
+			<div class="org-chart" id="chart">
 			</div>
 		</div>
 	</div>
 </main>
+
+@section Scripts {
+	<script>
+					$(document).ready(function () {
+						$.ajax({
+							url: '/Master/GetOrgChart',
+							method: 'GET',
+							data: {},
+							success: function (response) {
+								if (response) {
+										console.log(response);
+										 const chart = document.getElementById("chart");
+											chart.innerHTML = generateTree(response);
+								} else {
+									notyf.error(response.message || "Failed to Fetch.");
+								}
+							},
+							error: function (xhr) {
+								console.error(xhr);
+								notyf.error("Server error: " + (xhr.responseText || "Unknown error"));
+							}
+						});
+					})
+
+							function generateTree(nodes) {
+		  let html = "<ul>";
+
+		  nodes.forEach(node => {
+			html += `
+			  <li>
+				<div class="node">${node.name}</div>
+				${node.children.length ? generateTree(node.children) : ""}
+			  </li>
+			`;
+		  });
+
+		  html += "</ul>";
+		  return html;
+		}
+
+	</script>
+}

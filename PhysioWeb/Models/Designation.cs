@@ -4,7 +4,7 @@ namespace PhysioWeb.Models
 {
     public class Designation : CommanProp
     {
-        public string Designation { get; set; }
+        public string DesignationName { get; set; }
         public string Description { get; set; }
         public bool IsActive { get; set; }
         public string InActiveText { get; set; }
@@ -18,7 +18,7 @@ namespace PhysioWeb.Models
             {
                 TotalCount = reader["TotalCount"] != DBNull.Value ? Convert.ToInt32(reader["TotalCount"]) : 0;
                 UniquId = Convert.ToInt32(reader["UniquId"]);
-                Designation = reader["Designation"].ToString();
+                DesignationName = reader["Designation"].ToString();
                 InActiveText = reader["IsActive"].ToString();
                 Description = reader["Description"].ToString();
                 CreatedBy = reader["CreatedBy"].ToString();
@@ -36,7 +36,7 @@ namespace PhysioWeb.Models
             }
             if (!rdr.IsDBNull(rdr.GetOrdinal("Role")))
             {
-                obj.Designation = rdr.GetString(rdr.GetOrdinal("Designation"));
+                obj.DesignationName = rdr.GetString(rdr.GetOrdinal("Designation"));
             }
             if (!rdr.IsDBNull(rdr.GetOrdinal("Description")))
             {
