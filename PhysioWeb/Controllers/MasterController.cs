@@ -1144,6 +1144,101 @@ namespace PhysioWeb.Controllers
             return View();
         }
         #endregion
+
+        #region Designation Master
+        [HttpGet]
+        public async Task<ActionResult> Designation()
+        {
+            return View();
+        }
+
+
+        [HttpPost]
+        public async Task<ActionResult> SaveDesignation(Designation Designation)
+        {
+            Designation.UserID = User.FindFirst(ClaimTypes.PrimarySid)?.Value;
+            Designation.AgencyId = User.FindFirst(ClaimTypes.GroupSid)?.Value;
+            var result = await _masterRepository.SaveDesignation(Designation);
+            if (result)
+            {
+                await _hubContext.Clients.Group("SuperAdmin").SendAsync("ReceiveNotification", $"{Designation.UserID} Added: {Designation.Designation} In Designation");
+            }
+            return Json(result);
+        }
+
+
+        [HttpPost]
+        public async Task<ActionResult> DeleteDesignation(int UniqueID)
+        {
+            var Designation = new Designation
+            {
+                UniquId = UniqueID
+            };
+            Designation.UserID = User.FindFirst(ClaimTypes.PrimarySid)?.Value;
+            var result = await _masterRepository.DeleteDesignation(Designation);
+            await _hubContext.Clients.Group("SuperAdmin").SendAsync("ReceiveNotification", $"Designation Added : {Designation.Designation}");
+            return Json(new { success = result });
+        }
+
+
+        [HttpPost]
+        public async Task<ActionResult> ListDesignation()
+        {
+            var form = Request.Form;
+
+            // ✅ Map DataTables default parameters
+            var dataTablePara = new DataTablePara
+            {
+                iDisplayStart = Convert.ToInt32(form["start"]),
+                iDisplayLength = Convert.ToInt32(form["length"]),
+                iSortCol_0 = Convert.ToInt32(form["order[0][column]"]),
+                sSortDir_0 = form["order[0][dir]"],
+                sSearch = form["search[value]"]
+            };
+
+            // ✅ Map column filters dynamically (for first 10 columns)
+            for (int i = 0; i < 30; i++)
+            {
+                string key = $"columns[{i}][search][value]";
+                if (Request.Form.ContainsKey(key))
+                {
+                    typeof(DataTablePara)
+                        .GetProperty($"sSearch_{i}")
+                        ?.SetValue(dataTablePara, Request.Form[key].ToString());
+                }
+            }
+            dataTablePara.UserID = User.FindFirst(ClaimTypes.PrimarySid)?.Value;
+            dataTablePara.AgencyId = User.FindFirst(ClaimTypes.GroupSid)?.Value;
+            var result = await _masterRepository.ListDesignation(dataTablePara);
+            var requestForm = Request.Form;
+            return Json(new
+            {
+                draw = requestForm["draw"],
+                recordsTotal = result.iTotalRecords,
+                recordsFiltered = result.iTotalDisplayRecords,
+                data = result.aaData
+            });
+
+        }
+
+        [HttpPost]
+        public async Task<ActionResult> EditDesignation(int UniqueID)
+        {
+            try
+            {
+                string UserID = User.FindFirst(ClaimTypes.PrimarySid)?.Value;
+                var data = await _masterRepository.EditDesignation(UniqueID, UserID);
+
+                return Json(data);
+
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, message = ex.Message });
+            }
+        }
+
+        #endregion
     }
 
     public class PermissionUpdateModel
@@ -1153,4 +1248,5 @@ namespace PhysioWeb.Controllers
         public bool ShowAddress { get; set; }
     }
 
-}
+     
+    }
