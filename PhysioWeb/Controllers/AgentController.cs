@@ -6,7 +6,7 @@ using PhysioWeb.Repository;
 
 namespace PhysioWeb.Controllers
 {
-    [Authorize(Roles = "Agency")]
+    [Authorize(Roles = "Admin")]
     public class AgentController : Controller
     {
         private readonly IAgencyRepository _agencyRepository;
