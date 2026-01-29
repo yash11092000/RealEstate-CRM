@@ -34,8 +34,8 @@ namespace PhysioWeb.Models
             {
                 obj.UniquId = rdr.GetInt32(rdr.GetOrdinal("UniqueID"));
             }
-            if (!rdr.IsDBNull(rdr.GetOrdinal("Role")))
-            {
+            if (!rdr.IsDBNull(rdr.GetOrdinal("Designation")))
+            {   
                 obj.DesignationName = rdr.GetString(rdr.GetOrdinal("Designation"));
             }
             if (!rdr.IsDBNull(rdr.GetOrdinal("Description")))

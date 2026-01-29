@@ -1580,7 +1580,7 @@ namespace PhysioWeb.Repository
             catch (Exception ex)
             {
                 // Optional: log error here
-                throw;
+                throw ex;
             }
         }
 
