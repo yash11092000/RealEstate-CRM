@@ -1065,7 +1065,7 @@ namespace PhysioWeb.Controllers
         }
 
         #region Agent
-        [Authorize(Roles = "Agency,Agent")]
+        [Authorize(Roles = "Admin,Agent")]
         public async Task<ActionResult> NewLead()
         {
             NewLead DropDowns = await _masterRepository.GetLeadDropDowndata();
