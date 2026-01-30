@@ -43,7 +43,8 @@ namespace PhysioWeb.Controllers
             propertyCategoryMaster.UserID = User.FindFirst(ClaimTypes.PrimarySid)?.Value;
             propertyCategoryMaster.AgencyId = User.FindFirst(ClaimTypes.GroupSid)?.Value;
             var result = await _masterRepository.SavePropCategory(propertyCategoryMaster);
-            if (result) {
+            if (result)
+            {
                 await _hubContext.Clients.Group("SuperAdmin").SendAsync("ReceiveNotification", $"Category Added : {propertyCategoryMaster.CategoryName}");
             }
             return Json(result);
@@ -285,10 +286,10 @@ namespace PhysioWeb.Controllers
             var requestForm = Request.Form;
             return Json(new
             {
-                draw = requestForm["draw"],                     
-                recordsTotal = result.iTotalRecords,           
-                recordsFiltered = result.iTotalDisplayRecords, 
-                data = result.aaData                           
+                draw = requestForm["draw"],
+                recordsTotal = result.iTotalRecords,
+                recordsFiltered = result.iTotalDisplayRecords,
+                data = result.aaData
             });
 
         }
@@ -878,7 +879,7 @@ namespace PhysioWeb.Controllers
         #region Agent
         public async Task<ActionResult> Agent()
         {
-            Agent agent= await _masterRepository.GetAgentDropDown();
+            Agent agent = await _masterRepository.GetAgentDropDown();
             return View(agent);
         }
 
@@ -1140,8 +1141,9 @@ namespace PhysioWeb.Controllers
 
 
         #region Hierarchy View
-        public async Task<ActionResult> OrgHierarchy() {
-            return View();   
+        public async Task<ActionResult> OrgHierarchy()
+        {
+            return View();
         }
 
         [HttpGet]
@@ -1160,7 +1162,10 @@ namespace PhysioWeb.Controllers
                 {
                     Id = x.Id,
                     Name = x.Name,
-                    Children = BuildTree(list, x.Id) 
+                    Role = x.Role,
+                    Contact = x.Contact,
+                    Designation = x.Designation,
+                    Children = BuildTree(list, x.Id)
                 }).ToList();
         }
         #endregion
@@ -1268,5 +1273,5 @@ namespace PhysioWeb.Controllers
         public bool ShowAddress { get; set; }
     }
 
-     
-    }
+
+}

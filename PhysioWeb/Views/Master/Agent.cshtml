@@ -112,9 +112,8 @@
 
 							<div class="col-md-4 mb-3">
 								<label class="form-label fw-bold">Designation<span class="impMark">*</span></label>
-@* 								<input type="text" class="form-control" id="DesignationId" name="DesignationId" placeholder="Select Designation" />
- *@								<select class="form-select" name="DesignationId" id="DesignationId">
-									<option value="">Select Role</option>
+								<select class="form-select" name="DesignationId" id="DesignationId">
+									<option value="">Select Designation</option>
 									@foreach (var item in Model.Designations)
 									{
 										<option value="@item.Value">@item.Text</option>
@@ -126,7 +125,7 @@
 								<label class="form-label fw-bold">Reporting Manager<span class="impMark">*</span></label>
 								@* <input type="text" class="form-control" id="ManagerId" name="ManagerId" placeholder="Select Manager" /> *@
 								<select class="form-select" name="ManagerId" id="ManagerId">
-									<option value="">Select Role</option>
+									<option value="">Select Manager</option>
 									@foreach (var item in Model.ManagerList)
 									{
 										<option value="@item.Value">@item.Text</option>
@@ -338,6 +337,9 @@
 				let LastName = $("#LastName").val();
 				let Phone = $("#Phone").val();
 				let Password = $("#Password").val();
+				let UserRoleId = $("#UserRoleId").val();
+				let DesignationId = $("#DesignationId").val();
+				let ManagerId = $("#ManagerId").val();
 
 				if (userName === "") {
 					notyf.error("Please fill UserName.");
@@ -384,6 +386,9 @@
 					formData.append("Password", $("#Password").val());
 					formData.append("AgentProfile", file);
 					formData.append("OldPassword", OldPassword);
+					formData.append("UserRoleId", UserRoleId);
+					formData.append("DesignationId", DesignationId);
+					formData.append("ManagerId", ManagerId);
 
 
 					$.ajax({
@@ -394,12 +399,12 @@
 						contentType: false,
 						success: function (response) {
 							if (parseInt(response) > 0) {
-								notyf.success("Agent saved successfully");
+								notyf.success("User saved successfully");
 								$("#addAgentModal").modal('hide');
 								ClearAgentForm();
 								AgentTable.ajax.reload(null, false);
 							} else {
-								notyf.error(response.message || "Failed to save agent.");
+								notyf.error(response.message || "Failed to save User.");
 							}
 						},
 						error: function (xhr) {
