@@ -1136,6 +1136,9 @@ namespace PhysioWeb.Controllers
                 {
                     Id = x.Id,
                     Name = x.Name,
+                    Role = x.Role,
+                    Contact = x.Contact,
+                    Designation = x.Designation,
                     Children = BuildTree(list, x.Id)
                 }).ToList();
         }

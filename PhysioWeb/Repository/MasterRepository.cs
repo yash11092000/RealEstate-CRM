@@ -1242,7 +1242,7 @@ namespace PhysioWeb.Repository
             {
                 string[] parametersName = {
                 "UniquId", "UserName", "FirstName", "MiddleName", "LastName", "Email",
-                "Phone", "AlternatePhone","IsActive","ProfileImage","AgencyID","Password"
+                "Phone", "AlternatePhone","IsActive","ProfileImage","AgencyID","Password","UserRoleId","DesignationId","ReportingManagerId"
             };
 
                 object[] Values = {
@@ -1257,7 +1257,10 @@ namespace PhysioWeb.Repository
                         agent.IsActive,
                         agent.ProfileImageFilePath,
                         agent.AgencyId,
-                        agent.Password
+                        agent.Password,
+                        agent.UserRoleId,
+                        agent.DesignationId,
+                        agent.ManagerId,
                     };
 
 
@@ -1517,13 +1520,13 @@ namespace PhysioWeb.Repository
                         Agent.Designations.Add(new DropDownSource(data, true));
                     }
                 }
-                //if (data.NextResult())
-                //{
-                //    while (data.Read())
-                //    {
-                //        Agent.ManagerList.Add(new DropDownSource(data, true));
-                //    }
-                //}
+                if (data.NextResult())
+                {
+                    while (data.Read())
+                    {
+                        Agent.ManagerList.Add(new DropDownSource(data, true));
+                    }
+                }
 
 
                 return Agent;

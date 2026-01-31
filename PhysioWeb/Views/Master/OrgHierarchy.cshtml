@@ -1,7 +1,11 @@
 ﻿
+@{
+	ViewData["Title"] = "Org Tree";
+	var theme = User.FindFirst("Theme")?.Value ?? "#198754";
+}
 <style>
 	:root {
-		--primary-color: #4f46e5;
+		--primary-color: @theme;
 		--text-main: #1f2937;
 		--line-color: #d1d5db;
 		--bg-node: #ffffff;
@@ -11,11 +15,7 @@
 		--transition-speed: 0.3s;
 	}
 
-	/*   * {
-						  margin: 0;
-						  padding: 0;
-						  box-sizing: border-box;
-						} */
+	
 
 	.org-chart * {
 		box-sizing: border-box;
@@ -180,7 +180,7 @@
 		  nodes.forEach(node => {
 			html += `
 			  <li>
-				<div class="node">${node.name}</div>
+				<div class="node">${node.name} </br> [${node.role}] </div>
 				${node.children.length ? generateTree(node.children) : ""}
 			  </li>
 			`;

@@ -6,6 +6,12 @@ namespace PhysioWeb.Models
     {
         public int Id { get; set; }
         public string Name { get; set; }
+
+        public string Role { get; set; }
+
+        public string Contact { get; set; }
+
+        public string Designation { get; set; }
         public List<OrgNode> Children { get; set; } = new List<OrgNode>();
     }
     public class OrgData
@@ -15,9 +21,14 @@ namespace PhysioWeb.Models
         public string Name { get; set; }
 
         public int? ParentId { get; set; }
+        public string Role { get; set; }
+
+        public string Contact { get; set; }
+
+        public string Designation { get; set; }
         public OrgData()
         {
-            
+
         }
 
         public OrgData(IDataReader reader, int flag = 0)
@@ -38,6 +49,18 @@ namespace PhysioWeb.Models
             if (!rdr.IsDBNull(rdr.GetOrdinal("ParentId")))
             {
                 obj.ParentId = rdr.GetInt32(rdr.GetOrdinal("ParentId"));
+            }
+            if (!rdr.IsDBNull(rdr.GetOrdinal("UserRole")))
+            {
+                obj.Role = rdr.GetString(rdr.GetOrdinal("UserRole"));
+            }
+            if (!rdr.IsDBNull(rdr.GetOrdinal("Contact")))
+            {
+                obj.Contact = rdr.GetString(rdr.GetOrdinal("Contact"));
+            }
+            if (!rdr.IsDBNull(rdr.GetOrdinal("DesignationName")))
+            {
+                obj.Designation = rdr.GetString(rdr.GetOrdinal("DesignationName"));
             }
         }
     }
