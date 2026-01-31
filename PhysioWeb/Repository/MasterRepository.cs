@@ -1446,7 +1446,16 @@ namespace PhysioWeb.Repository
                 {
                     while (data.Read())
                     {
-                        NewLeadDropDown.RequirementTypeList.Add(new DropDownSource(data, true));
+                        //NewLeadDropDown.RequirementTypeList.Add(new DropDownSource(data, true));
+                       NewLeadDropDown.LeadSourceList.Add(new DropDownSource(data, true));
+                    }
+                }
+                if (data.NextResult())
+                {
+                    while (data.Read())
+                    {
+                       // NewLeadDropDown.PropertyTypeList.Add(new DropDownSource(data, true));
+                        NewLeadDropDown.LeadStatusList.Add(new DropDownSource(data, true));
                     }
                 }
                 if (data.NextResult())
@@ -1470,7 +1479,13 @@ namespace PhysioWeb.Repository
                         NewLeadDropDown.FurnishingTypeList.Add(new DropDownSource(data, true));
                     }
                 }
-
+                if (data.NextResult())
+                {
+                    while (data.Read())
+                    {
+                        NewLeadDropDown.AmountUnitList.Add(new DropDownSource(data, true));
+                    }
+                }
                 return NewLeadDropDown;
             }
             catch (Exception e)

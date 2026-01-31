@@ -10,7 +10,7 @@ namespace PhysioWeb.Models
     {
         // --- Lead Information ---
         [Key]
-        [Display(Name = "Lead ID")]
+        [Display(Name = "Lead Unique No.")]
         public string LeadId { get; set; } = $"LEAD{Guid.NewGuid().ToString().Substring(0, 8).ToUpper()}";
 
         [Required(ErrorMessage = "Lead Source is required.")]
@@ -35,13 +35,13 @@ namespace PhysioWeb.Models
         [Display(Name = "Email")]
         public string Email { get; set; }
 
-        [Required(ErrorMessage = "Phone Number is required.")]
-        [RegularExpression(@"^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$", ErrorMessage = "Not a valid Phone Number.")]
-        [Display(Name = "Phone Number")]
+        [Required(ErrorMessage = "Mobile No. is required.")]
+        [RegularExpression(@"^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$", ErrorMessage = "Not a valid Mobile No.")]
+        [Display(Name = "Mobile No.")]
         public string PhoneNumber { get; set; }
 
-        [RegularExpression(@"^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$", ErrorMessage = "Not a valid Alternate Phone Number.")]
-        [Display(Name = "Alternate Number")]
+        [RegularExpression(@"^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$", ErrorMessage = "Not a valid WhatsApp No. Number.")]
+        [Display(Name = "WhatsApp No.")]
         public string AlternateNumber { get; set; }
 
         [Required(ErrorMessage = "Preferred Contact Method is required.")]
@@ -51,6 +51,10 @@ namespace PhysioWeb.Models
         [Display(Name = "Follow-up Date")]
         [DataType(DataType.Date)]
         public DateTime? FollowUpDate { get; set; }
+        
+        [Display(Name = "Lead Date")]
+        [DataType(DataType.Date)]
+        public DateTime? LeadDate { get; set; }
 
         // --- Property Requirements ---
         [Required(ErrorMessage = "Requirement Type is required.")]
@@ -90,9 +94,9 @@ namespace PhysioWeb.Models
         [DataType(DataType.Date)]
         public DateTime CreatedDate { get; set; } = DateTime.Now; // Auto-filled
 
-        // --- Additional Fields ---
-        [Display(Name = "Remarks / Notes")]
-        public string Notes { get; set; }
+        //// --- Additional Fields ---
+        //[Display(Name = "Remarks / Notes")]
+        //public string Notes { get; set; }
 
         [Display(Name = "Lead Priority")]
         public string LeadPriority { get; set; }
@@ -107,6 +111,8 @@ namespace PhysioWeb.Models
         public string InActiveText { get; set; }
 
         // --- Dropdown/Lookup Properties (For View Rendering) ---
+        [Display(Name = "Campaign")]
+        public string Campaign { get; set; }
 
         public List<DropDownSource> LeadTypeList { get; set; }
 
@@ -135,9 +141,36 @@ namespace PhysioWeb.Models
         public List<DropDownSource> LeadRatingList { get; set; }
 
         public List<DropDownSource> AgentList { get; set; }
+        public List<DropDownSource> CampaignList { get; set; }
         // --- Constructors for Data Mapping ---
 
         public string PropertyInterestedIn { get; set; }
+        public List<DropDownSource> AmountUnitList { get; set; }
+        public string AmountUnitMinPrice { get; set; }
+        public string AmountUnitMaxPrice { get; set; }
+        public decimal ConvertedActualPrice { get; set; }
+        public decimal ConvertedNegotiablePrice { get; set; }
+
+        [Display(Name = "Pan Card")]
+        public string PanCard { get; set; }
+        [Display(Name = "Aadhar Card")]
+        public string AadharCard { get; set; }
+
+        [Display(Name = "Requirement Description")]
+        public string RequirementDescription { get; set; }
+
+        [Display(Name = "Address")]
+        public string Address { get; set; }
+        public string Pincode { get; set; }
+        public int CityID { get; set; }
+        public string City { get; set; }
+        public int StateID { get; set; }
+        public string State { get; set; }
+        public int CountryID { get; set; }
+        public string Country { get; set; }
+        public List<DropDownSource> StateList { get; set; }
+        public List<DropDownSource> CityList { get; set; }
+        public List<DropDownSource> CountryList { get; set; }
         public NewLead()
         {
 
@@ -153,6 +186,7 @@ namespace PhysioWeb.Models
             PreferredContactMethodList = new List<DropDownSource>();
             RequirementTypeList = new List<DropDownSource>();
             PropertyTypeList = new List<DropDownSource>();
+            AmountUnitList = new List<DropDownSource>();
 
         }
 

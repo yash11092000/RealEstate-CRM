@@ -43,7 +43,8 @@ namespace PhysioWeb.Controllers
             propertyCategoryMaster.UserID = User.FindFirst(ClaimTypes.PrimarySid)?.Value;
             propertyCategoryMaster.AgencyId = User.FindFirst(ClaimTypes.GroupSid)?.Value;
             var result = await _masterRepository.SavePropCategory(propertyCategoryMaster);
-            if (result) {
+            if (result)
+            {
                 await _hubContext.Clients.Group("SuperAdmin").SendAsync("ReceiveNotification", $"Category Added : {propertyCategoryMaster.CategoryName}");
             }
             return Json(result);
@@ -285,10 +286,10 @@ namespace PhysioWeb.Controllers
             var requestForm = Request.Form;
             return Json(new
             {
-                draw = requestForm["draw"],                     
-                recordsTotal = result.iTotalRecords,           
-                recordsFiltered = result.iTotalDisplayRecords, 
-                data = result.aaData                           
+                draw = requestForm["draw"],
+                recordsTotal = result.iTotalRecords,
+                recordsFiltered = result.iTotalDisplayRecords,
+                data = result.aaData
             });
 
         }
@@ -878,7 +879,7 @@ namespace PhysioWeb.Controllers
         #region Agent
         public async Task<ActionResult> Agent()
         {
-            Agent agent= await _masterRepository.GetAgentDropDown();
+            Agent agent = await _masterRepository.GetAgentDropDown();
             return View(agent);
         }
 
@@ -1064,59 +1065,33 @@ namespace PhysioWeb.Controllers
             return Json(result);
         }
 
-        #region Agent
+        #region NewLead
         [Authorize(Roles = "Admin,Agent")]
         public async Task<ActionResult> NewLead()
         {
             NewLead DropDowns = await _masterRepository.GetLeadDropDowndata();
 
-            DropDowns.LeadSourceList = new List<DropDownSource>
-        {
-            new DropDownSource { Value = "Website", Text = "Website" },
-            new DropDownSource { Value = "Walk-in", Text = "Walk-in" },
-            new DropDownSource { Value = "Referral", Text = "Referral" },
-            new DropDownSource { Value = "Facebook", Text = "Facebook" },
-            new DropDownSource { Value = "Google Ads", Text = "Google Ads" },
-            new DropDownSource { Value = "Broker", Text = "Broker" }
-        };
-
-            DropDowns.LeadStatusList = new List<DropDownSource>
-        {
-            new DropDownSource { Value = "New", Text = "New" },
-            new DropDownSource { Value = "Contacted", Text = "Contacted" },
-            new DropDownSource { Value = "Interested", Text = "Interested" },
-            new DropDownSource { Value = "Not Interested", Text = "Not Interested" },
-            new DropDownSource { Value = "Converted", Text = "Converted" },
-            new DropDownSource { Value = "Lost", Text = "Lost" }
-        };
 
             DropDowns.PreferredContactMethodList = new List<DropDownSource>
             {
-                new DropDownSource { Value = "Call", Text = "Call" },
-                new DropDownSource { Value = "WhatsApp", Text = "WhatsApp" },
-                new DropDownSource { Value = "Email", Text = "Email" }
-            };
-
-            DropDowns.PossessionTimeframeList = new List<DropDownSource>
-            {
-                new DropDownSource { Value = "Immediate", Text = "Immediate" },
-                new DropDownSource { Value = "3 Months", Text = "3 Months" },
-                new DropDownSource { Value = "6 Months", Text = "6 Months" },
-                new DropDownSource { Value = "1 Year", Text = "1 Year" }
+                new DropDownSource { Value = "1", Text = "Call" },
+                new DropDownSource { Value = "2", Text = "Text Message" },
+                new DropDownSource { Value = "3", Text = "WhatsApp Message" },
+                new DropDownSource { Value = "4", Text = "Email" },
+                new DropDownSource { Value = "5", Text = "Telegram" }
             };
 
             DropDowns.LeadPriorityList = new List<DropDownSource>
             {
-                new DropDownSource { Value = "High", Text = "High" },
-                new DropDownSource { Value = "Medium", Text = "Medium" },
-                new DropDownSource { Value = "Low", Text = "Low" }
+                new DropDownSource { Value = "1", Text = "Hot" },
+                new DropDownSource { Value = "2", Text = "Warm" },
+                new DropDownSource { Value = "3", Text = "Cold" }
             };
-
-            DropDowns.LeadRatingList = new List<DropDownSource>
+            DropDowns.CampaignList = new List<DropDownSource>
             {
-                new DropDownSource { Value = "Hot", Text = "Hot" },
-                new DropDownSource { Value = "Warm", Text = "Warm" },
-                new DropDownSource { Value = "Cold", Text = "Cold" }
+                new DropDownSource { Value = "1", Text = "Campaign 1" },
+                new DropDownSource { Value = "2", Text = "Campaign 2" },
+                new DropDownSource { Value = "3", Text = "Campaign 3" }
             };
             return View(DropDowns);
         }
@@ -1140,8 +1115,9 @@ namespace PhysioWeb.Controllers
 
 
         #region Hierarchy View
-        public async Task<ActionResult> OrgHierarchy() {
-            return View();   
+        public async Task<ActionResult> OrgHierarchy()
+        {
+            return View();
         }
 
         [HttpGet]
@@ -1160,7 +1136,7 @@ namespace PhysioWeb.Controllers
                 {
                     Id = x.Id,
                     Name = x.Name,
-                    Children = BuildTree(list, x.Id) 
+                    Children = BuildTree(list, x.Id)
                 }).ToList();
         }
         #endregion
@@ -1259,6 +1235,14 @@ namespace PhysioWeb.Controllers
         }
 
         #endregion
+
+        #region GeneralSettings
+        [HttpGet]
+        public async Task<ActionResult> GeneralSettings()
+        {
+            return View();
+        }
+        #endregion
     }
 
     public class PermissionUpdateModel
@@ -1268,5 +1252,5 @@ namespace PhysioWeb.Controllers
         public bool ShowAddress { get; set; }
     }
 
-     
-    }
+
+}
