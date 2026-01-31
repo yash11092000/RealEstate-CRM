@@ -264,8 +264,8 @@ namespace PhysioWeb.Models
                 obj.CreatedBy = rdr.GetString(rdr.GetOrdinal("CreatedBy"));
             if (!rdr.IsDBNull(rdr.GetOrdinal("CreatedDate")))
                 obj.CreatedDate = rdr.GetDateTime(rdr.GetOrdinal("CreatedDate"));
-            if (!rdr.IsDBNull(rdr.GetOrdinal("Notes")))
-                obj.Notes = rdr.GetString(rdr.GetOrdinal("Notes"));
+            //if (!rdr.IsDBNull(rdr.GetOrdinal("Notes")))
+            //    obj.Notes = rdr.GetString(rdr.GetOrdinal("Notes"));
             if (!rdr.IsDBNull(rdr.GetOrdinal("LeadPriority")))
                 obj.LeadPriority = rdr.GetString(rdr.GetOrdinal("LeadPriority"));
             if (!rdr.IsDBNull(rdr.GetOrdinal("LeadRating")))
