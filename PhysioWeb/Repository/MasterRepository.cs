@@ -1735,68 +1735,21 @@ namespace PhysioWeb.Repository
             try
             {
                 string[] parametersName =
-     {
-                    "@UniquId",
-        "@LeadName",
-        "@LeadUniqueNo",
-        "@LeadDate",
-        "@ContactPersonName",
-        "@ContactPerMobNo",
-        "@WpMobNo",
-        "@PanCard",
-        "@AadharNo",
-        "@LeadType",
-        "@LeadSource",
-        "@LeadStatus",
-        "@Priority",
-        "@IsHotLead",
-        "@Description",
-        "@Campaign",
-        "@Address",
-        "@PinCode",
-        "@CountryID",
-        "@StateID",
-        "@CityID",
-        "@SalesPersonID",
-        "@SalesCoordinatorID",
-        "@IsActive",
-       "@UserID",
-        "@AgencyID",
-        "@PropertyType"
-
-    };
+                {
+                    "@UniquId","@LeadName","@LeadUniqueNo","@LeadDate","@ContactPersonName","@ContactPerMobNo","@WpMobNo","@PanCard","@AadharNo","@LeadType","@LeadSource",
+                    "@LeadStatus","@Priority","@IsHotLead","@Description","@Campaign","@Address","@PinCode","@CountryID","@StateID","@CityID","@SalesPersonID","@SalesCoordinatorID",
+                    "@IsActive","@UserID","@AgencyID","@PropertyType"
+                };
 
                 object[] values =
                 {
-                    NewLead.UniquId,
-        NewLead.FullName,              // LeadName
-        NewLead.LeadId,                // LeadUniqueNo
-        NewLead.LeadDate,              // LeadDate
-        NewLead.FullName,              // ContactPersonName
-        NewLead.PhoneNumber,           // ContactPerMobNo
-        NewLead.AlternateNumber,       // WpMobNo
-        NewLead.PanCard,               // PanCard
-        NewLead.AadharCard,            // AadharNo
-        NewLead.LeadType,              // LeadTypeID
-        NewLead.LeadSource,            // LeadSourceID
-        NewLead.LeadStatus,            // LeadStatusID
-        NewLead.LeadPriority,          // Priority
-        false,                         // IsHotLead (or from model)
-        NewLead.RequirementDescription,// Description
-        NewLead.Campaign,              // CampaignID
-        NewLead.Address,               // Address
-        NewLead.Pincode,               // PinCode
-        NewLead.CountryID,             // CountryID
-        NewLead.StateID,               // StateID
-        NewLead.CityID,                // CityID
-        NewLead.AssignedAgent,         // SalesPersonID
-        DBNull.Value,                  // SalesCoordinatorID
-        NewLead.IsActive,              // IsActive
-        NewLead.UserID,                // CreatedBy
-        NewLead.AgencyId    ,         // AgencyID
-        NewLead.PropertyType
+                    NewLead.UniquId,NewLead.FullName, NewLead.LeadId, NewLead.LeadDate,NewLead.FullName, NewLead.PhoneNumber,          
+                    NewLead.AlternateNumber,NewLead.PanCard, NewLead.AadharCard, NewLead.LeadType,NewLead.LeadSource,NewLead.LeadStatus,      
+                    NewLead.LeadPriority,false,NewLead.RequirementDescription,NewLead.Campaign,NewLead.Address,
+                    NewLead.Pincode, NewLead.CountryID, NewLead.StateID, NewLead.CityID,  NewLead.AssignedAgent,DBNull.Value,     
+                    NewLead.IsActive,NewLead.UserID, NewLead.AgencyId ,NewLead.PropertyType
 
-    };
+                };
 
                 string Sp = "FMR_SaveNewLead";
                 int RecordAffected = await _dbHelper.ExecuteNonQueryAsync(Sp, parametersName, values);
