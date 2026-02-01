@@ -171,6 +171,7 @@ namespace PhysioWeb.Models
         public List<DropDownSource> StateList { get; set; }
         public List<DropDownSource> CityList { get; set; }
         public List<DropDownSource> CountryList { get; set; }
+        public List<DropDownSource> PropertyInterestedInList { get; set; }
         public NewLead()
         {
 
@@ -187,6 +188,8 @@ namespace PhysioWeb.Models
             RequirementTypeList = new List<DropDownSource>();
             PropertyTypeList = new List<DropDownSource>();
             AmountUnitList = new List<DropDownSource>();
+            PropertyInterestedInList = new List<DropDownSource>();
+            CampaignList = new List<DropDownSource>();
 
         }
 
@@ -264,8 +267,8 @@ namespace PhysioWeb.Models
                 obj.CreatedBy = rdr.GetString(rdr.GetOrdinal("CreatedBy"));
             if (!rdr.IsDBNull(rdr.GetOrdinal("CreatedDate")))
                 obj.CreatedDate = rdr.GetDateTime(rdr.GetOrdinal("CreatedDate"));
-            if (!rdr.IsDBNull(rdr.GetOrdinal("Notes")))
-                obj.Notes = rdr.GetString(rdr.GetOrdinal("Notes"));
+            //if (!rdr.IsDBNull(rdr.GetOrdinal("Notes")))
+            //    obj.Notes = rdr.GetString(rdr.GetOrdinal("Notes"));
             if (!rdr.IsDBNull(rdr.GetOrdinal("LeadPriority")))
                 obj.LeadPriority = rdr.GetString(rdr.GetOrdinal("LeadPriority"));
             if (!rdr.IsDBNull(rdr.GetOrdinal("LeadRating")))

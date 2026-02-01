@@ -165,3 +165,16 @@ function validatePassword(password) {
 $('.alphabetic-only').on('input', function () {
     this.value = this.value.replace(/[^a-zA-Z]/g, '');
 });
+
+document.addEventListener("DOMContentLoaded", () => {
+    const d = new Date();
+    const day = String(d.getDate()).padStart(2, '0');
+    const month = String(d.getMonth() + 1).padStart(2, '0');
+    const year = d.getFullYear();
+
+    const today = `${day}/${month}/${year}`;
+
+    document.querySelectorAll(".currDate").forEach(input => {
+        input.value = today;
+    });
+});

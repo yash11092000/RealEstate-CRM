@@ -123,10 +123,14 @@
 							<div class="card p-3 mb-4 shadow-sm">
 								<h5 class="card-title text-primary"><i class="bi bi-info-circle-fill"></i> Lead Information</h5>
 								<div class="row">
-									<div class="col-md-2 mb-3">
+									@* <div class="col-md-2 mb-3">
 										<label asp-for="LeadDate" class="form-label"></label>
 										<input asp-for="LeadDate" class="form-control" type="date" />
 										<span asp-validation-for="LeadDate" class="text-danger"></span>
+									</div> *@
+									<div class="col-md-2 mb-3">
+										<label asp-for="LeadDate" class="form-label"></label>
+										<input type="date" class="form-control currDate" id="LeadDate" name="LeadDate">
 									</div>
 									<div class="col-md-3 mb-3">
 										<label asp-for="LeadType" class="form-label"></label>
@@ -245,12 +249,12 @@
 										<input asp-for="Address" class="form-control" placeholder="Address" />
 										<span asp-validation-for="Address" class="text-danger"></span>
 									</div>
-									<div class="col-md-4 mb-3">
+									<div class="col-md-4 mb-3" style="display:none;">
 										<label class="form-label fw-bold">Pincode</label>
 										<input type="text" class="form-control" id="Pincode" name="Pincode" placeholder="Enter pincode" />
 									</div>
 
-									<div class="col-md-4 mb-3">
+									<div class="col-md-4 mb-3" style="display:none;">
 										<label class="form-label fw-bold">Country</label>
 										<select class="form-select" id="CountryID" name="Country">
 											<option value="">-- Select Country --</option>
@@ -260,7 +264,7 @@
 											} *@
 										</select>
 									</div>
-									<div class="col-md-4 mb-3">
+									<div class="col-md-4 mb-3" style="display:none;">
 										<label class="form-label fw-bold">State</label>
 										<select class="form-select" id="StateID" name="State">
 											<option value="">-- Select State --</option>
@@ -272,7 +276,7 @@
 									</div>
 
 
-									<div class="col-md-4 mb-3">
+									<div class="col-md-4 mb-3" style="display:none;">
 										<label class="form-label fw-bold">City</label>
 										<select class="form-select" id="CityID" name="City">
 											<option value="">-- Select City --</option>
@@ -386,19 +390,31 @@
 										</select>
 										<span asp-validation-for="FurnishingType" class="text-danger"></span>
 									</div>
+									@* <div class="col-md-2 mb-3">
+										<label asp-for="Bedrooms" class="form-label"></label>
+										<select class="form-select" id="Bedrooms" name="Bedrooms">
+											<option value="">-- Select Bedroom--</option>
+											@foreach (var Type in Model.BedroomsList)
+											{
+												<option value="@Type.Value">@Type.Text</option>
+											}
+										</select>
+										<span asp-validation-for="Bedrooms" class="text-danger"></span>
+									</div>
+ *@
 									<div class=" col-md-4 mb-3">
 										@* <label class="form-check-label" for="ReminderNotification">
 											Property Interested In
 										</label> *@
 										<label asp-for="PropertyInterestedIn" class="form-label">Property Interested In</label>
-										<select asp-for="PropertyInterestedIn" class="form-control">
-											<option value="">-- Select Property --</option>
-											<option value="P001">Green Valley Apartments</option>
-											<option value="P002">Sunshine Villas</option>
-											<option value="P003">Lakeview Heights</option>
-											<option value="P004">Downtown Commercial Plaza</option>
-											<option value="P005">Silver Leaf Residency</option>
+										<select class="form-select" id="PropertyInterestedIn" name="PropertyInterestedIn">
+											<option value="">-- Select Property Interested In --</option>
+											@foreach (var Type in Model.PropertyInterestedInList)
+											{
+												<option value="@Type.Value">@Type.Text</option>
+											}
 										</select>
+										
 										<span asp-validation-for="PropertyInterestedIn" class="text-danger"></span>
 									</div>
 									<div class="col-md-4 mb-3">
@@ -495,8 +511,11 @@
 								<button type="button" class="btn btn-success btn-lg" data-bs-toggle="modal" data-bs-target="#bulkImportModal">
 									<i class="bi bi-file-earmark-arrow-up"></i> Bulk Import
 								</button>
-								<button type="submit" class="btn btn-success btn-lg me-md-2" style="background-color: @theme; border-color: @theme;">
+								@* <button type="submit" class="btn btn-success btn-lg me-md-2" style="background-color: @theme; border-color: @theme;">
 									<i class="bi bi-save"></i> Save Lead
+								</button> *@
+								<button type="button" class="btn btn-success" id="btnSave">
+									<i class="bi bi-save"></i> Save
 								</button>
 							</div>
 						</form>
@@ -698,6 +717,40 @@
 				return result.replace(/^,/, '');
 			}
 
+		flatpickr("#LeadDate", {
+		  dateFormat: "d/m/Y",  // Matches SQL datetime format
+		  allowInput: true
+		});
+
+			 $("#btnSave").on("click", function () {
+				 let Area = $("#Area").val();
+
+				 if (Area === "") {
+					 notyf.error("Please enter Area");
+					 $("#Area").focus();
+					 return;
+				 }
+
+				 $.ajax({
+					 url: '/Master/SaveNewLead',
+					 method: 'POST',
+					 data: $("#leadForm").serialize(),
+					 success: function (response) {
+						 if (response) {
+							 notyf.success("Area added successfully");
+							 $("#addAreaModal").modal('hide');
+							 ClearData();
+							 $("#TableList").DataTable().ajax.reload(null, false);
+						 } else {
+							 notyf.error(response.message || "Failed to save.");
+						 }
+					 },
+					 error: function (xhr) {
+						 console.error(xhr);
+						 notyf.error("Server error: " + (xhr.responseText || "Unknown error"));
+					 }
+				 });
+			 });
 
 	</script>
 }

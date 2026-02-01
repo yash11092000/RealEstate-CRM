@@ -1081,19 +1081,22 @@ namespace PhysioWeb.Controllers
                 new DropDownSource { Value = "5", Text = "Telegram" }
             };
 
-            DropDowns.LeadPriorityList = new List<DropDownSource>
+            DropDowns.LeadPriorityList = new List<DropDownSource>   
             {
                 new DropDownSource { Value = "1", Text = "Hot" },
                 new DropDownSource { Value = "2", Text = "Warm" },
                 new DropDownSource { Value = "3", Text = "Cold" }
             };
-            DropDowns.CampaignList = new List<DropDownSource>
-            {
-                new DropDownSource { Value = "1", Text = "Campaign 1" },
-                new DropDownSource { Value = "2", Text = "Campaign 2" },
-                new DropDownSource { Value = "3", Text = "Campaign 3" }
-            };
+          
             return View(DropDowns);
+        }
+        [HttpPost]
+        public async Task<ActionResult> SaveNewLead(NewLead NewLead)
+        {
+            NewLead.UserID = User.FindFirst(ClaimTypes.PrimarySid)?.Value;
+            NewLead.AgencyId = User.FindFirst(ClaimTypes.GroupSid)?.Value;
+            var result = await _masterRepository.SaveNewLead(NewLead);
+            return Json(result);
         }
         #endregion
 

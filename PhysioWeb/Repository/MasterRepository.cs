@@ -270,7 +270,7 @@ namespace PhysioWeb.Repository
                 throw e;
             }
         }
-        
+
         public async Task<UserRole> EditUserRole(int UniqueID, string UserID)
         {
             try
@@ -282,7 +282,7 @@ namespace PhysioWeb.Repository
                 var data = await _dbHelper.GetDataReaderAsync(Sp, parameterNames, parameterValues);
                 while (data.Read())
                 {
-                    UserRole UserRole= new UserRole(data, 1);
+                    UserRole UserRole = new UserRole(data, 1);
                     return UserRole;
                 }
                 return null;
@@ -1291,7 +1291,7 @@ namespace PhysioWeb.Repository
                 throw;
             }
         }
-        
+
         public async Task<bool> DeleteUserRole(UserRole userRole)
         {
             try
@@ -1450,14 +1450,14 @@ namespace PhysioWeb.Repository
                     while (data.Read())
                     {
                         //NewLeadDropDown.RequirementTypeList.Add(new DropDownSource(data, true));
-                       NewLeadDropDown.LeadSourceList.Add(new DropDownSource(data, true));
+                        NewLeadDropDown.LeadSourceList.Add(new DropDownSource(data, true));
                     }
                 }
                 if (data.NextResult())
                 {
                     while (data.Read())
                     {
-                       // NewLeadDropDown.PropertyTypeList.Add(new DropDownSource(data, true));
+                        // NewLeadDropDown.PropertyTypeList.Add(new DropDownSource(data, true));
                         NewLeadDropDown.LeadStatusList.Add(new DropDownSource(data, true));
                     }
                 }
@@ -1487,6 +1487,20 @@ namespace PhysioWeb.Repository
                     while (data.Read())
                     {
                         NewLeadDropDown.AmountUnitList.Add(new DropDownSource(data, true));
+                    }
+                }
+                if (data.NextResult())
+                {
+                    while (data.Read())
+                    {
+                        NewLeadDropDown.PropertyInterestedInList.Add(new DropDownSource(data, true));
+                    }
+                }
+                if (data.NextResult())
+                {
+                    while (data.Read())
+                    {
+                        NewLeadDropDown.CampaignList.Add(new DropDownSource(data, true));
                     }
                 }
                 return NewLeadDropDown;
@@ -1696,8 +1710,8 @@ namespace PhysioWeb.Repository
         {
             try
             {
-                string[] parameterNames = {  };
-                object[] parameterValues = {  };
+                string[] parameterNames = { };
+                object[] parameterValues = { };
 
                 string Sp = "FMR_GetOrgData";
                 var data = await _dbHelper.GetDataReaderAsync(Sp, parameterNames, parameterValues);
@@ -1713,6 +1727,85 @@ namespace PhysioWeb.Repository
             catch (Exception e)
             {
                 throw e;
+            }
+        }
+
+        public async Task<bool> SaveNewLead(NewLead NewLead)
+        {
+            try
+            {
+                string[] parametersName =
+     {
+                    "@UniquId",
+        "@LeadName",
+        "@LeadUniqueNo",
+        "@LeadDate",
+        "@ContactPersonName",
+        "@ContactPerMobNo",
+        "@WpMobNo",
+        "@PanCard",
+        "@AadharNo",
+        "@LeadType",
+        "@LeadSource",
+        "@LeadStatus",
+        "@Priority",
+        "@IsHotLead",
+        "@Description",
+        "@Campaign",
+        "@Address",
+        "@PinCode",
+        "@CountryID",
+        "@StateID",
+        "@CityID",
+        "@SalesPersonID",
+        "@SalesCoordinatorID",
+        "@IsActive",
+       "@UserID",
+        "@AgencyID",
+        "@PropertyType"
+
+    };
+
+                object[] values =
+                {
+                    NewLead.UniquId,
+        NewLead.FullName,              // LeadName
+        NewLead.LeadId,                // LeadUniqueNo
+        NewLead.LeadDate,              // LeadDate
+        NewLead.FullName,              // ContactPersonName
+        NewLead.PhoneNumber,           // ContactPerMobNo
+        NewLead.AlternateNumber,       // WpMobNo
+        NewLead.PanCard,               // PanCard
+        NewLead.AadharCard,            // AadharNo
+        NewLead.LeadType,              // LeadTypeID
+        NewLead.LeadSource,            // LeadSourceID
+        NewLead.LeadStatus,            // LeadStatusID
+        NewLead.LeadPriority,          // Priority
+        false,                         // IsHotLead (or from model)
+        NewLead.RequirementDescription,// Description
+        NewLead.Campaign,              // CampaignID
+        NewLead.Address,               // Address
+        NewLead.Pincode,               // PinCode
+        NewLead.CountryID,             // CountryID
+        NewLead.StateID,               // StateID
+        NewLead.CityID,                // CityID
+        NewLead.AssignedAgent,         // SalesPersonID
+        DBNull.Value,                  // SalesCoordinatorID
+        NewLead.IsActive,              // IsActive
+        NewLead.UserID,                // CreatedBy
+        NewLead.AgencyId    ,         // AgencyID
+        NewLead.PropertyType
+
+    };
+
+                string Sp = "FMR_SaveNewLead";
+                int RecordAffected = await _dbHelper.ExecuteNonQueryAsync(Sp, parametersName, values);
+                return RecordAffected > 0;
+            }
+            catch (Exception ex)
+            {
+                // Optional: log error here
+                throw ex;
             }
         }
     }
