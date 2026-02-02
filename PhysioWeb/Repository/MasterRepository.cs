@@ -1,13 +1,14 @@
 ﻿using Microsoft.AspNetCore.Components;
+using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Pages.Manage;
 using PhysioWeb.Data;
 using PhysioWeb.Models;
 using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Reflection.PortableExecutable;
-using System.Reflection;
-using System.Threading.Tasks;
 using System.Data.Common;
+using System.Reflection;
+using System.Reflection.PortableExecutable;
+using System.Threading.Tasks;
 using static System.Net.Mime.MediaTypeNames;
 
 namespace PhysioWeb.Repository
@@ -1738,19 +1739,21 @@ namespace PhysioWeb.Repository
                 {
                     "@UniquId","@LeadName","@LeadUniqueNo","@LeadDate","@ContactPersonName","@ContactPerMobNo","@WpMobNo","@PanCard","@AadharNo","@LeadType","@LeadSource",
                     "@LeadStatus","@Priority","@IsHotLead","@Description","@Campaign","@Address","@PinCode","@CountryID","@StateID","@CityID","@SalesPersonID","@SalesCoordinatorID",
-                    "@IsActive","@UserID","@AgencyID","@PropertyType"
+                    "@IsActive","@UserID","@AgencyID","@PropertyType","@Email","@FollowUpDate","@PreferredContactMethod","@BudgetMin","@BudgetMax","@AmountUnitMinPrice","@AmountUnitMaxPrice",
+                    "@ConvertedActualPrice","@ConvertedNegotiablePrice","@LocationPreference","@PropertyInterestedIn"
                 };
 
                 object[] values =
                 {
-                    NewLead.UniquId,NewLead.FullName, NewLead.LeadId, NewLead.LeadDate,NewLead.FullName, NewLead.PhoneNumber,          
+                    NewLead.UniquId,NewLead.FullName, NewLead.LeadId, NewLead.LeadDate,null, NewLead.PhoneNumber,          
                     NewLead.AlternateNumber,NewLead.PanCard, NewLead.AadharCard, NewLead.LeadType,NewLead.LeadSource,NewLead.LeadStatus,      
                     NewLead.LeadPriority,false,NewLead.RequirementDescription,NewLead.Campaign,NewLead.Address,
                     NewLead.Pincode, NewLead.CountryID, NewLead.StateID, NewLead.CityID,  NewLead.AssignedAgent,DBNull.Value,     
-                    NewLead.IsActive,NewLead.UserID, NewLead.AgencyId ,NewLead.PropertyType
-
+                    NewLead.IsActive,NewLead.UserID, NewLead.AgencyId ,NewLead.PropertyType,NewLead.Email,NewLead.FollowUpDate,NewLead.PreferredContactMethod,
+                    NewLead.BudgetMin,NewLead.BudgetMax,NewLead.AmountUnitMinPrice ,NewLead.AmountUnitMaxPrice,
+                    NewLead.ConvertedActualPrice ,NewLead.ConvertedNegotiablePrice,NewLead.LocationPreference,NewLead.PropertyInterestedIn
                 };
-
+                    
                 string Sp = "FMR_SaveNewLead";
                 int RecordAffected = await _dbHelper.ExecuteNonQueryAsync(Sp, parametersName, values);
                 return RecordAffected > 0;

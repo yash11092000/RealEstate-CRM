@@ -244,7 +244,7 @@
 										<input asp-for="AadharCard" class="form-control" placeholder="Aadhar Card" />
 										<span asp-validation-for="AadharCard" class="text-danger"></span>
 									</div>
-									<div class="col-md-6 mb-3">
+									<div class="col-md-6 mb-12">
 										<label asp-for="Address" class="form-label"></label>
 										<input asp-for="Address" class="form-control" placeholder="Address" />
 										<span asp-validation-for="Address" class="text-danger"></span>
@@ -366,7 +366,7 @@
 										<span id="displayMinBudget" class="text-success fw-bold"></span>
 
 									</div>
-									<div class="col-md-2 mb-3">
+									@* <div class="col-md-2 mb-3">
 										<label asp-for="Bedrooms" class="form-label"></label>
 										<select class="form-select" id="Bedrooms" name="Bedrooms">
 											<option value="">-- Select Bedroom--</option>
@@ -377,8 +377,8 @@
 										</select>
 										<span asp-validation-for="Bedrooms" class="text-danger"></span>
 									</div>
-								
-									<div class="col-md-4 mb-3">
+								 *@
+								@* 	<div class="col-md-4 mb-3">
 										<label asp-for="FurnishingType" class="form-label"></label>
 										<select class="form-select" id="FurnishingType" name="FurnishingType">
 											<option value="">-- Select FurnishingType --</option>
@@ -389,7 +389,7 @@
 											}
 										</select>
 										<span asp-validation-for="FurnishingType" class="text-danger"></span>
-									</div>
+									</div> *@
 									@* <div class="col-md-2 mb-3">
 										<label asp-for="Bedrooms" class="form-label"></label>
 										<select class="form-select" id="Bedrooms" name="Bedrooms">
@@ -737,9 +737,9 @@
 					 data: $("#leadForm").serialize(),
 					 success: function (response) {
 						 if (response) {
-							 notyf.success("Area added successfully");
-							 $("#addAreaModal").modal('hide');
-							 ClearData();
+							 notyf.success("New Lead added successfully");
+							 // $("#addAreaModal").modal('hide');
+							 // ClearData();
 							 $("#TableList").DataTable().ajax.reload(null, false);
 						 } else {
 							 notyf.error(response.message || "Failed to save.");
