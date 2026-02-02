@@ -519,7 +519,7 @@
 
 
 		flatpickr("#LicenseIssueDate", {
-		  dateFormat: "d/m/Y",  // Matches SQL datetime format
+		  dateFormat: "d/m/Y", 
 		  allowInput: true
 		});
 
@@ -535,11 +535,9 @@
 		}
 
 		function goToStep(stepIndex) {
-			// ✅ Only target stepper tab-panes inside the form
 			$("#formSection .tab-pane").removeClass("show active")
 				.eq(stepIndex).addClass("show active");
 
-			// ✅ Update step indicators
 			$(".step").removeClass("active completed").each(function (index) {
 				if (index < stepIndex) $(this).addClass("completed");
 				if (index === stepIndex) $(this).addClass("active");
@@ -548,28 +546,24 @@
 			updateProgress(stepIndex);
 		}
 
-		// ✅ Click on step indicators
 		$(document).on("click", ".step", function () {
 			goToStep($(this).index());
 		});
 
-		// ✅ Next button
 		$(document).on("click", ".next-step", function () {
 			let currentIndex = $(".step.active").index();
 			if (currentIndex < $(".step").length - 1) goToStep(currentIndex + 1);
 		});
 
-		// ✅ Previous button
 		$(document).on("click", ".prev-step", function () {
 			let currentIndex = $(".step.active").index();
 			if (currentIndex > 0) goToStep(currentIndex - 1);
 		});
 
 
-		// ✅ File preview (single file per input)
 			$(document).on("change", ".file-input", function () {
 			let inputId = $(this).attr("id");
-			let previewArea = "#preview" + inputId; // ✅ Dynamically pick corresponding preview div
+			let previewArea = "#preview" + inputId; 
 
 			let file = this.files[0];
 			if (!file) return;
@@ -587,32 +581,26 @@
 						: `<embed src="${url}" type="${file.type}" style="width:100%;height:150px;">`}
 				</div>`;
 
-			// ✅ Replace only this field’s preview
 			$(previewArea).html(card);
 
-			// ✅ Delete functionality
 			card.querySelector(".delete-file").addEventListener("click", () => {
-				this.value = "";      // clear file input
-				card.remove();        // remove preview
+				this.value = "";    
+				card.remove();       
 			});
 		});
 				const themeButtons = document.querySelectorAll('.theme-btn');
 		const agencyThemeInput = document.getElementById('AgencyTheme');
 
-		// Handle click
 		themeButtons.forEach(btn => {
 		  btn.addEventListener('click', () => {
 			const color = btn.dataset.color;
 			agencyThemeInput.value = color;
 
-			// Remove selection from all
 			themeButtons.forEach(b => b.classList.remove('selected'));
 
-			// Add to current
 			btn.classList.add('selected');
 		  });
 		});
-				// Highlight default selected color on page load
 		const selectedColor = agencyThemeInput.value.toLowerCase();
 		themeButtons.forEach(b => {
 		  if (b.dataset.color.toLowerCase() === selectedColor) {
@@ -620,12 +608,11 @@
 		  }
 		});
 		$("#submitAgency").on("click", function () {
-		 if (!validateAgencyForm()) return; // stop if validation fails
+		 if (!validateAgencyForm()) return; 
 
 			let fd = new FormData();
 
 
-		// ✅ Basic Info
 		fd.append("UniquId", $("#UniquId").val());
 		fd.append("AgencyName", $("#AgencyName").val());
 		fd.append("IsAgencyRegistered", $("#IsAgencyRegistered").is(":checked"));
@@ -636,14 +623,12 @@
 		fd.append("WebsiteUrl", $("#WebsiteUrl").val());
 		fd.append("AgencyTheme", $("#AgencyTheme").val());
 
-		// ✅ Address
 		fd.append("StreetAddress", $("#StreetAddress").val());
 		fd.append("CityName", $("#CityName").val());
 		fd.append("StateName", $("#StateName").val());
 		fd.append("Pincode", $("#Pincode").val());
 		fd.append("Country", $("#Country").val());
 
-		// ✅ Registration Info
 		fd.append("ReraRegNo", $("#ReraRegNo").val());
 		fd.append("LicenseIssueDate", $("#LicenseIssueDate").val());
 		fd.append("LicenseExpiryDate", $("#LicenseExpiryDate").val());
