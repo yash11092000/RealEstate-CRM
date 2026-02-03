@@ -1764,5 +1764,78 @@ namespace PhysioWeb.Repository
                 throw ex;
             }
         }
+
+        public async Task<DataTableResult> ListNewLead(DataTablePara dataTablePara)
+        {
+            try
+            {
+                string[] parameterName = new string[]
+                {
+                    "DisplayLength", "DisplayStart", "SortCol", "SortDir", "Search",
+                    //"FullName", "Email","Phone","CreatedBy","IsActive","AgencyId"
+                      "LeadName",
+    "LeadUniqueNo",
+    "LeadDate",
+    "ContactPerMobNo",
+    "WpMobNo",
+    "LeadType",
+    "LeadSource",
+    "LeadStatus",
+    "FollowUpDate",
+
+    "CreatedBy",
+    "IsActive",
+    "AgencyId"
+                };
+
+                object[] parameterValue = new object[]
+                {
+                    dataTablePara.iDisplayLength,dataTablePara.iDisplayStart,dataTablePara.iSortCol_0,
+                    dataTablePara.sSortDir_0,dataTablePara.sSearch,
+                     dataTablePara.sSearch_1,  // LeadName
+    dataTablePara.sSearch_2,  // LeadUniqueNo
+    dataTablePara.sSearch_3,  // LeadDate
+    dataTablePara.sSearch_4,  // ContactPerMobNo
+    dataTablePara.sSearch_5,  // WpMobNo
+    dataTablePara.sSearch_6,  // LeadType
+    dataTablePara.sSearch_7,  // LeadSource
+    dataTablePara.sSearch_8,  // LeadStatus
+    dataTablePara.sSearch_9,  // FollowUpDate
+
+    dataTablePara.sSearch_10, // CreatedBy
+    dataTablePara.sSearch_11, // IsActive
+    dataTablePara.AgencyId
+                };
+
+                var reader = await _dbHelper.GetDataReaderAsync("[FMR_DataListNewLead]", parameterName, parameterValue);
+
+                var result = new DataTableResult();
+                var list = new List<NewLead>();
+
+                while (reader.Read())
+                {
+                    list.Add(new NewLead(reader, 0));
+                }
+
+                if (reader.NextResult())
+                {
+                    while (reader.Read())
+                    {
+                        result.iTotalRecords = Convert.ToInt32(reader[0]);
+                    }
+                }
+
+                result.iTotalDisplayRecords = result.iTotalRecords;
+                result.aaData = list;
+
+                return result;
+            }
+            catch (Exception ex)
+            {
+                // Optional: log error here
+                throw;
+            }
+        }
+
     }
 }

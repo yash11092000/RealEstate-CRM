@@ -225,10 +225,10 @@
 										</select>
 										<span asp-validation-for="PreferredContactMethod" class="text-danger"></span>
 									</div>
+								
 									<div class="col-md-3 mb-3">
 										<label asp-for="FollowUpDate" class="form-label"></label>
-										<input asp-for="FollowUpDate" class="form-control" type="date" />
-										<span asp-validation-for="FollowUpDate" class="text-danger"></span>
+										<input type="date" class="form-control currDate" id="FollowUpDate" name="FollowUpDate">
 									</div>
 									<div class="col-md-3 mb-3">
 										<label asp-for="PanCard" class="form-label"></label>
@@ -714,6 +714,10 @@
 			}
 
 		flatpickr("#LeadDate", {
+		  dateFormat: "d/m/Y",  // Matches SQL datetime format
+		  allowInput: true
+		});
+		flatpickr("#FollowUpDate", {
 		  dateFormat: "d/m/Y",  // Matches SQL datetime format
 		  allowInput: true
 		});

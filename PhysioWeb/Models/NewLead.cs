@@ -199,19 +199,36 @@ namespace PhysioWeb.Models
         {
             if (flag == 0)
             {
-                // Mapping fields for a list/grid view
-                TotalCount = reader["TotalCount"] != DBNull.Value ? Convert.ToInt32(reader["TotalCount"]) : 0;
-                UniquId = reader["UniquId"] != DBNull.Value ? Convert.ToInt32(reader["UniquId"]) : 0;
-                LeadId = reader["LeadId"]?.ToString();
-                FullName = reader["FullName"]?.ToString();
-                Email = reader["Email"]?.ToString();
-                PhoneNumber = reader["PhoneNumber"]?.ToString();
-                LeadStatus = reader["LeadStatus"]?.ToString();
+                // Mapping fields for New Lead list/grid view
+                TotalCount = reader["TotalCount"] != DBNull.Value
+                                ? Convert.ToInt32(reader["TotalCount"])
+                                : 0;
+
+                UniquId = reader["UniquId"] != DBNull.Value
+                                ? Convert.ToInt32(reader["UniquId"])
+                                : 0;
+
+                FullName = reader["LeadName"]?.ToString();
+                LeadId = reader["LeadUniqueNo"]?.ToString();
+
+                LeadDate = reader["LeadDate"] != DBNull.Value
+                                ? Convert.ToDateTime(reader["LeadDate"])
+                                : (DateTime?)null;
+
+                PhoneNumber = reader["ContactPerMobNo"]?.ToString();
+                AlternateNumber = reader["WpMobNo"]?.ToString();
+
+                LeadType = reader["LeadType"]?.ToString();
                 LeadSource = reader["LeadSource"]?.ToString();
-                AssignedAgent = reader["AssignedAgent"]?.ToString();
-                CreatedDate = reader["CreatedDate"] != DBNull.Value ? Convert.ToDateTime(reader["CreatedDate"]) : DateTime.Now;
-                InActiveText = reader["IsActive"].ToString();
+                LeadStatus = reader["LeadStatus"]?.ToString();
+
+                FollowUpDate = reader["FollowUpDate"] != DBNull.Value
+                                ? Convert.ToDateTime(reader["FollowUpDate"])
+                                : (DateTime?)null;
+
+                InActiveText = reader["IsActive"]?.ToString();
                 CreatedBy = reader["CreatedBy"]?.ToString();
+
             }
             else if (flag == 1)
             {

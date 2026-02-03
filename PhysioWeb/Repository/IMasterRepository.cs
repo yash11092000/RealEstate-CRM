@@ -62,5 +62,6 @@ namespace PhysioWeb.Repository
         Task<Designation> EditDesignation(int UniqueID, string UserID);
         Task<List<OrgData>> GetOrgData();
         Task<bool> SaveNewLead(NewLead NewLead);
+        Task<DataTableResult> ListNewLead(DataTablePara dataTablePara);
     }
 }
