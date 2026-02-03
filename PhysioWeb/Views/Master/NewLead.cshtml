@@ -123,27 +123,23 @@
 							<div class="card p-3 mb-4 shadow-sm">
 								<h5 class="card-title text-primary"><i class="bi bi-info-circle-fill"></i> Lead Information</h5>
 								<div class="row">
-									@* <div class="col-md-2 mb-3">
-										<label asp-for="LeadDate" class="form-label"></label>
-										<input asp-for="LeadDate" class="form-control" type="date" />
-										<span asp-validation-for="LeadDate" class="text-danger"></span>
-									</div> *@
+								
 									<div class="col-md-2 mb-3">
 										<label asp-for="LeadDate" class="form-label"></label>
 										<input type="date" class="form-control currDate" id="LeadDate" name="LeadDate">
 									</div>
+									
 									<div class="col-md-3 mb-3">
-										<label asp-for="LeadType" class="form-label"></label>
-										<select class="form-select">
+										<label class="form-label fw-bold">LeadType</label>
+										<select class="form-select" id="LeadType" name="LeadType">
 											<option value="">-- Select Type --</option>
-											@foreach (var Type in Model.LeadTypeList)
+											@foreach (var item in Model.LeadTypeList)
 											{
-												<option value="@Type.Value">@Type.Text</option>
-
+												<option value="@item.Value">@item.Text</option>
 											}
 										</select>
-										<span asp-validation-for="LeadType" class="text-danger"></span>
 									</div>
+
 									<div class="col-md-3 mb-3">
 										<label asp-for="LeadId" class="form-label"></label>
 										<input asp-for="LeadId" class="form-control" readonly />
@@ -151,7 +147,7 @@
 									</div>
 									<div class="col-md-4 mb-3">
 										<label asp-for="LeadSource" class="form-label"></label>
-										<select class="form-select">
+										<select class="form-select" id="LeadSource" name="LeadSource">
 											<option value="">-- Select LeadSource --</option>
 											@foreach (var Type in Model.LeadSourceList)
 											{
@@ -164,7 +160,7 @@
 									
 									<div class="col-md-4 mb-3">
 										<label asp-for="LeadStatus" class="form-label"></label>
-										<select class="form-select">
+										<select class="form-select" id="LeadStatus" name="LeadStatus">
 											<option value="">-- Select Status --</option>
 											@foreach (var Type in Model.LeadStatusList)
 											{
@@ -183,7 +179,7 @@
 									</div>
 									<div class="col-md-4 mb-3">
 										<label asp-for="Campaign" class="form-label"></label>
-										<select class="form-select">
+										<select class="form-select" id="Campaign" name="Campaign">
 											<option value="">-- Select Campaign --</option>
 											@foreach (var Type in Model.CampaignList)
 											{
@@ -334,7 +330,7 @@
 										<div class="input-group">
 											<span class="input-group-text">₹</span>
 											<input type="number" class="form-control" name="BudgetMax" id="BudgetMax" placeholder="Enter amount">
-											<select id="AmountUnitMaxPrice" class="form-select" style="max-width: 100px;  background-color: #a9a9a96b;">
+											<select id="AmountUnitMaxPrice" class="form-select" style="max-width: 100px;  background-color: #a9a9a96b;" name="AmountUnitMaxPrice">
 												@foreach (var item in Model.AmountUnitList)
 												{
 													<option value="@item.Value">@item.Text</option>
@@ -355,8 +351,8 @@
 										<label class="form-label">Minimum Budget</label>
 										<div class="input-group">
 											<span class="input-group-text">₹</span>
-											<input type="number" class="form-control" name="PriceMin" id="BudgetMin" placeholder="Enter amount">
-											<select id="AmountUnitMinPrice" class="form-select" style="max-width: 100px; background-color: #a9a9a96b;">
+											<input type="number" class="form-control" name="BudgetMin" id="BudgetMin" placeholder="Enter amount">
+											<select id="AmountUnitMinPrice" class="form-select" style="max-width: 100px; background-color: #a9a9a96b;" name="AmountUnitMinPrice">
 												@foreach (var item in Model.AmountUnitList)
 												{
 													<option value="@item.Value">@item.Text</option>
