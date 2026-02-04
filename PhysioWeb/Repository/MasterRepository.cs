@@ -1764,5 +1764,117 @@ namespace PhysioWeb.Repository
                 throw ex;
             }
         }
+
+        public async Task<DataTableResult> ListNewLead(DataTablePara dataTablePara)
+        {
+            try
+            {
+                string[] parameterName = new string[]
+                {
+                    "DisplayLength", "DisplayStart", "SortCol", "SortDir", "Search",
+                    //"FullName", "Email","Phone","CreatedBy","IsActive","AgencyId"
+                      "LeadName",
+"LeadUniqueNo",
+    "LeadDate",
+    "ContactPerMobNo",
+    "WpMobNo",
+    "LeadType",
+    "LeadSource",
+    "LeadStatus",
+    "FollowUpDate",
+    "CreatedBy",
+    "IsActive",
+    "AgencyId"
+                };
+
+                object[] parameterValue = new object[]
+                {
+                    dataTablePara.iDisplayLength,dataTablePara.iDisplayStart,dataTablePara.iSortCol_0,
+                    dataTablePara.sSortDir_0,dataTablePara.sSearch,
+                     dataTablePara.sSearch_1,  
+    dataTablePara.sSearch_2,  
+    dataTablePara.sSearch_3,  
+    dataTablePara.sSearch_4,  
+    dataTablePara.sSearch_5,  
+    dataTablePara.sSearch_6,  
+    dataTablePara.sSearch_7,  
+    dataTablePara.sSearch_8,  
+    dataTablePara.sSearch_9,  
+
+    dataTablePara.sSearch_10, 
+    dataTablePara.sSearch_11, 
+    dataTablePara.AgencyId
+                };
+
+                var reader = await _dbHelper.GetDataReaderAsync("[FMR_DataListNewLead]", parameterName, parameterValue);
+
+                var result = new DataTableResult();
+                var list = new List<NewLead>();
+
+                while (reader.Read())
+                {
+                    list.Add(new NewLead(reader, 0));
+                }
+
+                if (reader.NextResult())
+                {
+                    while (reader.Read())
+                    {
+                        result.iTotalRecords = Convert.ToInt32(reader[0]);
+                    }
+                }
+
+                result.iTotalDisplayRecords = result.iTotalRecords;
+                result.aaData = list;
+
+                return result;
+            }
+            catch (Exception ex)
+            {
+                // Optional: log error here
+                throw;
+            }
+        }
+        public async Task<bool> DeleteNewLead(NewLead NewLead)
+        {
+            try
+            {
+                string[] parametersName = { "UniquId", "UserID" };
+                object[] Values = { NewLead.UniquId, NewLead.UserID };
+
+                string Sp = "FMR_DeleteNewLead";
+                int RecordAffected = await _dbHelper.ExecuteNonQueryAsync(Sp, parametersName, Values);
+                return RecordAffected > 0;
+            }
+            catch (Exception ex)
+            {
+                // Optional: log error here
+                throw;
+            }
+        }
+        public async Task<NewLead> EditNewLead(int uniqueID, int UserID)
+        {
+            try
+            {
+                string[] parameterNames = { "UniqueID", "UserID" };
+                object[] parameterValues = { uniqueID, UserID };
+
+                string Sp = "FMR_EditNewLead";
+                var data = await _dbHelper.GetDataReaderAsync(Sp, parameterNames, parameterValues);
+                while (data.Read())
+                {
+                    NewLead NewLead = new NewLead(data, 1);
+                    return NewLead;
+                }
+                return null;
+
+                //bind 
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }
+
     }
 }

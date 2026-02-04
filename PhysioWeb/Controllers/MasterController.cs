@@ -1098,6 +1098,75 @@ namespace PhysioWeb.Controllers
             var result = await _masterRepository.SaveNewLead(NewLead);
             return Json(result);
         }
+
+
+        [HttpPost]
+        public async Task<ActionResult> ListNewLead()
+        {
+            var form = Request.Form;
+
+            // ✅ Map DataTables default parameters
+            var dataTablePara = new DataTablePara
+            {
+                iDisplayStart = Convert.ToInt32(form["start"]),
+                iDisplayLength = Convert.ToInt32(form["length"]),
+                iSortCol_0 = Convert.ToInt32(form["order[0][column]"]),
+                sSortDir_0 = form["order[0][dir]"],
+                sSearch = form["search[value]"]
+            };
+
+            // ✅ Map column filters dynamically (for first 10 columns)
+            for (int i = 0; i < 30; i++)
+            {
+                string key = $"columns[{i}][search][value]";
+                if (Request.Form.ContainsKey(key))
+                {
+                    typeof(DataTablePara)
+                        .GetProperty($"sSearch_{i}")
+                        ?.SetValue(dataTablePara, Request.Form[key].ToString());
+                }
+            }
+            dataTablePara.UserID = User.FindFirst(ClaimTypes.PrimarySid)?.Value;
+            dataTablePara.AgencyId = User.FindFirst(ClaimTypes.GroupSid)?.Value;
+            var result = await _masterRepository.ListNewLead(dataTablePara);
+            var requestForm = Request.Form;
+            return Json(new
+            {
+                draw = requestForm["draw"],
+                recordsTotal = result.iTotalRecords,
+                recordsFiltered = result.iTotalDisplayRecords,
+                data = result.aaData
+            });
+
+        }
+
+        public async Task<ActionResult> DeleteNewLead(int UniqueID)
+        {
+            var NewLead = new NewLead
+            {
+                UniquId = UniqueID
+            };
+            NewLead.UserID = User.FindFirst(ClaimTypes.PrimarySid)?.Value;
+            var result = await _masterRepository.DeleteNewLead(NewLead);
+            return Json(new { success = result });
+
+        }
+        [HttpPost]
+        public async Task<ActionResult> EditNewLead(int UniqueID)
+        {
+            try
+            {
+                string UserID = User.FindFirst(ClaimTypes.PrimarySid)?.Value;
+                var data = await _masterRepository.EditNewLead(UniqueID, Convert.ToInt32(UserID));
+
+                return Json(data);
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, message = ex.Message });
+            }
+        }
+
         #endregion
 
         #region Quotation
