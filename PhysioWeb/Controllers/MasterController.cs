@@ -1139,6 +1139,34 @@ namespace PhysioWeb.Controllers
             });
 
         }
+
+        public async Task<ActionResult> DeleteNewLead(int UniqueID)
+        {
+            var NewLead = new NewLead
+            {
+                UniquId = UniqueID
+            };
+            NewLead.UserID = User.FindFirst(ClaimTypes.PrimarySid)?.Value;
+            var result = await _masterRepository.DeleteNewLead(NewLead);
+            return Json(new { success = result });
+
+        }
+        [HttpPost]
+        public async Task<ActionResult> EditNewLead(int UniqueID)
+        {
+            try
+            {
+                string UserID = User.FindFirst(ClaimTypes.PrimarySid)?.Value;
+                var data = await _masterRepository.EditNewLead(UniqueID, Convert.ToInt32(UserID));
+
+                return Json(data);
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, message = ex.Message });
+            }
+        }
+
         #endregion
 
         #region Quotation

@@ -521,64 +521,30 @@
 
 			<!-- All Leads Tab (Static Example) -->
 			<div class="tab-pane fade" id="all-leads" role="tabpanel" aria-labelledby="all-leads-tab">
-				<table class="table table-striped table-hover mt-3">
-					<thead class="table-primary">
+			
+				<table id="TableList" class="table table-hover align-middle">
+					<thead class="table-light">
 						<tr>
 							<th>Lead ID</th>
 							<th>Full Name</th>
-							<th>Lead Status</th>
+							<th>Lead Date</th>
+							<th>Phone Number</th>
+							<th>Alternate Number</th>
+							<th>Lead Type</th>
 							<th>Lead Source</th>
-							<th>Assigned Agent</th>
-							<th>Created Date</th>
+							<th>Lead Status</th>
+							@* <th>Follow Up Date</th> *@
+							<th>Is Active</th>
+							<th>Created By</th>
 							<th><i class="bi bi-eye text-primary fs-5" title="View"></i></th>
-							@* <th><i class="bi bi-check2-circle text-primary fs-5" title="Sold Out Details"></i></th> *@
 							<th><i class="bi bi-pencil-square text-primary fs-5" title="Edit"></i></th>
 							<th><i class="bi bi-trash text-danger fs-5" title="Delete"></i></th>
 						</tr>
 					</thead>
-					<tbody>
-						<tr>
-							<td>LEAD001</td>
-							<td>Michael Scott</td>
-							<td><span class="badge bg-warning">Interested</span></td>
-							<td>Website</td>
-							<td>Agent 1</td>
-							<td>2025-11-01</td>
-							<td><i class="bi bi-eye text-primary fs-5" title="View"></i></td>
-							@* <td><i class="bi bi-check2-circle text-primary fs-5" title="Sold Out Details"></i></td> *@
-							<td><i class="bi bi-pencil-square text-primary fs-5" title="Edit"></i></td>
-							<td><i class="bi bi-trash text-danger fs-5" title="Delete"></i></td>
-						</tr>
-						<tr>
-							<td>LEAD002</td>
-							<td>Pam Beesly</td>
-							<td><span class="badge bg-success">Converted</span></td>
-							<td>Referral</td>
-							<td>Agent 2</td>
-							<td>2025-11-05</td>
-							<td><i class="bi bi-eye text-primary fs-5" title="View"></i></td>
-							@* <td><i class="bi bi-check2-circle text-primary fs-5" title="Sold Out Details"></i></td> *@
-							<td><i class="bi bi-pencil-square text-primary fs-5" title="Edit"></i></td>
-							<td><i class="bi bi-trash text-danger fs-5" title="Delete"></i></td>
-						</tr>
-						<tr>
-							<td>LEAD003</td>
-							<td>Dwight Schrute</td>
-							<td><span class="badge bg-secondary">New</span></td>
-							<td>Google Ads</td>
-							<td>Agent 3</td>
-							<td>2025-11-07</td>
-							<td><i class="bi bi-eye text-primary fs-5" title="View"></i></td>
-							@* <td><i class="bi bi-check2-circle text-primary fs-5" title="Sold Out Details"></i></td> *@
-							<td><i class="bi bi-pencil-square text-primary fs-5" title="Edit"></i></td>
-							<td><i class="bi bi-trash text-danger fs-5" title="Delete"></i></td>
-						</tr>
-					</tbody>
+					<tbody></tbody>
 				</table>
-				<div class="d-flex justify-content-between">
-					<span class="text-muted">Showing 1 to 3 of 3 total leads.</span>
-					<button class="btn btn-outline-secondary">Load More</button>
-				</div>
+
+				
 			</div>
 		</div>
 	</div>
@@ -619,14 +585,104 @@
 		// 		bootstrap.Tab.getInstance(triggerEl).show();
 		// 	}
 		// });
+			$(document).ready(function () {
+		 $('#TableList thead tr').clone(true).appendTo('#TableList thead');
 
+		$('#TableList thead tr:eq(1) th').each(function (i) {
+			if ($(this).find('i').length === 0) {
+				var title = $('#TableList thead tr:eq(0) th').eq(i).text().trim();
+				$(this).html('<input class="form-control form-control-sm" type="text" placeholder="' + title + '" />');
+			} else {
+				$(this).html('');
+			}
+		});
 
+			 var TableList = $("#TableList").DataTable({
+							 orderCellsTop: true,
+							 processing: true,
+							 serverSide: true,
+							 order: [[0, "asc"]],
+							 ajax: {
+								 url: '/Master/ListNewLead',
+								 type: 'POST' , // or 'GET' depending on your controller setup
+							 },
+					columns: [
+			{ data: 'leadId' },           // Lead ID
+			{ data: 'fullName' },         // Full Name
+			{ data: 'leadDate' },         // Lead Date
+			{ data: 'phoneNumber' },      // Phone Number
+			{ data: 'alternateNumber' },  // Alternate Number
+			{ data: 'leadType' },         // Lead Type
+			{ data: 'leadSource' },       // Lead Source
+			{ data: 'leadStatus' },       // Lead Status
+			// { data: 'followUpDate' },     // Follow Up Date
+			{ data: 'inActiveText' },     // Is Active
+			{ data: 'createdBy' },        // Created By
+
+			// 👁 View
+			{
+				data: null,
+				render: function (data, type, row) {
+					let para = `'${row.uniquId}', 'Master', 'ViewNewLead'`;
+					return `<a href="javascript:void(0)" onclick="ViewData(${para})">
+								<i class="bi bi-eye text-primary fs-5"></i>
+							</a>`;
+				},
+				orderable: false,
+				searchable: false
+			},
+
+			// ✏️ Edit
+			{
+				data: null,
+				render: function (data, type, row) {
+					let para = `'${row.uniquId}', 'Master', 'EditNewLead'`;
+					return `<a href="javascript:void(0)" onclick="EditData(${para})">
+								<i class="bi bi-pencil-square text-primary fs-5"></i>
+							</a>`;
+				},
+				orderable: false,
+				searchable: false
+			},
+
+			// 🗑 Delete
+			{
+				data: null,
+				render: function (data, type, row) {
+					let para = `'${row.uniquId}', 'Master', 'DeleteNewLead'`;
+					return `<a href="javascript:void(0)" onclick="DeleteData(${para})">
+								<i class="bi bi-trash text-danger fs-5"></i>
+							</a>`;
+				},
+				orderable: false,
+				searchable: false
+			}
+		],
+
+			initComplete: function () {
+				var table = this.api();
+
+				$('#TableList thead tr:eq(1) th').each(function (i) {
+					$('input', this).on('keyup change', function () {
+						if (table.column(i).search() !== this.value) {
+							table
+								.column(i)
+								.search(this.value)
+								.draw();
+						}
+					});
+				});
+			}
+		});
+		 });
 			$(document).on("change", "#IsNegotiable", function () {
 				if ($(this).is(":checked")) {
 					$(".negotiableprice").show();
 				} else {
 					$(".negotiableprice").hide();
 				}
+
+					
 			});
 
 
@@ -751,6 +807,93 @@
 					 }
 				 });
 			 });
+					function OnSuccessOfEdit(data) {
+
+			$("#UniquId").val(data.uniquId);
+			$("#LeadId").val(data.leadId);
+			$("#LeadName").val(data.fullName);
+
+			// Dates (ISO → input[type=date] safe)
+			$("#LeadDate").val(data.leadDate ? data.leadDate.split('T')[0] : '');
+			$("#FollowUpDate").val(data.followUpDate ? data.followUpDate.split('T')[0] : '');
+
+			$("#ContactPerMobNo").val(data.phoneNumber);
+			$("#WpMobNo").val(data.alternateNumber);
+			$("#Email").val(data.email);
+
+			$("#PanCard").val(data.panCard);
+			$("#AadharCard").val(data.aadharCard);
+
+			$("#LeadTypeID").val(data.leadType);
+			$("#LeadSourceID").val(data.leadSource);
+			$("#LeadStatusID").val(data.leadStatus);
+			$("#PropertyTypeID").val(data.propertyType);
+
+			$("#Priority").val(data.leadPriority);
+			$("#Description").val(data.requirementDescription);
+			$("#CampaignID").val(data.campaign);
+
+			$("#Address").val(data.address);
+			$("#LocationPreference").val(data.locationPreference);
+			$("#PropertyInterestedIn").val(data.propertyInterestedIn);
+			$("#PreferredContactMethod").val(data.preferredContactMethod);
+
+			$("#MinPrice").val(data.budgetMin);
+			$("#MaxPrice").val(data.budgetMax);
+			$("#AmountUnitMinPrice").val(data.amountUnitMinPrice);
+			$("#AmountUnitMaxPrice").val(data.amountUnitMaxPrice);
+
+			$("#ConvertedActualPrice").val(data.convertedActualPrice);
+			$("#ConvertedNegotiablePrice").val(data.convertedNegotiablePrice);
+
+			$("#IsActive").prop("checked", data.isActive === true);
+		}
+
+
+					function ClearData() {
+
+			$("#UniquId").val("");
+			$("#LeadId").val("");
+			$("#LeadName").val("");
+
+			$("#LeadDate").val("");
+			$("#FollowUpDate").val("");
+
+			$("#ContactPerMobNo").val("");
+			$("#WpMobNo").val("");
+			$("#Email").val("");
+
+			$("#PanCard").val("");
+			$("#AadharCard").val("");
+
+			$("#LeadTypeID").val("");
+			$("#LeadSourceID").val("");
+			$("#LeadStatusID").val("");
+			$("#PropertyTypeID").val("");
+
+			$("#Priority").val("");
+			$("#Description").val("");
+			$("#CampaignID").val("");
+
+			$("#Address").val("");
+			$("#LocationPreference").val("");
+			$("#PropertyInterestedIn").val("");
+			$("#PreferredContactMethod").val("");
+
+			$("#MinPrice").val("");
+			$("#MaxPrice").val("");
+			$("#AmountUnitMinPrice").val("");
+			$("#AmountUnitMaxPrice").val("");
+
+			$("#ConvertedActualPrice").val("");
+			$("#ConvertedNegotiablePrice").val("");
+
+			$("#IsActive").prop("checked", true);
+		}
+
+			 function OnSuccessOfDelete() {
+				 notyf.success("New Lead deleted successfully");
+			 }
 
 	</script>
 }

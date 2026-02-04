@@ -1774,7 +1774,7 @@ namespace PhysioWeb.Repository
                     "DisplayLength", "DisplayStart", "SortCol", "SortDir", "Search",
                     //"FullName", "Email","Phone","CreatedBy","IsActive","AgencyId"
                       "LeadName",
-    "LeadUniqueNo",
+"LeadUniqueNo",
     "LeadDate",
     "ContactPerMobNo",
     "WpMobNo",
@@ -1782,7 +1782,6 @@ namespace PhysioWeb.Repository
     "LeadSource",
     "LeadStatus",
     "FollowUpDate",
-
     "CreatedBy",
     "IsActive",
     "AgencyId"
@@ -1792,18 +1791,18 @@ namespace PhysioWeb.Repository
                 {
                     dataTablePara.iDisplayLength,dataTablePara.iDisplayStart,dataTablePara.iSortCol_0,
                     dataTablePara.sSortDir_0,dataTablePara.sSearch,
-                     dataTablePara.sSearch_1,  // LeadName
-    dataTablePara.sSearch_2,  // LeadUniqueNo
-    dataTablePara.sSearch_3,  // LeadDate
-    dataTablePara.sSearch_4,  // ContactPerMobNo
-    dataTablePara.sSearch_5,  // WpMobNo
-    dataTablePara.sSearch_6,  // LeadType
-    dataTablePara.sSearch_7,  // LeadSource
-    dataTablePara.sSearch_8,  // LeadStatus
-    dataTablePara.sSearch_9,  // FollowUpDate
+                     dataTablePara.sSearch_1,  
+    dataTablePara.sSearch_2,  
+    dataTablePara.sSearch_3,  
+    dataTablePara.sSearch_4,  
+    dataTablePara.sSearch_5,  
+    dataTablePara.sSearch_6,  
+    dataTablePara.sSearch_7,  
+    dataTablePara.sSearch_8,  
+    dataTablePara.sSearch_9,  
 
-    dataTablePara.sSearch_10, // CreatedBy
-    dataTablePara.sSearch_11, // IsActive
+    dataTablePara.sSearch_10, 
+    dataTablePara.sSearch_11, 
     dataTablePara.AgencyId
                 };
 
@@ -1834,6 +1833,46 @@ namespace PhysioWeb.Repository
             {
                 // Optional: log error here
                 throw;
+            }
+        }
+        public async Task<bool> DeleteNewLead(NewLead NewLead)
+        {
+            try
+            {
+                string[] parametersName = { "UniquId", "UserID" };
+                object[] Values = { NewLead.UniquId, NewLead.UserID };
+
+                string Sp = "FMR_DeleteNewLead";
+                int RecordAffected = await _dbHelper.ExecuteNonQueryAsync(Sp, parametersName, Values);
+                return RecordAffected > 0;
+            }
+            catch (Exception ex)
+            {
+                // Optional: log error here
+                throw;
+            }
+        }
+        public async Task<NewLead> EditNewLead(int uniqueID, int UserID)
+        {
+            try
+            {
+                string[] parameterNames = { "UniqueID", "UserID" };
+                object[] parameterValues = { uniqueID, UserID };
+
+                string Sp = "FMR_EditNewLead";
+                var data = await _dbHelper.GetDataReaderAsync(Sp, parameterNames, parameterValues);
+                while (data.Read())
+                {
+                    NewLead NewLead = new NewLead(data, 1);
+                    return NewLead;
+                }
+                return null;
+
+                //bind 
+            }
+            catch (Exception e)
+            {
+                throw e;
             }
         }
 
