@@ -12,13 +12,56 @@ namespace PhysioWeb.Models
 
         public int ConvertedLeadCount { get; set; }
 
+        public string LeadName { get; set; }
+
+        public string ContactPerMobNo { get; set; }
+
+        public string PropertyName { get; set; }
+
+
+        public decimal Budget { get; set; }
+
+        public string AssignAgent { get; set; }
+
+
         public LeadDashboard()
         {
 
         }
-        public LeadDashboard(IDataReader reader)
+        public LeadDashboard(IDataReader reader, int IsDataList = 0)
         {
-            populateObject(this, reader);
+            if (IsDataList == 0)
+            {
+                populateObject(this, reader);
+            }
+            else if (IsDataList == 1)
+            {
+                populateObjectForDataList(this, reader);
+            }
+        }
+
+        private void populateObjectForDataList(LeadDashboard obj, IDataReader rdr)
+        {
+            if (!rdr.IsDBNull(rdr.GetOrdinal("LeadName")))
+            {
+                obj.LeadName = rdr.GetString(rdr.GetOrdinal("LeadName"));
+            }
+            if (!rdr.IsDBNull(rdr.GetOrdinal("ContactPerMobNo")))
+            {
+                obj.ContactPerMobNo = rdr.GetString(rdr.GetOrdinal("ContactPerMobNo"));
+            }
+            if (!rdr.IsDBNull(rdr.GetOrdinal("PropertyName")))
+            {
+                obj.PropertyName = rdr.GetString(rdr.GetOrdinal("PropertyName"));
+            }
+            if (!rdr.IsDBNull(rdr.GetOrdinal("Budget")))
+            {
+                obj.Budget = rdr.GetDecimal(rdr.GetOrdinal("Budget"));
+            }
+            if (!rdr.IsDBNull(rdr.GetOrdinal("AssignAgent")))
+            {
+                obj.AssignAgent = rdr.GetString(rdr.GetOrdinal("AssignAgent"));
+            }
         }
 
         private void populateObject(LeadDashboard obj, IDataReader rdr)
