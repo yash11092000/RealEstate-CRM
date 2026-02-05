@@ -788,6 +788,11 @@
 			color: #007bff;
 		}
 
+	table.dataTable thead th,
+	table.dataTable tbody td {
+		text-align: center !important;
+	}
+
 </style>
 
 <main class="dashboard-content with-sidebar collapsed">
@@ -1253,8 +1258,6 @@
 			</div>
 		</div>
 	</div>
-	</div>
-
 </main>
 
 @section Scripts {
@@ -1262,15 +1265,15 @@
 				$(document).ready(function(){
 					$(document).ready(function () {
 
-							 $('#LeadsTable thead tr').clone(true).appendTo('#LeadsTable thead');
-
-							 $('#LeadsTable thead tr:eq(1) th').each(function (i) {
-								 if ($(this).find('i').length === 0) { // ✅ only add input if no icon
-									 var title = $('#LeadsTable thead tr:eq(0) th').eq(i).text().trim();
-									 $(this).html('<input class="form-control form-control-sm" type="text" placeholder="' + title + '" />');
-								 } else {
+						$('#LeadsTable thead tr').clone(true).appendTo('#LeadsTable thead');
+						$('#LeadsTable thead tr:eq(1) th').each(function (i) {
+									if ($(this).find('i').length === 0) {
+									var title = $('#LeadsTable thead tr:eq(0) th').eq(i).text().trim();
+									$(this).html('<input class="form-control form-control-sm" type="text" placeholder="' + title + '" />');
+								}
+								else {
 									 $(this).html('');
-								 }
+								}
 							 });
 							 var TableList = $("#LeadsTable").DataTable({
 							 orderCellsTop: true,
@@ -1280,19 +1283,23 @@
 							 ajax: {
 								 url: '/Dashboard/LeadList',
 								 type: 'POST' ,
+								  dataSrc: function (json) {
+									console.log("Full server response:", json);
+									console.log("Row data array:", json.data);
+									return json.data;
+								}
 							 },
 							 columns: [
-								 { data: 'leadname' },
-								 { data: 'contactpermobno' },
-								 { data: 'propertytype' },
+								 { data: 'leadName' },
+								 { data: 'contactPerMobNo' },
+								 { data: 'propertyName' },
 								 { data: 'budget' },
 								 { data: 'status' },
 								 { data: 'priority' },
-								 { data: 'assignedagent' },
-								 { data: 'createdBy' },
+								 { data: 'assignAgent' },
 								 {
-									"data": null,
-									"render": function() {
+									data: null,
+									render: function() {
 										return `
 											<div class="action-buttons">
 												<button class="action-btn" data-bs-toggle="modal" data-bs-target="#leadConversionModal">
@@ -1305,23 +1312,25 @@
 												<button class="action-btn"><i class="fas fa-phone"></i></button>
 											</div>
 										`;
-									}
+									},
+									orderable: false, searchable: false
+
 								}
 							 ],
 							 initComplete: function () {
-									  var table = this.api();
+							 var table = this.api();
 
 
-					 $('#TableList thead tr:eq(1) th').each(function (i) {
-						 $('input', this).on('keyup change', function () {
-							 if (table.column(i).search() !== this.value) {
-								 table
-									 .column(i)
-									 .search(this.value)
-									 .draw();
-							 }
-						 });
-					 });
+							 $('#LeadsTable thead tr:eq(1) th').each(function (i) {
+								 $('input', this).on('keyup change', function () {
+									 if (table.column(i).search() !== this.value) {
+										 table
+											 .column(i)
+											 .search(this.value)
+											 .draw();
+									 }
+								 });
+							 });
 							 }
 						 });
 

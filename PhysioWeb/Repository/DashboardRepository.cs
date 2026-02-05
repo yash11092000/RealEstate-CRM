@@ -43,7 +43,7 @@ namespace PhysioWeb.Repository
                 string[] parameterName = new string[]
                 {
                     "DisplayLength", "DisplayStart", "SortCol", "SortDir", "Search",
-                    "Lead","Contact", "PropertyType","Budget", "Status", "AssignedAgent","AgencyId"
+                    "Lead","Contact", "PropertyType","Budget", "Status","Priority", "AssignedAgent","AgencyId"
                 };
 
                 object[] parameterValue = new object[]
@@ -51,7 +51,7 @@ namespace PhysioWeb.Repository
                     dataTablePara.iDisplayLength,dataTablePara.iDisplayStart,dataTablePara.iSortCol_0,
                     dataTablePara.sSortDir_0,dataTablePara.sSearch,dataTablePara.sSearch_0,
                     dataTablePara.sSearch_1,dataTablePara.sSearch_2,dataTablePara.sSearch_3,
-                    dataTablePara.sSearch_4,dataTablePara.sSearch_5,dataTablePara.AgencyId
+                    dataTablePara.sSearch_4,dataTablePara.sSearch_5,dataTablePara.sSearch_6,dataTablePara.AgencyId
                 };
 
 
@@ -62,7 +62,7 @@ namespace PhysioWeb.Repository
 
                 while (reader.Read())
                 {
-                    list.Add(new LeadDashboard(reader,1));
+                    list.Add(new LeadDashboard(reader, 1));
                 }
 
                 if (reader.NextResult())

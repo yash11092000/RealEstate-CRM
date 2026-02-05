@@ -23,6 +23,9 @@ namespace PhysioWeb.Models
 
         public string AssignAgent { get; set; }
 
+        public string Status { get; set; }
+        public int Priority { get; set; }
+
 
         public LeadDashboard()
         {
@@ -61,6 +64,14 @@ namespace PhysioWeb.Models
             if (!rdr.IsDBNull(rdr.GetOrdinal("AssignAgent")))
             {
                 obj.AssignAgent = rdr.GetString(rdr.GetOrdinal("AssignAgent"));
+            }
+            if (!rdr.IsDBNull(rdr.GetOrdinal("LeadStatus")))
+            {
+                obj.Status = rdr.GetString(rdr.GetOrdinal("LeadStatus"));
+            }
+            if (!rdr.IsDBNull(rdr.GetOrdinal("Priority")))
+            {
+                obj.Priority = rdr.GetInt32(rdr.GetOrdinal("Priority"));
             }
         }
 
