@@ -243,7 +243,7 @@ namespace PhysioWeb.Models
                 obj.UniquId = rdr.GetInt32(rdr.GetOrdinal("UniquId"));
 
             if (!rdr.IsDBNull(rdr.GetOrdinal("LeadId")))
-                obj.LeadId = rdr.GetString(rdr.GetOrdinal("LeadId"));
+                obj.LeadId = rdr.GetString(rdr.GetOrdinal("LeadId"));   
 
             if (!rdr.IsDBNull(rdr.GetOrdinal("LeadName")))
                 obj.FullName = rdr.GetString(rdr.GetOrdinal("LeadName"));
