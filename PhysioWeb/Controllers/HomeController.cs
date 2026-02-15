@@ -11,6 +11,7 @@ using System.Diagnostics;
 using System.Reflection;
 using System.Security.Claims;
 using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Pages.Manage;
+using Microsoft.Extensions.Caching.Memory;
 
 
 namespace PhysioWeb.Controllers
@@ -21,12 +22,15 @@ namespace PhysioWeb.Controllers
         private readonly IUserRepository _userRepository;
         private readonly IMasterRepository _masterRepository;
         private readonly ILogger<HomeController> _logger;
+        private readonly IMemoryCache _cache;
 
-        public HomeController(ILogger<HomeController> logger, IUserRepository userRepository, IMasterRepository masterRepository)
+        public HomeController(ILogger<HomeController> logger, IUserRepository userRepository, IMasterRepository masterRepository, IMemoryCache cache)
         {
             _logger = logger;
             _userRepository = userRepository;
             _masterRepository = masterRepository;
+            _cache = cache;
+
         }
 
         public async Task<IActionResult> Index()
@@ -103,7 +107,7 @@ namespace PhysioWeb.Controllers
                     string redirectUrl = role switch
                     {
                         "SUPERADMIN" => "/SuperAdmin/AdminDashboard",
-                        "AGENCY" => "/Agent/AgencyDashboard",
+                        "ADMIN" => "/Agent/AgencyDashboard",
                         _ => "/Home/Index"
                     };
                     return Json(new { success = true, redirect = redirectUrl });
@@ -111,7 +115,7 @@ namespace PhysioWeb.Controllers
 
                 // ✅ Normal form login
                 if (role == "SUPERADMIN") return Redirect("/SuperAdmin/AdminDashboard");
-                if (role == "AGENCY") return RedirectToAction("AgencyDashboard", "Agent");
+                if (role == "ADMIN") return RedirectToAction("AgencyDashboard", "Agent");
                 return RedirectToAction("Index", "Home");
             }
 
@@ -132,6 +136,8 @@ namespace PhysioWeb.Controllers
 
         public async Task<ActionResult> Logout()
         {
+            var cacheKey = $"SidebarMenu_{User.Identity.Name}";
+            _cache.Remove(cacheKey);   // ✅ Clear sidebar cache
             await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
             return RedirectToAction("Index", "Home");
         }

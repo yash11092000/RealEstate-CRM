@@ -1,13 +1,14 @@
 ﻿using Microsoft.AspNetCore.Components;
+using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Pages.Manage;
 using PhysioWeb.Data;
 using PhysioWeb.Models;
 using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Reflection.PortableExecutable;
-using System.Reflection;
-using System.Threading.Tasks;
 using System.Data.Common;
+using System.Reflection;
+using System.Reflection.PortableExecutable;
+using System.Threading.Tasks;
 using static System.Net.Mime.MediaTypeNames;
 
 namespace PhysioWeb.Repository
@@ -146,6 +147,24 @@ namespace PhysioWeb.Repository
                 throw;
             }
         }
+        public async Task<bool> SaveUserRole(UserRole UserRole)
+        {
+            try
+            {
+                string[] parametersName = { "UniquId", "Role", "Description", "IsActive", "AgencyID", "UserID" };
+                object[] Values = { UserRole.UniquId,UserRole.Role, UserRole.Description,
+                UserRole.IsActive ,UserRole.AgencyId ,UserRole.UserID };
+
+                string Sp = "FMR_SaveUserRole";
+                int RecordAffected = await _dbHelper.ExecuteNonQueryAsync(Sp, parametersName, Values);
+                return RecordAffected > 0;
+            }
+            catch (Exception ex)
+            {
+                // Optional: log error here
+                throw;
+            }
+        }
         public async Task<bool> DeletePropertyType(PropertyTypeMaster PropertyTypeMaster)
         {
             try
@@ -242,6 +261,30 @@ namespace PhysioWeb.Repository
                 {
                     PropertyTypeMaster PropertyTypeMaster = new PropertyTypeMaster(data, 1);
                     return PropertyTypeMaster;
+                }
+                return null;
+
+                //bind 
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }
+
+        public async Task<UserRole> EditUserRole(int UniqueID, string UserID)
+        {
+            try
+            {
+                string[] parameterNames = { "UniqueID", "UserID" };
+                object[] parameterValues = { UniqueID, UserID };
+
+                string Sp = "FMR_EditUserRole";
+                var data = await _dbHelper.GetDataReaderAsync(Sp, parameterNames, parameterValues);
+                while (data.Read())
+                {
+                    UserRole UserRole = new UserRole(data, 1);
+                    return UserRole;
                 }
                 return null;
 
@@ -1200,7 +1243,7 @@ namespace PhysioWeb.Repository
             {
                 string[] parametersName = {
                 "UniquId", "UserName", "FirstName", "MiddleName", "LastName", "Email",
-                "Phone", "AlternatePhone","IsActive","ProfileImage","AgencyID","Password"
+                "Phone", "AlternatePhone","IsActive","ProfileImage","AgencyID","Password","UserRoleId","DesignationId","ReportingManagerId"
             };
 
                 object[] Values = {
@@ -1215,7 +1258,10 @@ namespace PhysioWeb.Repository
                         agent.IsActive,
                         agent.ProfileImageFilePath,
                         agent.AgencyId,
-                        agent.Password
+                        agent.Password,
+                        agent.UserRoleId,
+                        agent.DesignationId,
+                        agent.ManagerId,
                     };
 
 
@@ -1225,7 +1271,6 @@ namespace PhysioWeb.Repository
             }
             catch (Exception ex)
             {
-                // Optional: log error here
                 throw;
             }
         }
@@ -1238,6 +1283,24 @@ namespace PhysioWeb.Repository
                 object[] Values = { agent.UniquId, agent.UserID };
 
                 string Sp = "FMR_DeleteAgent";
+                int RecordAffected = await _dbHelper.ExecuteNonQueryAsync(Sp, parametersName, Values);
+                return RecordAffected > 0;
+            }
+            catch (Exception ex)
+            {
+                // Optional: log error here
+                throw;
+            }
+        }
+
+        public async Task<bool> DeleteUserRole(UserRole userRole)
+        {
+            try
+            {
+                string[] parametersName = { "UniquId", "UserID" };
+                object[] Values = { userRole.UniquId, userRole.UserID };
+
+                string Sp = "FMR_DeleteUserRole";
                 int RecordAffected = await _dbHelper.ExecuteNonQueryAsync(Sp, parametersName, Values);
                 return RecordAffected > 0;
             }
@@ -1387,7 +1450,16 @@ namespace PhysioWeb.Repository
                 {
                     while (data.Read())
                     {
-                        NewLeadDropDown.RequirementTypeList.Add(new DropDownSource(data, true));
+                        //NewLeadDropDown.RequirementTypeList.Add(new DropDownSource(data, true));
+                        NewLeadDropDown.LeadSourceList.Add(new DropDownSource(data, true));
+                    }
+                }
+                if (data.NextResult())
+                {
+                    while (data.Read())
+                    {
+                        // NewLeadDropDown.PropertyTypeList.Add(new DropDownSource(data, true));
+                        NewLeadDropDown.LeadStatusList.Add(new DropDownSource(data, true));
                     }
                 }
                 if (data.NextResult())
@@ -1411,7 +1483,27 @@ namespace PhysioWeb.Repository
                         NewLeadDropDown.FurnishingTypeList.Add(new DropDownSource(data, true));
                     }
                 }
-
+                if (data.NextResult())
+                {
+                    while (data.Read())
+                    {
+                        NewLeadDropDown.AmountUnitList.Add(new DropDownSource(data, true));
+                    }
+                }
+                if (data.NextResult())
+                {
+                    while (data.Read())
+                    {
+                        NewLeadDropDown.PropertyInterestedInList.Add(new DropDownSource(data, true));
+                    }
+                }
+                if (data.NextResult())
+                {
+                    while (data.Read())
+                    {
+                        NewLeadDropDown.CampaignList.Add(new DropDownSource(data, true));
+                    }
+                }
                 return NewLeadDropDown;
             }
             catch (Exception e)
@@ -1419,5 +1511,370 @@ namespace PhysioWeb.Repository
                 throw e;
             }
         }
+
+        public async Task<Agent> GetAgentDropDown()
+        {
+
+            try
+            {
+                string[] parameterNames = { };
+                object[] parameterValues = { };
+
+                string Sp = "FMR_UserDropDown";
+                var data = await _dbHelper.GetDataReaderAsync(Sp, parameterNames, parameterValues);
+                var Agent = new Agent();
+
+                while (data.Read())
+                {
+                    Agent.UserRoles.Add(new DropDownSource(data, true));
+                }
+                if (data.NextResult())
+                {
+                    while (data.Read())
+                    {
+                        Agent.Designations.Add(new DropDownSource(data, true));
+                    }
+                }
+                if (data.NextResult())
+                {
+                    while (data.Read())
+                    {
+                        Agent.ManagerList.Add(new DropDownSource(data, true));
+                    }
+                }
+
+
+                return Agent;
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }
+
+        public async Task<DataTableResult> ListUserRole(DataTablePara dataTablePara)
+        {
+            try
+            {
+                string[] parameterName = new string[]
+                {
+                    "DisplayLength", "DisplayStart", "SortCol", "SortDir", "Search",
+                    "Role", "Description", "IsActive", "CreatedBy", "AgencyId"
+                };
+
+                object[] parameterValue = new object[]
+                {
+                    dataTablePara.iDisplayLength,dataTablePara.iDisplayStart,dataTablePara.iSortCol_0,
+                    dataTablePara.sSortDir_0,dataTablePara.sSearch,dataTablePara.sSearch_0,
+                    dataTablePara.sSearch_1,dataTablePara.sSearch_2,dataTablePara.sSearch_3,dataTablePara.AgencyId
+                };
+
+                var reader = await _dbHelper.GetDataReaderAsync("[FMR_DataListUserRole]", parameterName, parameterValue);
+
+                var result = new DataTableResult();
+                var list = new List<UserRole>();
+
+                while (reader.Read())
+                {
+                    list.Add(new UserRole(reader));
+                }
+
+                if (reader.NextResult())
+                {
+                    while (reader.Read())
+                    {
+                        result.iTotalRecords = Convert.ToInt32(reader[0]);
+                    }
+                }
+
+                result.iTotalDisplayRecords = result.iTotalRecords;
+                result.aaData = list;
+
+                return result;
+            }
+            catch (Exception ex)
+            {
+                // Optional: log error here
+                throw;
+            }
+        }
+        public async Task<bool> SaveDesignation(Designation Designation)
+        {
+            try
+            {
+                string[] parametersName = { "UniquId", "DesignationName", "Description", "IsActive", "AgencyID", "UserID" };
+                object[] Values = { Designation.UniquId,Designation.DesignationName, Designation.Description,
+                Designation.IsActive ,Designation.AgencyId ,Designation.UserID };
+
+                string Sp = "FMR_SaveDesignation";
+                int RecordAffected = await _dbHelper.ExecuteNonQueryAsync(Sp, parametersName, Values);
+                return RecordAffected > 0;
+            }
+            catch (Exception ex)
+            {
+                // Optional: log error here
+                throw ex;
+            }
+        }
+
+
+        public async Task<bool> DeleteDesignation(Designation Designation)
+        {
+            try
+            {
+                string[] parametersName = { "UniquId", "UserID" };
+                object[] Values = { Designation.UniquId, Designation.UserID };
+
+                string Sp = "FMR_DeleteDesignation";
+                int RecordAffected = await _dbHelper.ExecuteNonQueryAsync(Sp, parametersName, Values);
+                return RecordAffected > 0;
+            }
+            catch (Exception ex)
+            {
+                // Optional: log error here
+                throw;
+            }
+        }
+
+        public async Task<DataTableResult> ListDesignation(DataTablePara dataTablePara)
+        {
+            try
+            {
+                string[] parameterName = new string[]
+                {
+                    "DisplayLength", "DisplayStart", "SortCol", "SortDir", "Search",
+                    "Designation", "Description", "IsActive", "CreatedBy", "AgencyId"
+                };
+
+                object[] parameterValue = new object[]
+                {
+                    dataTablePara.iDisplayLength,dataTablePara.iDisplayStart,dataTablePara.iSortCol_0,
+                    dataTablePara.sSortDir_0,dataTablePara.sSearch,dataTablePara.sSearch_0,
+                    dataTablePara.sSearch_1,dataTablePara.sSearch_2,dataTablePara.sSearch_3,dataTablePara.AgencyId
+                };
+
+                var reader = await _dbHelper.GetDataReaderAsync("[FMR_DataListDesignation]", parameterName, parameterValue);
+
+                var result = new DataTableResult();
+                var list = new List<Designation>();
+
+                while (reader.Read())
+                {
+                    list.Add(new Designation(reader));
+                }
+
+                if (reader.NextResult())
+                {
+                    while (reader.Read())
+                    {
+                        result.iTotalRecords = Convert.ToInt32(reader[0]);
+                    }
+                }
+
+                result.iTotalDisplayRecords = result.iTotalRecords;
+                result.aaData = list;
+
+                return result;
+            }
+            catch (Exception ex)
+            {
+                // Optional: log error here
+                throw;
+            }
+        }
+
+        public async Task<Designation> EditDesignation(int UniqueID, string UserID)
+        {
+            try
+            {
+                string[] parameterNames = { "UniqueID", "UserID" };
+                object[] parameterValues = { UniqueID, UserID };
+
+                string Sp = "FMR_EditDesignation";
+                var data = await _dbHelper.GetDataReaderAsync(Sp, parameterNames, parameterValues);
+                while (data.Read())
+                {
+                    Designation Designation = new Designation(data, 1);
+                    return Designation;
+                }
+                return null;
+
+                //bind 
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }
+
+        public async Task<List<OrgData>> GetOrgData()
+        {
+            try
+            {
+                string[] parameterNames = { };
+                object[] parameterValues = { };
+
+                string Sp = "FMR_GetOrgData";
+                var data = await _dbHelper.GetDataReaderAsync(Sp, parameterNames, parameterValues);
+                List<OrgData> OrgData = new List<OrgData>();
+                while (data.Read())
+                {
+                    OrgData.Add(new OrgData(data));
+                }
+                return OrgData;
+
+                //bind 
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }
+
+        public async Task<bool> SaveNewLead(NewLead NewLead)
+        {
+            try
+            {
+                string[] parametersName =
+                {
+                    "@UniquId","@LeadName","@LeadUniqueNo","@LeadDate","@ContactPersonName","@ContactPerMobNo","@WpMobNo","@PanCard","@AadharNo","@LeadType","@LeadSource",
+                    "@LeadStatus","@Priority","@IsHotLead","@Description","@Campaign","@Address","@PinCode","@CountryID","@StateID","@CityID","@SalesPersonID","@SalesCoordinatorID",
+                    "@IsActive","@UserID","@AgencyID","@PropertyType","@Email","@FollowUpDate","@PreferredContactMethod","@BudgetMin","@BudgetMax","@AmountUnitMinPrice","@AmountUnitMaxPrice",
+                    "@ConvertedActualPrice","@ConvertedNegotiablePrice","@LocationPreference","@PropertyInterestedIn"
+                };
+
+                object[] values =
+                {
+                    NewLead.UniquId,NewLead.FullName, NewLead.LeadId, NewLead.LeadDate,null, NewLead.PhoneNumber,          
+                    NewLead.AlternateNumber,NewLead.PanCard, NewLead.AadharCard, NewLead.LeadType,NewLead.LeadSource,NewLead.LeadStatus,      
+                    NewLead.LeadPriority,false,NewLead.RequirementDescription,NewLead.Campaign,NewLead.Address,
+                    NewLead.Pincode, NewLead.CountryID, NewLead.StateID, NewLead.CityID,  NewLead.AssignedAgent,DBNull.Value,     
+                    NewLead.IsActive,NewLead.UserID, NewLead.AgencyId ,NewLead.PropertyType,NewLead.Email,NewLead.FollowUpDate,NewLead.PreferredContactMethod,
+                    NewLead.BudgetMin,NewLead.BudgetMax,NewLead.AmountUnitMinPrice ,NewLead.AmountUnitMaxPrice,
+                    NewLead.ConvertedActualPrice ,NewLead.ConvertedNegotiablePrice,NewLead.LocationPreference,NewLead.PropertyInterestedIn
+                };
+                    
+                string Sp = "FMR_SaveNewLead";
+                int RecordAffected = await _dbHelper.ExecuteNonQueryAsync(Sp, parametersName, values);
+                return RecordAffected > 0;
+            }
+            catch (Exception ex)
+            {
+                // Optional: log error here
+                throw ex;
+            }
+        }
+
+        public async Task<DataTableResult> ListNewLead(DataTablePara dataTablePara)
+        {
+            try
+            {
+                string[] parameterName = new string[]
+                {
+                    "DisplayLength", "DisplayStart", "SortCol", "SortDir", "Search",
+                    //"FullName", "Email","Phone","CreatedBy","IsActive","AgencyId"
+                      "LeadName",
+"LeadUniqueNo",
+    "LeadDate",
+    "ContactPerMobNo",
+    "WpMobNo",
+    "LeadType",
+    "LeadSource",
+    "LeadStatus",
+    "FollowUpDate",
+    "CreatedBy",
+    "IsActive",
+    "AgencyId"
+                };
+
+                object[] parameterValue = new object[]
+                {
+                    dataTablePara.iDisplayLength,dataTablePara.iDisplayStart,dataTablePara.iSortCol_0,
+                    dataTablePara.sSortDir_0,dataTablePara.sSearch,
+                     dataTablePara.sSearch_1,  
+    dataTablePara.sSearch_2,  
+    dataTablePara.sSearch_3,  
+    dataTablePara.sSearch_4,  
+    dataTablePara.sSearch_5,  
+    dataTablePara.sSearch_6,  
+    dataTablePara.sSearch_7,  
+    dataTablePara.sSearch_8,  
+    dataTablePara.sSearch_9,  
+
+    dataTablePara.sSearch_10, 
+    dataTablePara.sSearch_11, 
+    dataTablePara.AgencyId
+                };
+
+                var reader = await _dbHelper.GetDataReaderAsync("[FMR_DataListNewLead]", parameterName, parameterValue);
+
+                var result = new DataTableResult();
+                var list = new List<NewLead>();
+
+                while (reader.Read())
+                {
+                    list.Add(new NewLead(reader, 0));
+                }
+
+                if (reader.NextResult())
+                {
+                    while (reader.Read())
+                    {
+                        result.iTotalRecords = Convert.ToInt32(reader[0]);
+                    }
+                }
+
+                result.iTotalDisplayRecords = result.iTotalRecords;
+                result.aaData = list;
+
+                return result;
+            }
+            catch (Exception ex)
+            {
+                // Optional: log error here
+                throw;
+            }
+        }
+        public async Task<bool> DeleteNewLead(NewLead NewLead)
+        {
+            try
+            {
+                string[] parametersName = { "UniquId", "UserID" };
+                object[] Values = { NewLead.UniquId, NewLead.UserID };
+
+                string Sp = "FMR_DeleteNewLead";
+                int RecordAffected = await _dbHelper.ExecuteNonQueryAsync(Sp, parametersName, Values);
+                return RecordAffected > 0;
+            }
+            catch (Exception ex)
+            {
+                // Optional: log error here
+                throw;
+            }
+        }
+        public async Task<NewLead> EditNewLead(int uniqueID, int UserID)
+        {
+            try
+            {
+                string[] parameterNames = { "UniqueID", "UserID" };
+                object[] parameterValues = { uniqueID, UserID };
+
+                string Sp = "FMR_EditNewLead";
+                var data = await _dbHelper.GetDataReaderAsync(Sp, parameterNames, parameterValues);
+                while (data.Read())
+                {
+                    NewLead NewLead = new NewLead(data, 1);
+                    return NewLead;
+                }
+                return null;
+
+                //bind 
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }
+
     }
 }

@@ -576,7 +576,7 @@
 					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 				</div>
 				<div class="modal-body">
-					<div id="imagesContainer" class="row g-3"></div>
+					<div id="imagesContainer" style="align-items:center;"  class="row g-3"></div>
 				</div>
 			</div>
 		</div>
@@ -1052,6 +1052,8 @@
 					$("#displayMinBudget").text("");
 					var triggerTab = new bootstrap.Tab(document.querySelector('#list-tab'));
 					triggerTab.show();
+					$('#imagesContainer').empty();
+					$('#videoGallery').empty();
 				}
 
 
@@ -1104,6 +1106,7 @@
 				 $("#AmountUnitMinPrice").val(data.amountUnitMaxPrice);
 				 $("#BudgetMax").trigger("change")
 				 $("#BudgetMin").trigger("change")
+				 $("#Qty").val(data.qty)
 
 				 showSavedImages(data.images);
 				 showSavedVideos(data.videos);
@@ -1391,16 +1394,12 @@
 				response.images.forEach(function(imgUrl) {
 					$('#imagesContainer').append(`
 						<div class="col-md-4">
-							<img src="/secure-images/${imgUrl.value}" class="img-fluid rounded" alt="Property Image">
+							<img src="/secure-images/${imgUrl.value}" style="max-width:250px;max-height:250px" class="img-fluid rounded" alt="Property Image">
 						</div>
 					`);
 				});
 			}
-			else {
-				$('#imagesContainer').html('<p>No images available.</p>');
-			}
-
-			if (response.videos && response.videos.length > 0) {
+			else if (response.videos && response.videos.length > 0) {
 				response.videos.forEach(function(media) {
 					$('#imagesContainer').append(`
 						  <div class="col-md-6">

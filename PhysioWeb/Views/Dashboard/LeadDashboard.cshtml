@@ -1,9 +1,12 @@
-﻿@{
+﻿@model PhysioWeb.Models.LeadDashboard
+
+@{
 	ViewBag.Title = "Lead Dashboard";
 	var theme = User.FindFirst("Theme")?.Value ?? "#198754";
 }
 
 <style>
+
 	.pipeline-container {
 		display: flex;
 		align-items: center;
@@ -71,13 +74,13 @@
 		transition: background 0.3s ease;
 	}
 
-	.pipeline-line.completed {
-		background: linear-gradient(90deg, #198754, #28a745);
-	}
+		.pipeline-line.completed {
+			background: linear-gradient(90deg, #198754, #28a745);
+		}
 
-	.pipeline-line.active {
-		background: linear-gradient(90deg, #ffc107, #ffca2c);
-	}
+		.pipeline-line.active {
+			background: linear-gradient(90deg, #ffc107, #ffca2c);
+		}
 
 	@@media (max-width: 768px) {
 		.pipeline-container {
@@ -115,8 +118,8 @@
 
 
 	.dashboard-container {
-		max-width: 1400px;
-		margin: 0 auto;
+		max-width: 100%;
+		/* margin: 0 auto; */
 	}
 
 	.top-bar {
@@ -695,553 +698,650 @@
 		}
 	}
 
+	/* datatable Styleing */
+
+	/* Custom DataTables Styling */
+	.dataTables_wrapper {
+		width: 100%;
+	}
+
+	/* Header styling */
+	#leadsTable thead th {
+		background-color: #f8f9fa;
+		font-weight: 600;
+		color: #495057;
+		padding: 1rem;
+		border-bottom: 2px solid #dee2e6;
+	}
+
+	/* Row styling */
+	#leadsTable tbody td {
+		padding: 1rem;
+		vertical-align: middle;
+		border-bottom: 1px solid #e9ecef;
+	}
+
+	/* Hover effect */
+	#leadsTable tbody tr:hover {
+		background-color: #f8f9fa;
+	}
+
+	/* Pagination styling */
+	.dataTables_wrapper .dataTables_paginate {
+		margin-top: 1rem;
+		float: none;
+		text-align: center;
+	}
+
+		.dataTables_wrapper .dataTables_paginate .paginate_button {
+			border: 1px solid #dee2e6;
+			padding: 0.5rem 0.75rem;
+			margin: 0 0.125rem;
+			border-radius: 4px;
+			cursor: pointer;
+		}
+
+			.dataTables_wrapper .dataTables_paginate .paginate_button.current {
+				background-color: #007bff;
+				color: white !important;
+				border-color: #007bff;
+			}
+
+	/* Search box styling */
+	.dataTables_filter input {
+		border: 1px solid #ced4da;
+		border-radius: 4px;
+		padding: 0.375rem 0.75rem;
+		margin-left: 0.5rem;
+	}
+
+	/* Info styling */
+	.dataTables_info {
+		padding-top: 0.5rem;
+		color: #6c757d;
+	}
+
+	/* Remove default DataTables classes */
+	.leads-table.dataTable {
+		border-collapse: collapse !important;
+		margin-top: 0 !important;
+		margin-bottom: 0 !important;
+	}
+
+	/* Action buttons styling */
+	.action-buttons {
+		display: flex;
+		gap: 0.5rem;
+	}
+
+	.action-btn {
+		background: none;
+		border: 1px solid #dee2e6;
+		border-radius: 4px;
+		padding: 0.25rem 0.5rem;
+		color: #6c757d;
+		cursor: pointer;
+		transition: all 0.2s;
+	}
+
+		.action-btn:hover {
+			background-color: #f8f9fa;
+			color: #007bff;
+		}
+
+	table.dataTable thead th,
+	table.dataTable tbody td {
+		text-align: center !important;
+	}
+
 </style>
 
 <main class="dashboard-content with-sidebar collapsed">
 
 	<div class="dashboard-container">
+		<div class="row">
 
-		<!-- Dashboard Content -->
-		<div class="dashboard-content">
+			<div class="col-md-6">
+				<h1 class="dashboard-title">Leads Dashboard</h1>
+				<p class="dashboard-subtitle">Overview of your leads and conversions</p>
+			</div>
+
 			<!-- Page Header -->
-			<div class="page-header text-end">
-				<a class="btn btn-primary-custom" href="/Master/NewLead">
-					<i class="fas fa-plus"></i> Add New Lead
-				</a>
+			<div class="col-md-6">
+				<div class="page-header text-end">
+					<a class="btn btn-primary-custom" href="/Master/NewLead">
+						<i class="fas fa-plus"></i> Add New Lead
+					</a>
+				</div>
 			</div>
+		</div>
 
-			<!-- Bootstrap Tabs -->
-			<ul class="nav nav-tabs" id="dashboardTabs" role="tablist">
-				<li class="nav-item" role="presentation">
-					<button class="nav-link active" id="leads-tab" data-bs-toggle="tab" data-bs-target="#leads" type="button" role="tab" aria-controls="leads" aria-selected="true">
-						<i class="fas fa-users me-2"></i>Lead Management
-					</button>
-				</li>
-				<li class="nav-item" role="presentation">
-					<button class="nav-link" id="pipeline-tab" data-bs-toggle="tab" data-bs-target="#pipeline" type="button" role="tab" aria-controls="pipeline" aria-selected="false">
-						<i class="fas fa-project-diagram me-2"></i>Visual Pipeline
-					</button>
-				</li>
-				<li class="nav-item" role="presentation">
-					<button class="nav-link" id="stats-tab" data-bs-toggle="tab" data-bs-target="#stats" type="button" role="tab" aria-controls="stats" aria-selected="false">
-						<i class="fas fa-chart-pie me-2"></i>Monthly Statistics
-					</button>
-				</li>
-			</ul>
+		<!-- Bootstrap Tabs -->
+		<ul class="nav nav-tabs" id="dashboardTabs" role="tablist">
+			<li class="nav-item" role="presentation">
+				<button class="nav-link active" id="leads-tab" data-bs-toggle="tab" data-bs-target="#leads" type="button" role="tab" aria-controls="leads" aria-selected="true">
+					<i class="fas fa-users me-2"></i>Lead Management
+				</button>
+			</li>
+			<li class="nav-item" role="presentation">
+				<button class="nav-link" id="pipeline-tab" data-bs-toggle="tab" data-bs-target="#pipeline" type="button" role="tab" aria-controls="pipeline" aria-selected="false">
+					<i class="fas fa-project-diagram me-2"></i>Visual Pipeline
+				</button>
+			</li>
+			<li class="nav-item" role="presentation">
+				<button class="nav-link" id="stats-tab" data-bs-toggle="tab" data-bs-target="#stats" type="button" role="tab" aria-controls="stats" aria-selected="false">
+					<i class="fas fa-chart-pie me-2"></i>Monthly Statistics
+				</button>
+			</li>
+		</ul>
 
-			<div class="tab-content" id="dashboardTabsContent">
-				<!-- Leads Tab -->
-				<div class="tab-pane fade show active" id="leads" role="tabpanel" aria-labelledby="leads-tab">
+		<div class="tab-content" id="dashboardTabsContent">
+			<!-- Leads Tab -->
+			<div class="tab-pane fade show active" id="leads" role="tabpanel" aria-labelledby="leads-tab">
+				<div class="container-fluid py-4">
+					<!-- Dashboard Header -->
+					<div class="dashboard-header">
+						<div class="row align-items-center">
+							<div class="col-md-12 text-end">
+								<span class="badge bg-light text-dark p-2">Last updated: Today</span>
+							</div>
+						</div>
+					</div>
+
 					<!-- Stats Cards -->
-					<div class="stats-container">
-						<div class="stat-card new">
-							<div class="stat-header">
-								<div class="stat-title">New Leads</div>
-								<div class="stat-icon">
-									<i class="fas fa-user-plus"></i>
+					<div class="row g-4">
+						<!-- New Leads Card -->
+						<div class="col-12 col-sm-6 col-lg-4 col-xl">
+							<div class="stat-card new">
+								<div class="stat-header">
+									<div class="stat-title">New Leads</div>
+									<div class="stat-icon">
+										<i class="fas fa-user-plus"></i>
+									</div>
+								</div>
+								<div class="stat-value">@Model.NewLeadsCount</div>
+								<div class="stat-change positive">
+									<i class="fas fa-arrow-up"></i> 12% from last month
 								</div>
 							</div>
-							<div class="stat-value">42</div>
-							<div class="stat-change positive">
-								<i class="fas fa-arrow-up"></i> 12% from last month
-							</div>
 						</div>
 
-						<div class="stat-card contacted">
-							<div class="stat-header">
-								<div class="stat-title">Contacted</div>
-								<div class="stat-icon">
-									<i class="fas fa-phone"></i>
+						<!-- Contacted Card -->
+						<div class="col-12 col-sm-6 col-lg-4 col-xl">
+							<div class="stat-card contacted">
+								<div class="stat-header">
+									<div class="stat-title">Contacted</div>
+									<div class="stat-icon">
+										<i class="fas fa-phone"></i>
+									</div>
+								</div>
+								<div class="stat-value">@Model.ContactedLeadCount</div>
+								<div class="stat-change positive">
+									<i class="fas fa-arrow-up"></i> 5% from last month
 								</div>
 							</div>
-							<div class="stat-value">28</div>
-							<div class="stat-change positive">
-								<i class="fas fa-arrow-up"></i> 5% from last month
-							</div>
 						</div>
 
-						<div class="stat-card qualified">
-							<div class="stat-header">
-								<div class="stat-title">Qualified</div>
-								<div class="stat-icon">
-									<i class="fas fa-check-circle"></i>
+						<!-- Interested Card -->
+						<div class="col-12 col-sm-6 col-lg-4 col-xl">
+							<div class="stat-card interested">
+								<div class="stat-header">
+									<div class="stat-title">Interested</div>
+									<div class="stat-icon">
+										<i class="fas fa-check-circle"></i>
+									</div>
+								</div>
+								<div class="stat-value">@Model.IntrestedLeadCount</div>
+								<div class="stat-change positive">
+									<i class="fas fa-arrow-up"></i> 8% from last month
 								</div>
 							</div>
-							<div class="stat-value">19</div>
-							<div class="stat-change positive">
-								<i class="fas fa-arrow-up"></i> 8% from last month
-							</div>
 						</div>
 
-						<div class="stat-card converted">
-							<div class="stat-header">
-								<div class="stat-title">Converted</div>
-								<div class="stat-icon">
-									<i class="fas fa-trophy"></i>
+						<!-- Not Interested Card -->
+						<div class="col-12 col-sm-6 col-lg-4 col-xl">
+							<div class="stat-card not-interested">
+								<div class="stat-header">
+									<div class="stat-title">Not Intrested</div>
+									<div class="stat-icon">
+										<i class="fas fa-times-circle"></i>
+									</div>
+								</div>
+								<div class="stat-value">@Model.NotIntrestedLeadCount</div>
+								<div class="stat-change positive">
+									<i class="fas fa-arrow-up"></i> 3% from last month
 								</div>
 							</div>
-							<div class="stat-value">12</div>
-							<div class="stat-change positive">
-								<i class="fas fa-arrow-up"></i> 3% from last month
-							</div>
 						</div>
 
-						<div class="stat-card unqualified">
-							<div class="stat-header">
-								<div class="stat-title">Unqualified</div>
-								<div class="stat-icon">
-									<i class="fas fa-times-circle"></i>
+						<!-- Converted Card -->
+						<div class="col-12 col-sm-6 col-lg-4 col-xl">
+							<div class="stat-card converted">
+								<div class="stat-header">
+									<div class="stat-title">Converted</div>
+									<div class="stat-icon">
+										<i class="fas fa-trophy"></i>
+									</div>
 								</div>
-							</div>
-							<div class="stat-value">7</div>
-							<div class="stat-change negative">
-								<i class="fas fa-arrow-down"></i> 2% from last month
-							</div>
-						</div>
-					</div>
-
-					<!-- Leads Table -->
-					<div class="leads-section">
-						<div class="section-header">
-							<div class="section-title">Recent Leads</div>
-							<div class="table-controls">
-								<select class="filter-select">
-									<option>All Status</option>
-									<option>New</option>
-									<option>Contacted</option>
-									<option>Qualified</option>
-									<option>Converted</option>
-									<option>Unqualified</option>
-								</select>
-								<select class="filter-select">
-									<option>All Agents</option>
-									<option>John Smith</option>
-									<option>Sarah Johnson</option>
-									<option>Michael Brown</option>
-								</select>
-							</div>
-						</div>
-
-						<table class="leads-table">
-							<thead>
-								<tr>
-									<th>Lead</th>
-									<th>Contact</th>
-									<th>Property Type</th>
-									<th>Budget</th>
-									<th>Status</th>
-									<th>Priority</th>
-									<th>Assigned Agent</th>
-									<th>Actions</th>
-								</tr>
-							</thead>
-							<tbody>
-								<tr>
-									<td>
-										<div class="lead-name">
-											<div class="lead-avatar">RJ</div>
-											<div>
-												<div>Robert Johnson</div>
-												<div style="font-size: 13px; color: var(--gray);">L-2023-00125</div>
-											</div>
-										</div>
-									</td>
-									<td>
-										<div>robert.j@email.com</div>
-										<div style="font-size: 13px; color: var(--gray);">+1 (555) 123-4567</div>
-									</td>
-									<td>3 BHK Apartment</td>
-									<td>₹75-90 L</td>
-									<td><span class="status-badge status-new">New</span></td>
-									<td><span class="priority-badge priority-high">High</span></td>
-									<td>John Smith</td>
-									<td>
-										<div class="action-buttons">
-											<button class="action-btn" data-bs-toggle="modal" data-bs-target="#leadConversionModal">
-												<i class="fas fa-plus-circle"></i>
-											</button>
-											<a href="/Services/LeadProfile" class="action-btn"><i class="fas fa-eye"></i></a>
-											<button class="action-btn"><i class="fas fa-edit"></i></button>
-											<button class="action-btn"><i class="fas fa-phone"></i></button>
-										</div>
-									</td>
-								</tr>
-								<tr>
-									<td>
-										<div class="lead-name">
-											<div class="lead-avatar">MP</div>
-											<div>
-												<div>Michael Peterson</div>
-												<div style="font-size: 13px; color: var(--gray);">L-2023-00124</div>
-											</div>
-										</div>
-									</td>
-									<td>
-										<div>michael.p@email.com</div>
-										<div style="font-size: 13px; color: var(--gray);">+1 (555) 987-6543</div>
-									</td>
-									<td>4 BHK Villa</td>
-									<td>₹1.2-1.5 Cr</td>
-									<td><span class="status-badge status-qualified">Qualified</span></td>
-									<td><span class="priority-badge priority-medium">Medium</span></td>
-									<td>Sarah Johnson</td>
-									<td>
-										<div class="action-buttons">
-											<button class="action-btn" data-bs-toggle="modal" data-bs-target="#leadConversionModal">
-												<i class="fas fa-plus-circle"></i>
-											</button>
-											<a href="/Services/LeadProfile" class="action-btn"><i class="fas fa-eye"></i></a>
-											<button class="action-btn"><i class="fas fa-edit"></i></button>
-											<button class="action-btn"><i class="fas fa-phone"></i></button>
-										</div>
-									</td>
-								</tr>
-								<tr>
-									<td>
-										<div class="lead-name">
-											<div class="lead-avatar">SW</div>
-											<div>
-												<div>Sarah Williams</div>
-												<div style="font-size: 13px; color: var(--gray);">L-2023-00123</div>
-											</div>
-										</div>
-									</td>
-									<td>
-										<div>sarah.w@email.com</div>
-										<div style="font-size: 13px; color: var(--gray);">+1 (555) 456-7890</div>
-									</td>
-									<td>2 BHK Apartment</td>
-									<td>₹45-60 L</td>
-									<td><span class="status-badge status-contacted">Contacted</span></td>
-									<td><span class="priority-badge priority-high">High</span></td>
-									<td>Michael Brown</td>
-									<td>
-										<div class="action-buttons">
-											<button class="action-btn" data-bs-toggle="modal" data-bs-target="#leadConversionModal">
-												<i class="fas fa-plus-circle"></i>
-											</button>
-											<a href="/Services/LeadProfile" class="action-btn"><i class="fas fa-eye"></i></a>
-											<button class="action-btn"><i class="fas fa-edit"></i></button>
-											<button class="action-btn"><i class="fas fa-phone"></i></button>
-										</div>
-									</td>
-								</tr>
-								<tr>
-									<td>
-										<div class="lead-name">
-											<div class="lead-avatar">DR</div>
-											<div>
-												<div>David Rodriguez</div>
-												<div style="font-size: 13px; color: var(--gray);">L-2023-00122</div>
-											</div>
-										</div>
-									</td>
-									<td>
-										<div>david.r@email.com</div>
-										<div style="font-size: 13px; color: var(--gray);">+1 (555) 234-5678</div>
-									</td>
-									<td>Office Space</td>
-									<td>₹2.5-3 Cr</td>
-									<td><span class="status-badge status-converted">Converted</span></td>
-									<td><span class="priority-badge priority-low">Low</span></td>
-									<td>John Smith</td>
-									<td>
-										<div class="action-buttons">
-											<button class="action-btn" data-bs-toggle="modal" data-bs-target="#leadConversionModal">
-												<i class="fas fa-plus-circle"></i>
-											</button>
-											<a href="/Services/LeadProfile" class="action-btn"><i class="fas fa-eye"></i></a>
-											<button class="action-btn"><i class="fas fa-edit"></i></button>
-											<button class="action-btn"><i class="fas fa-phone"></i></button>
-										</div>
-									</td>
-								</tr>
-								<tr>
-									<td>
-										<div class="lead-name">
-											<div class="lead-avatar">EM</div>
-											<div>
-												<div>Emily Martinez</div>
-												<div style="font-size: 13px; color: var(--gray);">L-2023-00121</div>
-											</div>
-										</div>
-									</td>
-									<td>
-										<div>emily.m@email.com</div>
-										<div style="font-size: 13px; color: var(--gray);">+1 (555) 876-5432</div>
-									</td>
-									<td>1 BHK Apartment</td>
-									<td>₹35-45 L</td>
-									<td><span class="status-badge status-unqualified">Unqualified</span></td>
-									<td><span class="priority-badge priority-low">Low</span></td>
-									<td>Sarah Johnson</td>
-									<td>
-										<div class="action-buttons">
-											<button class="action-btn" data-bs-toggle="modal" data-bs-target="#leadConversionModal">
-												<i class="fas fa-plus-circle"></i>
-											</button>
-											<a href="/Services/LeadProfile" class="action-btn"><i class="fas fa-eye"></i></a>
-
-
-
-
-											<button class="action-btn"><i class="fas fa-edit"></i></button>
-											<button class="action-btn"><i class="fas fa-phone"></i></button>
-										</div>
-									</td>
-								</tr>
-							</tbody>
-						</table>
-
-						<div class="pagination">
-							<div class="pagination-info">Showing 1 to 5 of 42 leads</div>
-							<div class="pagination-controls">
-								<div class="pagination-btn"><i class="fas fa-chevron-left"></i></div>
-								<div class="pagination-btn active">1</div>
-								<div class="pagination-btn">2</div>
-								<div class="pagination-btn">3</div>
-								<div class="pagination-btn">4</div>
-								<div class="pagination-btn"><i class="fas fa-chevron-right"></i></div>
+								<div class="stat-value">@Model.ContactedLeadCount</div>
+								<div class="stat-change negative">
+									<i class="fas fa-arrow-down"></i> 2% from last month
+								</div>
 							</div>
 						</div>
 					</div>
-				</div>
-				<!-- 🔹 Visual Pipeline Tab -->
-				<div class="tab-pane fade" id="pipeline" role="tabpanel" aria-labelledby="pipeline-tab">
-					<div class="card p-4 shadow-sm mt-3">
-						<h5 class="card-title mb-4"><i class="bi bi-diagram-3"></i> Lead Progress</h5>
 
-						<div class="pipeline-container">
-							<div class="pipeline-step completed">
-								<div class="pipeline-icon">
-									<i class="bi bi-person-plus"></i>
+					<!-- Additional Info Section -->
+					<div class="row mt-5">
+						<div class="col-12">
+							<div class="card">
+								<div class="card-body">
+									<h5 class="card-title">Lead Conversion Summary</h5>
+									<p class="card-text">Based on the current data, you have a <strong>25% conversion rate</strong> from interested leads to converted customers. The overall lead-to-customer conversion rate is <strong>16.7%</strong>.</p>
+									<div class="progress mb-3" style="height: 25px;">
+										<div class="progress-bar bg-success" role="progressbar" style="width: 25%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">
+											Interested to Converted: 25%
+										</div>
+									</div>
+									<div class="row mt-3">
+										<div class="col-md-4">
+											<div class="d-flex align-items-center">
+												<div class="bg-primary rounded-circle p-2 me-2">
+													<i class="fas fa-user-plus text-white"></i>
+												</div>
+												<div>
+													<small class="text-muted">New Leads</small>
+													<div class="fw-bold">42</div>
+												</div>
+											</div>
+										</div>
+										<div class="col-md-4">
+											<div class="d-flex align-items-center">
+												<div class="bg-warning rounded-circle p-2 me-2">
+													<i class="fas fa-check-circle text-white"></i>
+												</div>
+												<div>
+													<small class="text-muted">Interested</small>
+													<div class="fw-bold">19</div>
+												</div>
+											</div>
+										</div>
+										<div class="col-md-4">
+											<div class="d-flex align-items-center">
+												<div class="bg-success rounded-circle p-2 me-2">
+													<i class="fas fa-trophy text-white"></i>
+												</div>
+												<div>
+													<small class="text-muted">Converted</small>
+													<div class="fw-bold">7</div>
+												</div>
+											</div>
+										</div>
+									</div>
 								</div>
-								<p class="pipeline-label">New</p>
-							</div>
-
-							<div class="pipeline-line completed"></div>
-
-							<div class="pipeline-step completed">
-								<div class="pipeline-icon">
-									<i class="bi bi-telephone-forward"></i>
-								</div>
-								<p class="pipeline-label">Contacted</p>
-							</div>
-
-							<div class="pipeline-line active"></div>
-
-							<div class="pipeline-step active">
-								<div class="pipeline-icon">
-									<i class="bi bi-building"></i>
-								</div>
-								<p class="pipeline-label">Visit</p>
-							</div>
-
-							<div class="pipeline-line"></div>
-
-							<div class="pipeline-step">
-								<div class="pipeline-icon">
-									<i class="bi bi-hand-thumbs-up"></i>
-								</div>
-								<p class="pipeline-label">Booking</p>
 							</div>
 						</div>
 					</div>
 				</div>
 
-				<!-- Statistics Tab -->
-				<div class="tab-pane fade" id="stats" role="tabpanel" aria-labelledby="stats-tab">
-					<div class="row">
-						<div class="col-md-8">
-							<div class="chart-container">
-								<h3 class="chart-title">Monthly Lead Conversion Ratio</h3>
-								<canvas id="conversionChart"></canvas>
-							</div>
-						</div>
-						<div class="col-md-4">
-							<div class="chart-container">
-								<h3 class="chart-title">Lead Status Distribution</h3>
-								<canvas id="statusChart"></canvas>
-							</div>
+				<!-- Leads Table -->
+				<div class="leads-section">
+					<div class="section-header">
+						<div class="section-title">Recent Leads</div>
+						<div class="table-controls">
+							<select class="filter-select" id="statusFilter">
+								<option value="">All Status</option>
+								<option value="New">New</option>
+								<option value="Contacted">Contacted</option>
+								<option value="Qualified">Qualified</option>
+								<option value="Converted">Converted</option>
+								<option value="Unqualified">Unqualified</option>
+							</select>
+							<select class="filter-select" id="agentFilter">
+								<option value="">All Agents</option>
+								<option value="John Smith">John Smith</option>
+								<option value="Sarah Johnson">Sarah Johnson</option>
+								<option value="Michael Brown">Michael Brown</option>
+							</select>
 						</div>
 					</div>
 
-					<div class="row mt-4">
-						<div class="col-md-6">
-							<div class="chart-container">
-								<h3 class="chart-title">Monthly Lead Trends</h3>
-								<canvas id="trendChart"></canvas>
-							</div>
+					<!-- Add an ID for DataTables -->
+				</div>
+				<div class="table-responsive">
+					<table id="LeadsTable" class="leads-table" style="width:100%">
+						<thead>
+							<tr>
+								<th>Lead</th>
+								<th>Contact</th>
+								<th>Property Type</th>
+								<th>Budget</th>
+								<th>Status</th>
+								<th>Priority</th>
+								<th>Assigned Agent</th>
+								<th>Actions</th>
+							</tr>
+						</thead>
+						<tbody>
+						</tbody>
+					</table>
+				</div>
+			</div>
+
+
+		</div>
+		<!-- 🔹 Visual Pipeline Tab -->
+		<div class="tab-pane fade" id="pipeline" role="tabpanel" aria-labelledby="pipeline-tab">
+			<div class="card p-4 shadow-sm mt-3">
+				<h5 class="card-title mb-4"><i class="bi bi-diagram-3"></i> Lead Progress</h5>
+
+				<div class="pipeline-container">
+					<div class="pipeline-step completed">
+						<div class="pipeline-icon">
+							<i class="bi bi-person-plus"></i>
 						</div>
-						<div class="col-md-6">
-							<div class="chart-container">
-								<h3 class="chart-title">Agent Performance</h3>
-								<canvas id="agentChart"></canvas>
-							</div>
+						<p class="pipeline-label">New</p>
+					</div>
+
+					<div class="pipeline-line completed"></div>
+
+					<div class="pipeline-step completed">
+						<div class="pipeline-icon">
+							<i class="bi bi-telephone-forward"></i>
 						</div>
+						<p class="pipeline-label">Contacted</p>
+					</div>
+
+					<div class="pipeline-line active"></div>
+
+					<div class="pipeline-step active">
+						<div class="pipeline-icon">
+							<i class="bi bi-building"></i>
+						</div>
+						<p class="pipeline-label">Visit</p>
+					</div>
+
+					<div class="pipeline-line"></div>
+
+					<div class="pipeline-step">
+						<div class="pipeline-icon">
+							<i class="bi bi-hand-thumbs-up"></i>
+						</div>
+						<p class="pipeline-label">Booking</p>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<!-- Statistics Tab -->
+		<div class="tab-pane fade" id="stats" role="tabpanel" aria-labelledby="stats-tab">
+			<div class="row">
+				<div class="col-md-8">
+					<div class="chart-container">
+						<h3 class="chart-title">Monthly Lead Conversion Ratio</h3>
+						<canvas id="conversionChart"></canvas>
+					</div>
+				</div>
+				<div class="col-md-4">
+					<div class="chart-container">
+						<h3 class="chart-title">Lead Status Distribution</h3>
+						<canvas id="statusChart"></canvas>
 					</div>
 				</div>
 			</div>
 
-			<!-- Lead Conversion Modal -->
-			<div class="modal fade" id="leadConversionModal" tabindex="-1" aria-labelledby="leadConversionModalLabel" aria-hidden="true">
-				<div class="modal-dialog modal-lg">
-					<div class="modal-content">
-						<div class="modal-header bg-success text-white">
-							<h5 class="modal-title" id="leadConversionModalLabel">
-								<i class="fas fa-exchange-alt me-2"></i>Convert Lead to Opportunity
-							</h5>
-							<button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
-						</div>
-						<div class="modal-body">
-							<form id="leadConversionForm">
-								<div class="row">
-									<div class="col-md-6 mb-3">
-										<label for="leadId" class="form-label fw-semibold">Lead ID <span class="text-danger">*</span></label>
-										<div class="input-group">
-											<span class="input-group-text bg-light"><i class="fas fa-link text-muted"></i></span>
-											<input type="text" class="form-control border-start-0" id="leadId" value="L-2023-00125" readonly>
-											<button class="btn btn-outline-secondary" type="button" id="viewLeadBtn">
-												<i class="fas fa-external-link-alt"></i>
-											</button>
-										</div>
-										<div class="form-text">
-											<a href="#" class="lead-id-link text-success text-decoration-none">
-												<i class="fas fa-eye me-1"></i>View original lead details
-											</a>
-										</div>
-									</div>
-
-									<div class="col-md-6 mb-3">
-										<label for="stage" class="form-label fw-semibold">Stage <span class="text-danger">*</span></label>
-										<select class="form-select" id="stage" required>
-											<option value="">Select Stage</option>
-											<option value="new">New</option>
-											<option value="contacted">Contacted</option>
-											<option value="qualified" selected>Qualified</option>
-											<option value="proposal">Proposal Sent</option>
-											<option value="negotiation">Negotiation</option>
-											<option value="closed-won">Closed Won</option>
-											<option value="closed-lost">Closed Lost</option>
-										</select>
-									</div>
-								</div>
-
-								<div class="row">
-									<div class="col-md-6 mb-3">
-										<label for="followUpDate" class="form-label fw-semibold">Follow-up Date <span class="text-danger">*</span></label>
-										<div class="input-group">
-											<span class="input-group-text bg-light"><i class="fas fa-calendar-alt text-muted"></i></span>
-											<input type="date" class="form-control" id="followUpDate" required>
-										</div>
-									</div>
-
-									<div class="col-md-6 mb-3">
-										<label for="lastContactDate" class="form-label fw-semibold">Last Contact Date</label>
-										<div class="input-group">
-											<span class="input-group-text bg-light"><i class="fas fa-clock text-muted"></i></span>
-											<input type="date" class="form-control" id="lastContactDate">
-										</div>
-									</div>
-								</div>
-
-								<div class="mb-3">
-									<label for="remarks" class="form-label fw-semibold">Remarks / Notes <span class="text-danger">*</span></label>
-									<textarea class="form-control" id="remarks" rows="3" placeholder="Enter communication summary and next steps..." required></textarea>
-								</div>
-
-								<div class="row">
-									<div class="col-md-6 mb-3">
-										<label for="propertyOffered" class="form-label fw-semibold">Property Offered</label>
-										<select class="form-select" id="propertyOffered">
-											<option value="">Select Property</option>
-											<option value="P-1001">P-1001 | 3 BHK Apartment | Downtown</option>
-											<option value="P-1002">P-1002 | 4 BHK Villa | Suburbs</option>
-											<option value="P-1003">P-1003 | 2 BHK Apartment | City Center</option>
-											<option value="P-1004">P-1004 | Office Space | Business District</option>
-											<option value="P-1005">P-1005 | Penthouse | Luxury Tower</option>
-										</select>
-									</div>
-
-									<div class="col-md-6 mb-3">
-										<label for="expectedDealValue" class="form-label fw-semibold">Expected Deal Value</label>
-										<div class="input-group">
-											<span class="input-group-text bg-light">₹</span>
-											<input type="number" class="form-control" id="expectedDealValue" placeholder="Estimated sale amount">
-											<span class="input-group-text bg-light">.00</span>
-										</div>
-									</div>
-								</div>
-
-								<div class="row">
-									<div class="col-md-6 mb-3">
-										<label for="probability" class="form-label fw-semibold">Probability (%)</label>
-										<div class="d-flex align-items-center gap-3">
-											<input type="range" class="form-range flex-grow-1" id="probability" min="0" max="100" value="50">
-											<span class="probability-value text-success bg-light rounded px-2 py-1" id="probabilityValue">50%</span>
-										</div>
-									</div>
-
-									<div class="col-md-6 mb-3">
-										<label for="assignedAgent" class="form-label fw-semibold">Assigned Agent <span class="text-danger">*</span></label>
-										<select class="form-select" id="assignedAgent" required>
-											<option value="">Select Agent</option>
-											<option value="agent-1">John Smith</option>
-											<option value="agent-2" selected>Sarah Johnson</option>
-											<option value="agent-3">Michael Brown</option>
-											<option value="agent-4">Emily Davis</option>
-										</select>
-									</div>
-								</div>
-
-								<div class="mb-3">
-									<label class="form-label fw-semibold">Attachment</label>
-									<div class="file-upload-area border border-2 border-dashed rounded p-4 text-center" id="fileUploadArea">
-										<i class="fas fa-cloud-upload-alt fa-2x text-muted mb-3"></i>
-										<h5 class="text-muted">Upload Quotation / Proposal</h5>
-										<p class="text-muted mb-3">Drag & drop files here or click to browse</p>
-										<input type="file" class="d-none" id="fileInput" accept=".pdf,.doc,.docx,.jpg,.png">
-										<button type="button" class="btn btn-outline-success" id="browseFilesBtn">
-											<i class="fas fa-folder-open me-2"></i>Browse Files
-										</button>
-									</div>
-									<div id="fileList" class="mt-3"></div>
-								</div>
-
-								<div class="row mt-4 pt-3 border-top">
-									<div class="col-md-6">
-										<div class="mb-3">
-											<label class="form-label fw-semibold">Updated By</label>
-											<input type="text" class="form-control bg-light" value="Sarah Johnson" readonly>
-										</div>
-									</div>
-									<div class="col-md-6">
-										<div class="mb-3">
-											<label class="form-label fw-semibold">Updated Date</label>
-											<input type="text" class="form-control bg-light" id="updatedDate" readonly>
-										</div>
-									</div>
-								</div>
-							</form>
-						</div>
-						<div class="modal-footer">
-							<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
-								<i class="fas fa-times me-2"></i>Cancel
-							</button>
-							<button type="button" class="btn btn-success" id="saveLeadBtn">
-								<i class="fas fa-save me-2"></i>Save Changes
-							</button>
-						</div>
+			<div class="row mt-4">
+				<div class="col-md-6">
+					<div class="chart-container">
+						<h3 class="chart-title">Monthly Lead Trends</h3>
+						<canvas id="trendChart"></canvas>
+					</div>
+				</div>
+				<div class="col-md-6">
+					<div class="chart-container">
+						<h3 class="chart-title">Agent Performance</h3>
+						<canvas id="agentChart"></canvas>
 					</div>
 				</div>
 			</div>
 		</div>
 	</div>
 
+	<!-- Lead Conversion Modal -->
+	<div class="modal fade" id="leadConversionModal" tabindex="-1" aria-labelledby="leadConversionModalLabel" aria-hidden="true">
+		<div class="modal-dialog modal-lg">
+			<div class="modal-content">
+				<div class="modal-header bg-success text-white">
+					<h5 class="modal-title" id="leadConversionModalLabel">
+						<i class="fas fa-exchange-alt me-2"></i>Convert Lead to Opportunity
+					</h5>
+					<button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+				</div>
+				<div class="modal-body">
+					<form id="leadConversionForm">
+						<div class="row">
+							<div class="col-md-6 mb-3">
+								<label for="leadId" class="form-label fw-semibold">Lead ID <span class="text-danger">*</span></label>
+								<div class="input-group">
+									<span class="input-group-text bg-light"><i class="fas fa-link text-muted"></i></span>
+									<input type="text" class="form-control border-start-0" id="leadId" value="L-2023-00125" readonly>
+									<button class="btn btn-outline-secondary" type="button" id="viewLeadBtn">
+										<i class="fas fa-external-link-alt"></i>
+									</button>
+								</div>
+								<div class="form-text">
+									<a href="#" class="lead-id-link text-success text-decoration-none">
+										<i class="fas fa-eye me-1"></i>View original lead details
+									</a>
+								</div>
+							</div>
+
+							<div class="col-md-6 mb-3">
+								<label for="stage" class="form-label fw-semibold">Stage <span class="text-danger">*</span></label>
+								<select class="form-select" id="stage" required>
+									<option value="">Select Stage</option>
+									<option value="new">New</option>
+									<option value="contacted">Contacted</option>
+									<option value="qualified" selected>Qualified</option>
+									<option value="proposal">Proposal Sent</option>
+									<option value="negotiation">Negotiation</option>
+									<option value="closed-won">Closed Won</option>
+									<option value="closed-lost">Closed Lost</option>
+								</select>
+							</div>
+						</div>
+
+						<div class="row">
+							<div class="col-md-6 mb-3">
+								<label for="followUpDate" class="form-label fw-semibold">Follow-up Date <span class="text-danger">*</span></label>
+								<div class="input-group">
+									<span class="input-group-text bg-light"><i class="fas fa-calendar-alt text-muted"></i></span>
+									<input type="date" class="form-control" id="followUpDate" required>
+								</div>
+							</div>
+
+							<div class="col-md-6 mb-3">
+								<label for="lastContactDate" class="form-label fw-semibold">Last Contact Date</label>
+								<div class="input-group">
+									<span class="input-group-text bg-light"><i class="fas fa-clock text-muted"></i></span>
+									<input type="date" class="form-control" id="lastContactDate">
+								</div>
+							</div>
+						</div>
+
+						<div class="mb-3">
+							<label for="remarks" class="form-label fw-semibold">Remarks / Notes <span class="text-danger">*</span></label>
+							<textarea class="form-control" id="remarks" rows="3" placeholder="Enter communication summary and next steps..." required></textarea>
+						</div>
+
+						<div class="row">
+							<div class="col-md-6 mb-3">
+								<label for="propertyOffered" class="form-label fw-semibold">Property Offered</label>
+								<select class="form-select" id="propertyOffered">
+									<option value="">Select Property</option>
+									<option value="P-1001">P-1001 | 3 BHK Apartment | Downtown</option>
+									<option value="P-1002">P-1002 | 4 BHK Villa | Suburbs</option>
+									<option value="P-1003">P-1003 | 2 BHK Apartment | City Center</option>
+									<option value="P-1004">P-1004 | Office Space | Business District</option>
+									<option value="P-1005">P-1005 | Penthouse | Luxury Tower</option>
+								</select>
+							</div>
+
+							<div class="col-md-6 mb-3">
+								<label for="expectedDealValue" class="form-label fw-semibold">Expected Deal Value</label>
+								<div class="input-group">
+									<span class="input-group-text bg-light">₹</span>
+									<input type="number" class="form-control" id="expectedDealValue" placeholder="Estimated sale amount">
+									<span class="input-group-text bg-light">.00</span>
+								</div>
+							</div>
+						</div>
+
+						<div class="row">
+							<div class="col-md-6 mb-3">
+								<label for="probability" class="form-label fw-semibold">Probability (%)</label>
+								<div class="d-flex align-items-center gap-3">
+									<input type="range" class="form-range flex-grow-1" id="probability" min="0" max="100" value="50">
+									<span class="probability-value text-success bg-light rounded px-2 py-1" id="probabilityValue">50%</span>
+								</div>
+							</div>
+
+							<div class="col-md-6 mb-3">
+								<label for="assignedAgent" class="form-label fw-semibold">Assigned Agent <span class="text-danger">*</span></label>
+								<select class="form-select" id="assignedAgent" required>
+									<option value="">Select Agent</option>
+									<option value="agent-1">John Smith</option>
+									<option value="agent-2" selected>Sarah Johnson</option>
+									<option value="agent-3">Michael Brown</option>
+									<option value="agent-4">Emily Davis</option>
+								</select>
+							</div>
+						</div>
+
+						<div class="mb-3">
+							<label class="form-label fw-semibold">Attachment</label>
+							<div class="file-upload-area border border-2 border-dashed rounded p-4 text-center" id="fileUploadArea">
+								<i class="fas fa-cloud-upload-alt fa-2x text-muted mb-3"></i>
+								<h5 class="text-muted">Upload Quotation / Proposal</h5>
+								<p class="text-muted mb-3">Drag & drop files here or click to browse</p>
+								<input type="file" class="d-none" id="fileInput" accept=".pdf,.doc,.docx,.jpg,.png">
+								<button type="button" class="btn btn-outline-success" id="browseFilesBtn">
+									<i class="fas fa-folder-open me-2"></i>Browse Files
+								</button>
+							</div>
+							<div id="fileList" class="mt-3"></div>
+						</div>
+
+						<div class="row mt-4 pt-3 border-top">
+							<div class="col-md-6">
+								<div class="mb-3">
+									<label class="form-label fw-semibold">Updated By</label>
+									<input type="text" class="form-control bg-light" value="Sarah Johnson" readonly>
+								</div>
+							</div>
+							<div class="col-md-6">
+								<div class="mb-3">
+									<label class="form-label fw-semibold">Updated Date</label>
+									<input type="text" class="form-control bg-light" id="updatedDate" readonly>
+								</div>
+							</div>
+						</div>
+					</form>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+						<i class="fas fa-times me-2"></i>Cancel
+					</button>
+					<button type="button" class="btn btn-success" id="saveLeadBtn">
+						<i class="fas fa-save me-2"></i>Save Changes
+					</button>
+				</div>
+			</div>
+		</div>
+	</div>
 </main>
 
 @section Scripts {
 	<script>
+				$(document).ready(function(){
+					$(document).ready(function () {
+
+						$('#LeadsTable thead tr').clone(true).appendTo('#LeadsTable thead');
+						$('#LeadsTable thead tr:eq(1) th').each(function (i) {
+									if ($(this).find('i').length === 0) {
+									var title = $('#LeadsTable thead tr:eq(0) th').eq(i).text().trim();
+									$(this).html('<input class="form-control form-control-sm" type="text" placeholder="' + title + '" />');
+								}
+								else {
+									 $(this).html('');
+								}
+							 });
+							 var TableList = $("#LeadsTable").DataTable({
+							 orderCellsTop: true,
+							 processing: true,
+							 serverSide: true,
+							 order: [[0, "asc"]],
+							 ajax: {
+								 url: '/Dashboard/LeadList',
+								 type: 'POST' ,
+								  dataSrc: function (json) {
+									console.log("Full server response:", json);
+									console.log("Row data array:", json.data);
+									return json.data;
+								}
+							 },
+							 columns: [
+								 { data: 'leadName' },
+								 { data: 'contactPerMobNo' },
+								 { data: 'propertyName' },
+								 { data: 'budget' },
+								 { data: 'status' },
+								 { data: 'priority' },
+								 { data: 'assignAgent' },
+								 {
+									data: null,
+									render: function() {
+										return `
+											<div class="action-buttons">
+												<button class="action-btn" data-bs-toggle="modal" data-bs-target="#leadConversionModal">
+													<i class="fas fa-plus-circle"></i>
+												</button>
+												<a href="/Services/LeadProfile" class="action-btn">
+													<i class="fas fa-eye"></i>
+												</a>
+												<button class="action-btn"><i class="fas fa-edit"></i></button>
+												<button class="action-btn"><i class="fas fa-phone"></i></button>
+											</div>
+										`;
+									},
+									orderable: false, searchable: false
+
+								}
+							 ],
+							 initComplete: function () {
+							 var table = this.api();
+
+
+							 $('#LeadsTable thead tr:eq(1) th').each(function (i) {
+								 $('input', this).on('keyup change', function () {
+									 if (table.column(i).search() !== this.value) {
+										 table
+											 .column(i)
+											 .search(this.value)
+											 .draw();
+									 }
+								 });
+							 });
+							 }
+						 });
+
+					 });
+				});
+
+
+
+
+
 		  // Simple interactivity for the dashboard
 		document.addEventListener('DOMContentLoaded', function() {
 			// Status filter functionality

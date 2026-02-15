@@ -10,7 +10,7 @@ namespace PhysioWeb.Models
     {
         // --- Lead Information ---
         [Key]
-        [Display(Name = "Lead ID")]
+        [Display(Name = "Lead Unique No.")]
         public string LeadId { get; set; } = $"LEAD{Guid.NewGuid().ToString().Substring(0, 8).ToUpper()}";
 
         [Required(ErrorMessage = "Lead Source is required.")]
@@ -35,13 +35,13 @@ namespace PhysioWeb.Models
         [Display(Name = "Email")]
         public string Email { get; set; }
 
-        [Required(ErrorMessage = "Phone Number is required.")]
-        [RegularExpression(@"^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$", ErrorMessage = "Not a valid Phone Number.")]
-        [Display(Name = "Phone Number")]
+        [Required(ErrorMessage = "Mobile No. is required.")]
+        [RegularExpression(@"^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$", ErrorMessage = "Not a valid Mobile No.")]
+        [Display(Name = "Mobile No.")]
         public string PhoneNumber { get; set; }
 
-        [RegularExpression(@"^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$", ErrorMessage = "Not a valid Alternate Phone Number.")]
-        [Display(Name = "Alternate Number")]
+        [RegularExpression(@"^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$", ErrorMessage = "Not a valid WhatsApp No. Number.")]
+        [Display(Name = "WhatsApp No.")]
         public string AlternateNumber { get; set; }
 
         [Required(ErrorMessage = "Preferred Contact Method is required.")]
@@ -51,6 +51,10 @@ namespace PhysioWeb.Models
         [Display(Name = "Follow-up Date")]
         [DataType(DataType.Date)]
         public DateTime? FollowUpDate { get; set; }
+        
+        [Display(Name = "Lead Date")]
+        [DataType(DataType.Date)]
+        public DateTime? LeadDate { get; set; }
 
         // --- Property Requirements ---
         [Required(ErrorMessage = "Requirement Type is required.")]
@@ -90,9 +94,9 @@ namespace PhysioWeb.Models
         [DataType(DataType.Date)]
         public DateTime CreatedDate { get; set; } = DateTime.Now; // Auto-filled
 
-        // --- Additional Fields ---
-        [Display(Name = "Remarks / Notes")]
-        public string Notes { get; set; }
+        //// --- Additional Fields ---
+        //[Display(Name = "Remarks / Notes")]
+        //public string Notes { get; set; }
 
         [Display(Name = "Lead Priority")]
         public string LeadPriority { get; set; }
@@ -107,6 +111,8 @@ namespace PhysioWeb.Models
         public string InActiveText { get; set; }
 
         // --- Dropdown/Lookup Properties (For View Rendering) ---
+        [Display(Name = "Campaign")]
+        public string Campaign { get; set; }
 
         public List<DropDownSource> LeadTypeList { get; set; }
 
@@ -135,9 +141,37 @@ namespace PhysioWeb.Models
         public List<DropDownSource> LeadRatingList { get; set; }
 
         public List<DropDownSource> AgentList { get; set; }
+        public List<DropDownSource> CampaignList { get; set; }
         // --- Constructors for Data Mapping ---
 
         public string PropertyInterestedIn { get; set; }
+        public List<DropDownSource> AmountUnitList { get; set; }
+        public string AmountUnitMinPrice { get; set; }
+        public string AmountUnitMaxPrice { get; set; }
+        public decimal ConvertedActualPrice { get; set; }
+        public decimal ConvertedNegotiablePrice { get; set; }
+
+        [Display(Name = "Pan Card")]
+        public string PanCard { get; set; }
+        [Display(Name = "Aadhar Card")]
+        public string AadharCard { get; set; }
+
+        [Display(Name = "Requirement Description")]
+        public string RequirementDescription { get; set; }
+
+        [Display(Name = "Address")]
+        public string Address { get; set; }
+        public string Pincode { get; set; }
+        public int CityID { get; set; }
+        public string City { get; set; }
+        public int StateID { get; set; }
+        public string State { get; set; }
+        public int CountryID { get; set; }
+        public string Country { get; set; }
+        public List<DropDownSource> StateList { get; set; }
+        public List<DropDownSource> CityList { get; set; }
+        public List<DropDownSource> CountryList { get; set; }
+        public List<DropDownSource> PropertyInterestedInList { get; set; }
         public NewLead()
         {
 
@@ -153,6 +187,9 @@ namespace PhysioWeb.Models
             PreferredContactMethodList = new List<DropDownSource>();
             RequirementTypeList = new List<DropDownSource>();
             PropertyTypeList = new List<DropDownSource>();
+            AmountUnitList = new List<DropDownSource>();
+            PropertyInterestedInList = new List<DropDownSource>();
+            CampaignList = new List<DropDownSource>();
 
         }
 
@@ -162,19 +199,36 @@ namespace PhysioWeb.Models
         {
             if (flag == 0)
             {
-                // Mapping fields for a list/grid view
-                TotalCount = reader["TotalCount"] != DBNull.Value ? Convert.ToInt32(reader["TotalCount"]) : 0;
-                UniquId = reader["UniquId"] != DBNull.Value ? Convert.ToInt32(reader["UniquId"]) : 0;
-                LeadId = reader["LeadId"]?.ToString();
-                FullName = reader["FullName"]?.ToString();
-                Email = reader["Email"]?.ToString();
-                PhoneNumber = reader["PhoneNumber"]?.ToString();
-                LeadStatus = reader["LeadStatus"]?.ToString();
+                // Mapping fields for New Lead list/grid view
+                TotalCount = reader["TotalCount"] != DBNull.Value
+                                ? Convert.ToInt32(reader["TotalCount"])
+                                : 0;
+
+                UniquId = reader["UniquId"] != DBNull.Value
+                                ? Convert.ToInt32(reader["UniquId"])
+                                : 0;
+
+                FullName = reader["LeadName"]?.ToString();
+                LeadId = reader["LeadUniqueNo"]?.ToString();
+
+                LeadDate = reader["LeadDate"] != DBNull.Value
+                                ? Convert.ToDateTime(reader["LeadDate"])
+                                : (DateTime?)null;
+
+                PhoneNumber = reader["ContactPerMobNo"]?.ToString();
+                AlternateNumber = reader["WpMobNo"]?.ToString();
+
+                LeadType = reader["LeadType"]?.ToString();
                 LeadSource = reader["LeadSource"]?.ToString();
-                AssignedAgent = reader["AssignedAgent"]?.ToString();
-                CreatedDate = reader["CreatedDate"] != DBNull.Value ? Convert.ToDateTime(reader["CreatedDate"]) : DateTime.Now;
-                InActiveText = reader["IsActive"].ToString();
+                LeadStatus = reader["LeadStatus"]?.ToString();
+
+                //FollowUpDate = reader["FollowUpDate"] != DBNull.Value
+                //                ? Convert.ToDateTime(reader["FollowUpDate"])
+                //                : (DateTime?)null;
+
+                InActiveText = reader["IsActive"]?.ToString();
                 CreatedBy = reader["CreatedBy"]?.ToString();
+
             }
             else if (flag == 1)
             {
@@ -185,62 +239,98 @@ namespace PhysioWeb.Models
 
         private void populateObject(NewLead obj, IDataReader rdr)
         {
-            // Utility method to safely read all columns
             if (!rdr.IsDBNull(rdr.GetOrdinal("UniquId")))
                 obj.UniquId = rdr.GetInt32(rdr.GetOrdinal("UniquId"));
+
             if (!rdr.IsDBNull(rdr.GetOrdinal("LeadId")))
                 obj.LeadId = rdr.GetString(rdr.GetOrdinal("LeadId"));
-            if (!rdr.IsDBNull(rdr.GetOrdinal("LeadSource")))
-                obj.LeadSource = rdr.GetString(rdr.GetOrdinal("LeadSource"));
-            if (!rdr.IsDBNull(rdr.GetOrdinal("LeadType")))
-                obj.LeadType = rdr.GetString(rdr.GetOrdinal("LeadType"));
-            if (!rdr.IsDBNull(rdr.GetOrdinal("LeadStatus")))
-                obj.LeadStatus = rdr.GetString(rdr.GetOrdinal("LeadStatus"));
-            if (!rdr.IsDBNull(rdr.GetOrdinal("FullName")))
-                obj.FullName = rdr.GetString(rdr.GetOrdinal("FullName"));
-            if (!rdr.IsDBNull(rdr.GetOrdinal("Email")))
-                obj.Email = rdr.GetString(rdr.GetOrdinal("Email"));
-            if (!rdr.IsDBNull(rdr.GetOrdinal("PhoneNumber")))
-                obj.PhoneNumber = rdr.GetString(rdr.GetOrdinal("PhoneNumber"));
-            if (!rdr.IsDBNull(rdr.GetOrdinal("AlternateNumber")))
-                obj.AlternateNumber = rdr.GetString(rdr.GetOrdinal("AlternateNumber"));
-            if (!rdr.IsDBNull(rdr.GetOrdinal("PreferredContactMethod")))
-                obj.PreferredContactMethod = rdr.GetString(rdr.GetOrdinal("PreferredContactMethod"));
+
+            if (!rdr.IsDBNull(rdr.GetOrdinal("LeadName")))
+                obj.FullName = rdr.GetString(rdr.GetOrdinal("LeadName"));
+
+            // Dates are coming as VARCHAR (dd/MM/yyyy)
+            if (!rdr.IsDBNull(rdr.GetOrdinal("LeadDate")))
+                obj.LeadDate = rdr.GetDateTime(rdr.GetOrdinal("LeadDate"));
+
             if (!rdr.IsDBNull(rdr.GetOrdinal("FollowUpDate")))
                 obj.FollowUpDate = rdr.GetDateTime(rdr.GetOrdinal("FollowUpDate"));
-            if (!rdr.IsDBNull(rdr.GetOrdinal("RequirementType")))
-                obj.RequirementType = rdr.GetString(rdr.GetOrdinal("RequirementType"));
-            if (!rdr.IsDBNull(rdr.GetOrdinal("PropertyType")))
-                obj.PropertyType = rdr.GetString(rdr.GetOrdinal("PropertyType"));
-            if (!rdr.IsDBNull(rdr.GetOrdinal("BudgetMin")))
-                obj.BudgetMin = rdr.GetDecimal(rdr.GetOrdinal("BudgetMin"));
-            if (!rdr.IsDBNull(rdr.GetOrdinal("BudgetMax")))
-                obj.BudgetMax = rdr.GetDecimal(rdr.GetOrdinal("BudgetMax"));
+
+            //if (!rdr.IsDBNull(rdr.GetOrdinal("ContactPersonName")))
+            //    obj.ContactPersonName = rdr.GetString(rdr.GetOrdinal("ContactPersonName"));
+
+            if (!rdr.IsDBNull(rdr.GetOrdinal("ContactPerMobNo")))
+                obj.PhoneNumber = rdr.GetString(rdr.GetOrdinal("ContactPerMobNo"));
+
+            if (!rdr.IsDBNull(rdr.GetOrdinal("WpMobNo")))
+                obj.AlternateNumber = rdr.GetString(rdr.GetOrdinal("WpMobNo"));
+
+            if (!rdr.IsDBNull(rdr.GetOrdinal("Email")))
+                obj.Email = rdr.GetString(rdr.GetOrdinal("Email"));
+
+            if (!rdr.IsDBNull(rdr.GetOrdinal("PanCard")))
+                obj.PanCard = rdr.GetString(rdr.GetOrdinal("PanCard"));
+
+            if (!rdr.IsDBNull(rdr.GetOrdinal("AadharNo")))
+                obj.AadharCard = rdr.GetString(rdr.GetOrdinal("AadharNo"));
+
+            if (!rdr.IsDBNull(rdr.GetOrdinal("LeadTypeID")))
+                obj.LeadType = rdr.GetString(rdr.GetOrdinal("LeadTypeID"));
+
+            if (!rdr.IsDBNull(rdr.GetOrdinal("LeadSourceID")))
+                obj.LeadSource = rdr.GetString(rdr.GetOrdinal("LeadSourceID"));
+
+            if (!rdr.IsDBNull(rdr.GetOrdinal("LeadStatusID")))
+                obj.LeadStatus = rdr.GetString(rdr.GetOrdinal("LeadStatusID"));
+
+            if (!rdr.IsDBNull(rdr.GetOrdinal("PropertyTypeID")))
+                obj.PropertyType = rdr.GetString(rdr.GetOrdinal("PropertyTypeID"));
+
+            if (!rdr.IsDBNull(rdr.GetOrdinal("Priority")))
+                obj.LeadPriority = rdr.GetString(rdr.GetOrdinal("Priority"));
+
+            if (!rdr.IsDBNull(rdr.GetOrdinal("Description")))
+                obj.RequirementDescription = rdr.GetString(rdr.GetOrdinal("Description"));
+
+            if (!rdr.IsDBNull(rdr.GetOrdinal("CampaignID")))
+                obj.Campaign = rdr.GetString(rdr.GetOrdinal("CampaignID"));
+
+            if (!rdr.IsDBNull(rdr.GetOrdinal("Address")))
+                obj.Address = rdr.GetString(rdr.GetOrdinal("Address"));
+
             if (!rdr.IsDBNull(rdr.GetOrdinal("LocationPreference")))
                 obj.LocationPreference = rdr.GetString(rdr.GetOrdinal("LocationPreference"));
-            if (!rdr.IsDBNull(rdr.GetOrdinal("Bedrooms")))
-                obj.Bedrooms = rdr.GetString(rdr.GetOrdinal("Bedrooms"));
-            if (!rdr.IsDBNull(rdr.GetOrdinal("FurnishingType")))
-                obj.FurnishingType = rdr.GetString(rdr.GetOrdinal("FurnishingType"));
-            if (!rdr.IsDBNull(rdr.GetOrdinal("PossessionTimeframe")))
-                obj.PossessionTimeframe = rdr.GetString(rdr.GetOrdinal("PossessionTimeframe"));
-            if (!rdr.IsDBNull(rdr.GetOrdinal("AssignedAgent")))
-                obj.AssignedAgent = rdr.GetString(rdr.GetOrdinal("AssignedAgent"));
-            if (!rdr.IsDBNull(rdr.GetOrdinal("CreatedBy")))
-                obj.CreatedBy = rdr.GetString(rdr.GetOrdinal("CreatedBy"));
-            if (!rdr.IsDBNull(rdr.GetOrdinal("CreatedDate")))
-                obj.CreatedDate = rdr.GetDateTime(rdr.GetOrdinal("CreatedDate"));
-            if (!rdr.IsDBNull(rdr.GetOrdinal("Notes")))
-                obj.Notes = rdr.GetString(rdr.GetOrdinal("Notes"));
-            if (!rdr.IsDBNull(rdr.GetOrdinal("LeadPriority")))
-                obj.LeadPriority = rdr.GetString(rdr.GetOrdinal("LeadPriority"));
-            if (!rdr.IsDBNull(rdr.GetOrdinal("LeadRating")))
-                obj.LeadRating = rdr.GetString(rdr.GetOrdinal("LeadRating"));
+
+            if (!rdr.IsDBNull(rdr.GetOrdinal("PropertyInterestedIn")))
+                obj.PropertyInterestedIn = rdr.GetString(rdr.GetOrdinal("PropertyInterestedIn"));
+
+            if (!rdr.IsDBNull(rdr.GetOrdinal("PreferredContactMethod")))
+                obj.PreferredContactMethod = rdr.GetString(rdr.GetOrdinal("PreferredContactMethod"));
+
+            if (!rdr.IsDBNull(rdr.GetOrdinal("MinPrice")))
+                obj.BudgetMin = rdr.GetDecimal(rdr.GetOrdinal("MinPrice"));
+
+            if (!rdr.IsDBNull(rdr.GetOrdinal("MaxPrice")))
+                obj.BudgetMax = rdr.GetDecimal(rdr.GetOrdinal("MaxPrice"));
+
+            if (!rdr.IsDBNull(rdr.GetOrdinal("AmountUnitMinPrice")))
+                obj.AmountUnitMinPrice = rdr.GetString(rdr.GetOrdinal("AmountUnitMinPrice"));
+
+            if (!rdr.IsDBNull(rdr.GetOrdinal("AmountUnitMaxPrice")))
+                obj.AmountUnitMaxPrice = rdr.GetString(rdr.GetOrdinal("AmountUnitMaxPrice"));
+
+            if (!rdr.IsDBNull(rdr.GetOrdinal("ConvertedActualPrice")))
+                obj.ConvertedActualPrice = rdr.GetDecimal(rdr.GetOrdinal("ConvertedActualPrice"));
+
+            if (!rdr.IsDBNull(rdr.GetOrdinal("ConvertedNegotiablePrice")))
+                obj.ConvertedNegotiablePrice = rdr.GetDecimal(rdr.GetOrdinal("ConvertedNegotiablePrice"));
+
             if (!rdr.IsDBNull(rdr.GetOrdinal("IsActive")))
+            {
                 obj.IsActive = rdr.GetBoolean(rdr.GetOrdinal("IsActive"));
-            if (!rdr.IsDBNull(rdr.GetOrdinal("IsActive")))
-                obj.InActiveText = rdr.GetBoolean(rdr.GetOrdinal("IsActive")).ToString();
+                obj.InActiveText = obj.IsActive ? "Yes" : "No";
+            }
         }
+
     }
 
     // Helper class for dropdowns

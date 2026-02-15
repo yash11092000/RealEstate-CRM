@@ -22,12 +22,31 @@ namespace PhysioWeb.Models
 
         public IFormFile AgentProfile { get; set; }
         public string OldPassword { get; set; }
+
+        public string ManagerId { get; set; }
+
+        public string UserRoleId { get; set; }
+
+        public string DesignationId { get; set; }
+
+        public List<DropDownSource> UserRoles { get; set; }
+        public List<DropDownSource> ManagerList { get; set; }
+        public List<DropDownSource> Designations { get; set; }
+
+
+
+
         public Agent()
         {
-
+            UserRoles = new List<DropDownSource>();
+            ManagerList = new List<DropDownSource>();
+            Designations = new List<DropDownSource>();
         }
         public Agent(IDataReader obj, int flag = 0)
         {
+            UserRoles = new List<DropDownSource>();
+            ManagerList = new List<DropDownSource>();
+            Designations = new List<DropDownSource>();
             if (flag == 0)
             {
                 populateObjectList(this, obj);

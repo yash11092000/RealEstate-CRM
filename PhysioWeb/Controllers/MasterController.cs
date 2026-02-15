@@ -43,6 +43,10 @@ namespace PhysioWeb.Controllers
             propertyCategoryMaster.UserID = User.FindFirst(ClaimTypes.PrimarySid)?.Value;
             propertyCategoryMaster.AgencyId = User.FindFirst(ClaimTypes.GroupSid)?.Value;
             var result = await _masterRepository.SavePropCategory(propertyCategoryMaster);
+            if (result)
+            {
+                await _hubContext.Clients.Group("SuperAdmin").SendAsync("ReceiveNotification", $"Category Added : {propertyCategoryMaster.CategoryName}");
+            }
             return Json(result);
         }
 
@@ -132,6 +136,10 @@ namespace PhysioWeb.Controllers
             propertyTypeMaster.UserID = User.FindFirst(ClaimTypes.PrimarySid)?.Value;
             propertyTypeMaster.AgencyId = User.FindFirst(ClaimTypes.GroupSid)?.Value;
             var result = await _masterRepository.SavePropType(propertyTypeMaster);
+            if (result)
+            {
+                await _hubContext.Clients.Group("SuperAdmin").SendAsync("ReceiveNotification", $"{propertyTypeMaster.UserID} Added: {propertyTypeMaster.PropertyType} In PropertyType");
+            }
             return Json(result);
         }
 
@@ -145,6 +153,7 @@ namespace PhysioWeb.Controllers
             };
             propertyTypeMaster.UserID = User.FindFirst(ClaimTypes.PrimarySid)?.Value;
             var result = await _masterRepository.DeletePropertyType(propertyTypeMaster);
+            await _hubContext.Clients.Group("SuperAdmin").SendAsync("ReceiveNotification", $"PropertyType Added : {propertyTypeMaster.PropertyType}");
             return Json(new { success = result });
         }
 
@@ -196,6 +205,102 @@ namespace PhysioWeb.Controllers
             {
                 string UserID = User.FindFirst(ClaimTypes.PrimarySid)?.Value;
                 var data = await _masterRepository.EditPropertyType(UniqueID, UserID);
+
+                return Json(data);
+
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, message = ex.Message });
+            }
+        }
+
+        #endregion
+
+
+        #region UserRole Master
+        [HttpGet]
+        public async Task<ActionResult> UserRole()
+        {
+            return View();
+        }
+
+
+        [HttpPost]
+        public async Task<ActionResult> SaveUserRole(UserRole UserRole)
+        {
+            UserRole.UserID = User.FindFirst(ClaimTypes.PrimarySid)?.Value;
+            UserRole.AgencyId = User.FindFirst(ClaimTypes.GroupSid)?.Value;
+            var result = await _masterRepository.SaveUserRole(UserRole);
+            if (result)
+            {
+                await _hubContext.Clients.Group("SuperAdmin").SendAsync("ReceiveNotification", $"{UserRole.UserID} Added: {UserRole.Role} In UserRole");
+            }
+            return Json(result);
+        }
+
+
+        [HttpPost]
+        public async Task<ActionResult> DeleteUserRole(int UniqueID)
+        {
+            var UserRole = new UserRole
+            {
+                UniquId = UniqueID
+            };
+            UserRole.UserID = User.FindFirst(ClaimTypes.PrimarySid)?.Value;
+            var result = await _masterRepository.DeleteUserRole(UserRole);
+            await _hubContext.Clients.Group("SuperAdmin").SendAsync("ReceiveNotification", $"PropertyType Added : {UserRole.Role}");
+            return Json(new { success = result });
+        }
+
+
+        [HttpPost]
+        public async Task<ActionResult> ListUserRole()
+        {
+            var form = Request.Form;
+
+            // ✅ Map DataTables default parameters
+            var dataTablePara = new DataTablePara
+            {
+                iDisplayStart = Convert.ToInt32(form["start"]),
+                iDisplayLength = Convert.ToInt32(form["length"]),
+                iSortCol_0 = Convert.ToInt32(form["order[0][column]"]),
+                sSortDir_0 = form["order[0][dir]"],
+                sSearch = form["search[value]"]
+            };
+
+            // ✅ Map column filters dynamically (for first 10 columns)
+            for (int i = 0; i < 30; i++)
+            {
+                string key = $"columns[{i}][search][value]";
+                if (Request.Form.ContainsKey(key))
+                {
+                    typeof(DataTablePara)
+                        .GetProperty($"sSearch_{i}")
+                        ?.SetValue(dataTablePara, Request.Form[key].ToString());
+                }
+            }
+            dataTablePara.UserID = User.FindFirst(ClaimTypes.PrimarySid)?.Value;
+            dataTablePara.AgencyId = User.FindFirst(ClaimTypes.GroupSid)?.Value;
+            var result = await _masterRepository.ListUserRole(dataTablePara);
+            var requestForm = Request.Form;
+            return Json(new
+            {
+                draw = requestForm["draw"],
+                recordsTotal = result.iTotalRecords,
+                recordsFiltered = result.iTotalDisplayRecords,
+                data = result.aaData
+            });
+
+        }
+
+        [HttpPost]
+        public async Task<ActionResult> EditUserRole(int UniqueID)
+        {
+            try
+            {
+                string UserID = User.FindFirst(ClaimTypes.PrimarySid)?.Value;
+                var data = await _masterRepository.EditUserRole(UniqueID, UserID);
 
                 return Json(data);
 
@@ -315,8 +420,7 @@ namespace PhysioWeb.Controllers
             var result = await _masterRepository.SaveProperty(PropertyMaster);
 
             // 2. Send notification to SuperAdmin group
-            await _hubContext.Clients.Group("SuperAdmin")
-                .SendAsync("ReceiveNotification", $"Property Added : {PropertyMaster.Title}");
+            await _hubContext.Clients.Group("SuperAdmin").SendAsync("ReceiveNotification", $"Property Added : {PropertyMaster.Title}");
 
             return Json(new { success = true, propertyId = result });
         }
@@ -775,7 +879,8 @@ namespace PhysioWeb.Controllers
         #region Agent
         public async Task<ActionResult> Agent()
         {
-            return View();
+            Agent agent = await _masterRepository.GetAgentDropDown();
+            return View(agent);
         }
 
         [HttpPost]
@@ -960,62 +1065,108 @@ namespace PhysioWeb.Controllers
             return Json(result);
         }
 
-        #region Agent
-        [Authorize(Roles = "Agency,Agent")]
+        #region NewLead
+        [Authorize(Roles = "Admin,Agent")]
         public async Task<ActionResult> NewLead()
         {
             NewLead DropDowns = await _masterRepository.GetLeadDropDowndata();
 
-            DropDowns.LeadSourceList = new List<DropDownSource>
-        {
-            new DropDownSource { Value = "Website", Text = "Website" },
-            new DropDownSource { Value = "Walk-in", Text = "Walk-in" },
-            new DropDownSource { Value = "Referral", Text = "Referral" },
-            new DropDownSource { Value = "Facebook", Text = "Facebook" },
-            new DropDownSource { Value = "Google Ads", Text = "Google Ads" },
-            new DropDownSource { Value = "Broker", Text = "Broker" }
-        };
-
-            DropDowns.LeadStatusList = new List<DropDownSource>
-        {
-            new DropDownSource { Value = "New", Text = "New" },
-            new DropDownSource { Value = "Contacted", Text = "Contacted" },
-            new DropDownSource { Value = "Interested", Text = "Interested" },
-            new DropDownSource { Value = "Not Interested", Text = "Not Interested" },
-            new DropDownSource { Value = "Converted", Text = "Converted" },
-            new DropDownSource { Value = "Lost", Text = "Lost" }
-        };
 
             DropDowns.PreferredContactMethodList = new List<DropDownSource>
             {
-                new DropDownSource { Value = "Call", Text = "Call" },
-                new DropDownSource { Value = "WhatsApp", Text = "WhatsApp" },
-                new DropDownSource { Value = "Email", Text = "Email" }
+                new DropDownSource { Value = "1", Text = "Call" },
+                new DropDownSource { Value = "2", Text = "Text Message" },
+                new DropDownSource { Value = "3", Text = "WhatsApp Message" },
+                new DropDownSource { Value = "4", Text = "Email" },
+                new DropDownSource { Value = "5", Text = "Telegram" }
             };
 
-            DropDowns.PossessionTimeframeList = new List<DropDownSource>
+            DropDowns.LeadPriorityList = new List<DropDownSource>   
             {
-                new DropDownSource { Value = "Immediate", Text = "Immediate" },
-                new DropDownSource { Value = "3 Months", Text = "3 Months" },
-                new DropDownSource { Value = "6 Months", Text = "6 Months" },
-                new DropDownSource { Value = "1 Year", Text = "1 Year" }
+                new DropDownSource { Value = "1", Text = "Hot" },
+                new DropDownSource { Value = "2", Text = "Warm" },
+                new DropDownSource { Value = "3", Text = "Cold" }
             };
-
-            DropDowns.LeadPriorityList = new List<DropDownSource>
-            {
-                new DropDownSource { Value = "High", Text = "High" },
-                new DropDownSource { Value = "Medium", Text = "Medium" },
-                new DropDownSource { Value = "Low", Text = "Low" }
-            };
-
-            DropDowns.LeadRatingList = new List<DropDownSource>
-            {
-                new DropDownSource { Value = "Hot", Text = "Hot" },
-                new DropDownSource { Value = "Warm", Text = "Warm" },
-                new DropDownSource { Value = "Cold", Text = "Cold" }
-            };
+          
             return View(DropDowns);
         }
+        [HttpPost]
+        public async Task<ActionResult> SaveNewLead(NewLead NewLead)
+        {
+            NewLead.UserID = User.FindFirst(ClaimTypes.PrimarySid)?.Value;
+            NewLead.AgencyId = User.FindFirst(ClaimTypes.GroupSid)?.Value;
+            var result = await _masterRepository.SaveNewLead(NewLead);
+            return Json(result);
+        }
+
+
+        [HttpPost]
+        public async Task<ActionResult> ListNewLead()
+        {
+            var form = Request.Form;
+
+            // ✅ Map DataTables default parameters
+            var dataTablePara = new DataTablePara
+            {
+                iDisplayStart = Convert.ToInt32(form["start"]),
+                iDisplayLength = Convert.ToInt32(form["length"]),
+                iSortCol_0 = Convert.ToInt32(form["order[0][column]"]),
+                sSortDir_0 = form["order[0][dir]"],
+                sSearch = form["search[value]"]
+            };
+
+            // ✅ Map column filters dynamically (for first 10 columns)
+            for (int i = 0; i < 30; i++)
+            {
+                string key = $"columns[{i}][search][value]";
+                if (Request.Form.ContainsKey(key))
+                {
+                    typeof(DataTablePara)
+                        .GetProperty($"sSearch_{i}")
+                        ?.SetValue(dataTablePara, Request.Form[key].ToString());
+                }
+            }
+            dataTablePara.UserID = User.FindFirst(ClaimTypes.PrimarySid)?.Value;
+            dataTablePara.AgencyId = User.FindFirst(ClaimTypes.GroupSid)?.Value;
+            var result = await _masterRepository.ListNewLead(dataTablePara);
+            var requestForm = Request.Form;
+            return Json(new
+            {
+                draw = requestForm["draw"],
+                recordsTotal = result.iTotalRecords,
+                recordsFiltered = result.iTotalDisplayRecords,
+                data = result.aaData
+            });
+
+        }
+
+        public async Task<ActionResult> DeleteNewLead(int UniqueID)
+        {
+            var NewLead = new NewLead
+            {
+                UniquId = UniqueID
+            };
+            NewLead.UserID = User.FindFirst(ClaimTypes.PrimarySid)?.Value;
+            var result = await _masterRepository.DeleteNewLead(NewLead);
+            return Json(new { success = result });
+
+        }
+        [HttpPost]
+        public async Task<ActionResult> EditNewLead(int UniqueID)
+        {
+            try
+            {
+                string UserID = User.FindFirst(ClaimTypes.PrimarySid)?.Value;
+                var data = await _masterRepository.EditNewLead(UniqueID, Convert.ToInt32(UserID));
+
+                return Json(data);
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, message = ex.Message });
+            }
+        }
+
         #endregion
 
         #region Quotation
@@ -1033,6 +1184,140 @@ namespace PhysioWeb.Controllers
         }
 
         #endregion
+
+
+        #region Hierarchy View
+        public async Task<ActionResult> OrgHierarchy()
+        {
+            return View();
+        }
+
+        [HttpGet]
+        public async Task<ActionResult> GetOrgChart()
+        {
+            List<OrgData> data = await _masterRepository.GetOrgData();
+            var tree = BuildTree(data, null);
+            return Json(tree);
+        }
+
+        private List<OrgNode> BuildTree(List<OrgData> list, int? parentId)
+        {
+            return list
+                .Where(x => x.ParentId == parentId)
+                .Select(x => new OrgNode
+                {
+                    Id = x.Id,
+                    Name = x.Name,
+                    Role = x.Role,
+                    Contact = x.Contact,
+                    Designation = x.Designation,
+                    Children = BuildTree(list, x.Id)
+                }).ToList();
+        }
+        #endregion
+
+        #region Designation Master
+        [HttpGet]
+        public async Task<ActionResult> Designation()
+        {
+            return View();
+        }
+
+
+        [HttpPost]
+        public async Task<ActionResult> SaveDesignation(Designation Designation)
+        {
+            Designation.UserID = User.FindFirst(ClaimTypes.PrimarySid)?.Value;
+            Designation.AgencyId = User.FindFirst(ClaimTypes.GroupSid)?.Value;
+            var result = await _masterRepository.SaveDesignation(Designation);
+            if (result)
+            {
+                await _hubContext.Clients.Group("SuperAdmin").SendAsync("ReceiveNotification", $"{Designation.UserID} Added: {Designation.DesignationName} In Designation");
+            }
+            return Json(result);
+        }
+
+
+        [HttpPost]
+        public async Task<ActionResult> DeleteDesignation(int UniqueID)
+        {
+            var Designation = new Designation
+            {
+                UniquId = UniqueID
+            };
+            Designation.UserID = User.FindFirst(ClaimTypes.PrimarySid)?.Value;
+            var result = await _masterRepository.DeleteDesignation(Designation);
+            await _hubContext.Clients.Group("SuperAdmin").SendAsync("ReceiveNotification", $"Designation Added : {Designation.DesignationName}");
+            return Json(new { success = result });
+        }
+
+
+        [HttpPost]
+        public async Task<ActionResult> ListDesignation()
+        {
+            var form = Request.Form;
+
+            // ✅ Map DataTables default parameters
+            var dataTablePara = new DataTablePara
+            {
+                iDisplayStart = Convert.ToInt32(form["start"]),
+                iDisplayLength = Convert.ToInt32(form["length"]),
+                iSortCol_0 = Convert.ToInt32(form["order[0][column]"]),
+                sSortDir_0 = form["order[0][dir]"],
+                sSearch = form["search[value]"]
+            };
+
+            // ✅ Map column filters dynamically (for first 10 columns)
+            for (int i = 0; i < 30; i++)
+            {
+                string key = $"columns[{i}][search][value]";
+                if (Request.Form.ContainsKey(key))
+                {
+                    typeof(DataTablePara)
+                        .GetProperty($"sSearch_{i}")
+                        ?.SetValue(dataTablePara, Request.Form[key].ToString());
+                }
+            }
+            dataTablePara.UserID = User.FindFirst(ClaimTypes.PrimarySid)?.Value;
+            dataTablePara.AgencyId = User.FindFirst(ClaimTypes.GroupSid)?.Value;
+            var result = await _masterRepository.ListDesignation(dataTablePara);
+            var requestForm = Request.Form;
+            return Json(new
+            {
+                draw = requestForm["draw"],
+                recordsTotal = result.iTotalRecords,
+                recordsFiltered = result.iTotalDisplayRecords,
+                data = result.aaData
+            });
+
+        }
+
+        [HttpPost]
+        public async Task<ActionResult> EditDesignation(int UniqueID)
+        {
+            try
+            {
+                string UserID = User.FindFirst(ClaimTypes.PrimarySid)?.Value;
+                var data = await _masterRepository.EditDesignation(UniqueID, UserID);
+
+                return Json(data);
+
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, message = ex.Message });
+            }
+        }
+
+        #endregion
+
+        #region GeneralSettings
+        [HttpGet]
+        public async Task<ActionResult> GeneralSettings()
+        {
+            return View();
+        }
+        #endregion
     }
 
     public class PermissionUpdateModel
@@ -1041,5 +1326,6 @@ namespace PhysioWeb.Controllers
         public bool ShowLandmark { get; set; }
         public bool ShowAddress { get; set; }
     }
+
 
 }

@@ -1,0 +1,194 @@
+﻿
+@{
+	ViewData["Title"] = "Org Tree";
+	var theme = User.FindFirst("Theme")?.Value ?? "#198754";
+}
+<style>
+	:root {
+		--primary-color: @theme;
+		--text-main: #1f2937;
+		--line-color: #d1d5db;
+		--bg-node: #ffffff;
+		--font-family: 'Inter', system-ui, -apple-system, sans-serif;
+		--sidebar-width: 280px;
+		--sidebar-collapsed-width: 70px;
+		--transition-speed: 0.3s;
+	}
+
+	
+
+	.org-chart * {
+		box-sizing: border-box;
+	}
+
+	.org-chart ul {
+		padding-top: 25px;
+		position: relative;
+		display: flex;
+		justify-content: center;
+		transition: all 0.5s;
+	}
+
+	.org-chart li {
+		text-align: center;
+		list-style-type: none;
+		position: relative;
+		padding: 25px 10px 0 10px;
+		transition: all 0.5s;
+	}
+
+		/* Connector Lines */
+		.org-chart li::before,
+		.org-chart li::after {
+			content: '';
+			position: absolute;
+			top: 0;
+			right: 50%;
+			border-top: 2px solid var(--line-color);
+			width: 50%;
+			height: 25px;
+		}
+
+		.org-chart li::after {
+			right: auto;
+			left: 50%;
+			border-left: 2px solid var(--line-color);
+		}
+
+		.org-chart li:only-child::after,
+		.org-chart li:only-child::before {
+			display: none;
+		}
+
+		.org-chart li:only-child {
+			padding-top: 0;
+		}
+
+		.org-chart li:first-child::before,
+		.org-chart li:last-child::after {
+			border: 0 none;
+		}
+
+		.org-chart li:last-child::before {
+			border-right: 2px solid var(--line-color);
+			border-radius: 0 8px 0 0;
+		}
+
+		.org-chart li:first-child::after {
+			border-radius: 8px 0 0 0;
+		}
+
+	.org-chart ul ul::before {
+		content: '';
+		position: absolute;
+		top: 0;
+		left: 50%;
+		border-left: 2px solid var(--line-color);
+		width: 0;
+		height: 25px;
+	}
+
+	/* Modern Node Styling */
+	.node {
+		background: var(--bg-node);
+		color: var(--text-main);
+		font-family: var(--font-family);
+		font-size: 13px;
+		font-weight: 600;
+		letter-spacing: 0.5px;
+		display: inline-block;
+		padding: 12px 24px;
+		text-decoration: none;
+		border-radius: 50px;
+		/* Pill Shape */
+		border: 2px solid var(--line-color);
+		/* Soft Shadow */
+		box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+		transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+		position: relative;
+		z-index: 10;
+	}
+
+		/* Hover Effects */
+		.node:hover {
+			border-color: var(--primary-color);
+			color: var(--primary-color);
+			transform: translateY(-3px);
+			box-shadow: 0 10px 15px -3px rgba(79, 70, 229, 0.1);
+		}
+
+	/* Special styling for the Top Level (CEO) */
+	.org-chart > ul > li > .node {
+		background: var(--primary-color);
+		color: white;
+		border-color: var(--primary-color);
+	}
+
+	body {
+		background-color: #f9fafb;
+	}
+
+	.org-chart {
+		display: inline-block;
+		/* Allows container to grow with content */
+		min-width: 100%;
+		text-align: center;
+	}
+
+	/* 2. Prevent text wrapping inside nodes */
+	.node {
+		white-space: nowrap;
+		min-width: 140px;
+	}
+
+</style>
+<main class="dashboard-content with-sidebar collapsed">
+	<div class="container-fluid mt-4">
+		<div style="width: 100%; overflow-x: auto;">
+			<div class="org-chart" id="chart">
+			</div>
+		</div>
+	</div>
+</main>
+
+@section Scripts {
+	<script>
+					$(document).ready(function () {
+						$.ajax({
+							url: '/Master/GetOrgChart',
+							method: 'GET',
+							data: {},
+							success: function (response) {
+								if (response) {
+										console.log(response);
+										 const chart = document.getElementById("chart");
+											chart.innerHTML = generateTree(response);
+								} else {
+									notyf.error(response.message || "Failed to Fetch.");
+								}
+							},
+							error: function (xhr) {
+								console.error(xhr);
+								notyf.error("Server error: " + (xhr.responseText || "Unknown error"));
+							}
+						});
+					})
+
+							function generateTree(nodes) {
+		  let html = "<ul>";
+
+		  nodes.forEach(node => {
+			html += `
+			  <li>
+				<div class="node">${node.name} </br> [${node.role}] </div>
+				${node.children.length ? generateTree(node.children) : ""}
+			  </li>
+			`;
+		  });
+
+		  html += "</ul>";
+		  return html;
+		}
+
+	</script>
+}

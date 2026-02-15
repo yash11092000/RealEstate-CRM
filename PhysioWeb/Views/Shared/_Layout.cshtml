@@ -379,6 +379,7 @@
 
 			.child-menu.show {
 				max-height: 500px;
+				overflow-y:auto;
 			}
 
 			.child-menu li a {
@@ -552,7 +553,7 @@
 						{
 							<li class="nav-item"><a class="nav-link text-dark" href="/SuperAdmin/AdminDashboard">SuperAdmin Dashboard</a></li>
 						}
-						@if (User.IsInRole("Agency"))
+						@if (User.IsInRole("Admin"))
 						{
 							<li class="nav-item"><a class="nav-link text-dark" href="/Agent/AgencyDashboard">Admin Dashboard</a></li>
 						}
@@ -612,7 +613,7 @@
 	</header>
 
 
-	<div class="container-fluid">
+	<div class="container-fluid" style="padding:0px">
 		<main role="main" class="pb-3">
 			<div id="Side_Bar">
 				<div class="offcanvas offcanvas-start" data-bs-scroll="true" data-bs-backdrop="false" tabindex="-1" id="offcanvasScrolling" aria-labelledby="offcanvasScrollingLabel">
@@ -645,7 +646,7 @@
 			"/propertydetails/property",
 			"/home/searchproperty"
 			};
-				@if (User.IsInRole("Agency") && !excludedPaths.Contains(currentPath))
+				@if (User.IsInRole("Admin") && !excludedPaths.Contains(currentPath))
 				{
 					@await Component.InvokeAsync("SidebarMenu")
 

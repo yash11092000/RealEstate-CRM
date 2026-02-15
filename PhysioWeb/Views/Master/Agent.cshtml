@@ -21,16 +21,16 @@
 <main class="dashboard-content with-sidebar collapsed">
 	<div class="container-fluid mt-4">
 		<div class="d-flex justify-content-between align-items-center mb-3">
-			<h4 class="mb-0">Agents</h4>
+			<h4 class="mb-0">Users</h4>
 			<button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#addAgentModal">
-				<i class="bi bi-plus-circle"></i> Add Agent
+				<i class="bi bi-plus-circle"></i> Add Users
 			</button>
 		</div>
 
 		<!-- ✅ Agents Table -->
 		<div class="card shadow-sm border-0">
 			<div class="card-header bg-success text-white">
-				<h5 class="mb-0"><i class="bi bi-people-fill"></i> All Agents</h5>
+				<h5 class="mb-0"><i class="bi bi-people-fill"></i> All Users</h5>
 			</div>
 			<div class="card-body">
 				<div class="table-responsive">
@@ -38,7 +38,7 @@
 						<thead class="table-light">
 							<tr>
 								<th class="Profile">Profile</th>
-								<th>Agent Name</th>
+								<th>User Name</th>
 								<th>Email</th>
 								<th>Phone</th>
 								<th>Created By</th>
@@ -59,10 +59,10 @@
 
 	<!-- ✅ Add/Edit Agent Modal -->
 	<div class="modal fade" id="addAgentModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1">
-		<div class="modal-dialog modal-lg">
+		<div class="modal-dialog modal-xl">
 			<div class="modal-content">
 				<div class="modal-header bg-success text-white">
-					<h5 class="modal-title">Add New Agent</h5>
+					<h5 class="modal-title">Add New Users</h5>
 					<button type="button" class="btn-close" data-bs-dismiss="modal"></button>
 				</div>
 				<div class="modal-body">
@@ -96,6 +96,43 @@
 								<label class="form-label fw-bold">Email </label>
 								<input type="email" class="form-control" id="Email" name="Email" placeholder="Enter Email" />
 							</div>
+
+
+							@* Newly Added On 28-01-2026 *@
+							<div class="col-md-4 mb-3">
+								<label class="form-label fw-bold">User Role <span class="impMark">*</span></label>
+								<select class="form-select" name="UserRoleId" id="UserRoleId">
+									<option value="">Select Role</option>
+									@foreach (var item in Model.UserRoles)
+									{
+										<option value="@item.Value">@item.Text</option>
+									}
+								</select>
+							</div>
+
+							<div class="col-md-4 mb-3">
+								<label class="form-label fw-bold">Designation<span class="impMark">*</span></label>
+								<select class="form-select" name="DesignationId" id="DesignationId">
+									<option value="">Select Designation</option>
+									@foreach (var item in Model.Designations)
+									{
+										<option value="@item.Value">@item.Text</option>
+									}
+								</select>
+							</div>
+							
+							<div class="col-md-4 mb-3">
+								<label class="form-label fw-bold">Reporting Manager<span class="impMark">*</span></label>
+								@* <input type="text" class="form-control" id="ManagerId" name="ManagerId" placeholder="Select Manager" /> *@
+								<select class="form-select" name="ManagerId" id="ManagerId">
+									<option value="">Select Manager</option>
+									@foreach (var item in Model.ManagerList)
+									{
+										<option value="@item.Value">@item.Text</option>
+									}
+								</select>
+							</div>
+
 
 							<div class="col-md-4 mb-3">
 								<label class="form-label fw-bold">Username <span class="impMark">*</span></label>
@@ -300,6 +337,9 @@
 				let LastName = $("#LastName").val();
 				let Phone = $("#Phone").val();
 				let Password = $("#Password").val();
+				let UserRoleId = $("#UserRoleId").val();
+				let DesignationId = $("#DesignationId").val();
+				let ManagerId = $("#ManagerId").val();
 
 				if (userName === "") {
 					notyf.error("Please fill UserName.");
@@ -346,6 +386,9 @@
 					formData.append("Password", $("#Password").val());
 					formData.append("AgentProfile", file);
 					formData.append("OldPassword", OldPassword);
+					formData.append("UserRoleId", UserRoleId);
+					formData.append("DesignationId", DesignationId);
+					formData.append("ManagerId", ManagerId);
 
 
 					$.ajax({
@@ -356,12 +399,12 @@
 						contentType: false,
 						success: function (response) {
 							if (parseInt(response) > 0) {
-								notyf.success("Agent saved successfully");
+								notyf.success("User saved successfully");
 								$("#addAgentModal").modal('hide');
 								ClearAgentForm();
 								AgentTable.ajax.reload(null, false);
 							} else {
-								notyf.error(response.message || "Failed to save agent.");
+								notyf.error(response.message || "Failed to save User.");
 							}
 						},
 						error: function (xhr) {
