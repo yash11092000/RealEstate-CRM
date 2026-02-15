@@ -4,6 +4,7 @@ namespace PhysioWeb.Models
 {
     public class LeadDashboard
     {
+        public int TotalLeads { get; set; }
         public int NewLeadsCount { get; set; }
         public int ContactedLeadCount { get; set; }
         public int IntrestedLeadCount { get; set; }
