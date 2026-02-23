@@ -26,8 +26,15 @@ namespace PhysioWeb.Repository
                 while (data.Read())
                 {
                     var LeadData = new LeadDashboard(data);
+
+                    if (data.NextResult()) {
+                        while (data.Read()) {
+                            LeadData.TotalLeads = Convert.ToInt32(data.GetValue(0));
+                        }
+                    }
                     return LeadData;
                 }
+
                 return null;
             }
             catch (Exception ex)
