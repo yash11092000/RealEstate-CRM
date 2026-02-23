@@ -1,0 +1,205 @@
+﻿@model PhysioWeb.Models.NewLead
+
+@{
+    ViewData["Title"] = "Lead Assignment Dashboard";
+    var theme = User.FindFirst("Theme")?.Value ?? "#198754";
+}
+
+<style>
+    :root {
+        --theme-color: @theme;
+        --sidebar-width: 280px;
+        --sidebar-collapsed-width: 70px;
+        --transition-speed: 0.3s;
+        --primary-color: @theme;
+        --secondary-color: #6c757d;
+        --light-bg: #f8f9fa;
+    }
+
+    .custom-tabs .nav-link {
+        border-radius: 30px;
+        padding: 8px 18px;
+        font-weight: 500;
+        color: var(--primary-color);
+        background: #f1f3f5;
+        margin-right: 10px;
+        transition: 0.2s ease-in-out;
+    }
+
+        .custom-tabs .nav-link.active {
+            background-color: var(--primary-color);
+            color: #fff;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+
+        .custom-tabs .nav-link:hover {
+            background-color: var(--primary-color);
+            color: #fff;
+        }
+
+    .table thead th {
+        font-size: 13px;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    .btn-assign {
+        background-color: var(--primary-color);
+        border: none;
+        color: white;
+        padding: 4px 10px;
+        border-radius: 20px;
+        font-size: 13px;
+    }
+
+        .btn-assign:hover {
+            opacity: 0.9;
+        }
+</style>
+<main class="dashboard-content with-sidebar collapsed">
+    <div class="container-fluid mt-4">
+
+        <!-- Card Wrapper -->
+        <div class="card shadow-sm border-0">
+            <div class="card-header text-white d-flex justify-content-between align-items-center"
+                 style="background-color: var(--primary-color);">
+                <h5 class="mb-0">
+                    <i class="bi bi-diagram-3-fill me-2"></i>
+                    Assignment Dashboard
+                </h5>
+            </div>
+
+            <div class="card-body">
+
+                <!-- Modern Tabs -->
+                <ul class="nav nav-pills mb-4 custom-tabs" id="leadTabs">
+                    <li class="nav-item">
+                        <button class="nav-link active" data-tab="Assigned">
+                            <i class="bi bi-person-check-fill me-1"></i>
+                            Assigned
+                            <span class="badge bg-light text-dark ms-1" id="assignedCount">0</span>
+                        </button>
+                    </li>
+                    <li class="nav-item">
+                        <button class="nav-link" data-tab="Unassigned">
+                            <i class="bi bi-person-x-fill me-1"></i>
+                            Unassigned
+                            <span class="badge bg-light text-dark ms-1" id="unassignedCount">0</span>
+                        </button>
+                    </li>
+                </ul>
+
+                <!-- Table -->
+                <div class="table-responsive">  
+                    <table id="TableList" class="table table-hover align-middle table-bordered">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Lead</th>
+                                <th>Contact</th>
+                                <th>Property Type</th>
+                                <th>Budget</th>
+                                <th>Status</th>
+                                <th>Priority</th>
+                                <th>Assigned Agent</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+</main>
+
+@section Scripts {
+
+    <script>
+                $(document).ready(function () {
+
+
+                        $('#TableList thead tr').clone(true).appendTo('#TableList thead');
+                        $('#TableList thead tr:eq(1) th').each(function (i) {
+                                    if ($(this).find('i').length === 0) {
+                                    var title = $('#TableList thead tr:eq(0) th').eq(i).text().trim();
+                                    $(this).html('<input class="form-control form-control-sm" type="text" placeholder="' + title + '" />');
+                                }
+                                else {
+                                     $(this).html('');
+                                }
+                             });
+                             var TableList = $("#TableList").DataTable({
+                             orderCellsTop: true,
+                             processing: true,
+                             serverSide: true,
+                             order: [[0, "asc"]],
+                             ajax: {
+                                 url: '/Dashboard/LeadList',
+                                 type: 'POST' ,
+                                  dataSrc: function (json) {
+                                    console.log("Full server response:", json);
+                                    console.log("Row data array:", json.data);
+                                    return json.data;
+                                }
+                             },
+                             columns: [
+                                 { data: 'leadName' },
+                                 { data: 'contactPerMobNo' },
+                                 { data: 'propertyName' },
+                                 { data: 'budget' },
+                                 { data: 'status' },
+                                 { data: 'priority' },
+                                 { data: 'assignAgent' },
+                                 {
+                                    data: null,
+                                    render: function() {
+                                        return `
+                                            <div class="action-buttons">
+                                                <button class="action-btn" data-bs-toggle="modal" data-bs-target="#leadConversionModal">
+                                                    <i class="fas fa-plus-circle"></i>
+                                                </button>
+                                                <a href="/Services/LeadProfile" class="action-btn">
+                                                    <i class="fas fa-eye"></i>
+                                                </a>
+                                                <button class="action-btn"><i class="fas fa-edit"></i></button>
+                                                <button class="action-btn"><i class="fas fa-phone"></i></button>
+                                            </div>
+                                        `;
+                                    },
+                                    orderable: false, searchable: false
+
+                                }
+                             ],
+                             initComplete: function () {
+                             var table = this.api();
+
+
+                             $('#TableList thead tr:eq(1) th').each(function (i) {
+                                 $('input', this).on('keyup change', function () {
+                                     if (table.column(i).search() !== this.value) {
+                                         table
+                                             .column(i)
+                                             .search(this.value)
+                                             .draw();
+                                     }
+                                 });
+                             });
+                             }
+                         });
+
+            // ================= TAB CLICK =================
+            $('#leadTabs button').on('click', function () {
+
+                $('#leadTabs button').removeClass('active');
+                $(this).addClass('active');
+
+                currentTab = $(this).data('tab');
+
+                table.ajax.reload(); // reload table based on tab
+            });
+
+        });
+    </script>
+}
