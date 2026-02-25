@@ -5,7 +5,13 @@
     var theme = User.FindFirst("Theme")?.Value ?? "#198754";
 }
 
+<link rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+      integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer" />
 <style>
+
     :root {
         --theme-color: @theme;
         --sidebar-width: 280px;
@@ -77,23 +83,27 @@
                         <button class="nav-link active" data-tab="Assigned">
                             <i class="bi bi-person-check-fill me-1"></i>
                             Assigned
-                            <span class="badge bg-light text-dark ms-1" id="assignedCount">0</span>
+                            @* <span class="badge bg-light text-dark ms-1" id="assignedCount">0</span> *@
                         </button>
                     </li>
                     <li class="nav-item">
                         <button class="nav-link" data-tab="Unassigned">
                             <i class="bi bi-person-x-fill me-1"></i>
                             Unassigned
-                            <span class="badge bg-light text-dark ms-1" id="unassignedCount">0</span>
+                            @* <span class="badge bg-light text-dark ms-1" id="unassignedCount">0</span> *@
                         </button>
                     </li>
                 </ul>
 
                 <!-- Table -->
-                <div class="table-responsive">  
+                <div class="table-responsive">
                     <table id="TableList" class="table table-hover align-middle table-bordered">
                         <thead class="table-light">
                             <tr>
+                                <th style="width:40px;">
+                                    <input type="checkbox" id="selectAll" />
+                                </th>
+                                <th style="width:50px;">Sr No</th>
                                 <th>Lead</th>
                                 <th>Contact</th>
                                 <th>Property Type</th>
@@ -120,86 +130,118 @@
                 $(document).ready(function () {
 
 
-                        $('#TableList thead tr').clone(true).appendTo('#TableList thead');
-                        $('#TableList thead tr:eq(1) th').each(function (i) {
-                                    if ($(this).find('i').length === 0) {
-                                    var title = $('#TableList thead tr:eq(0) th').eq(i).text().trim();
-                                    $(this).html('<input class="form-control form-control-sm" type="text" placeholder="' + title + '" />');
-                                }
-                                else {
-                                     $(this).html('');
-                                }
-                             });
-                             var TableList = $("#TableList").DataTable({
-                             orderCellsTop: true,
-                             processing: true,
-                             serverSide: true,
-                             order: [[0, "asc"]],
-                             ajax: {
-                                 url: '/Dashboard/LeadList',
-                                 type: 'POST' ,
-                                  dataSrc: function (json) {
-                                    console.log("Full server response:", json);
-                                    console.log("Row data array:", json.data);
-                                    return json.data;
-                                }
-                             },
-                             columns: [
-                                 { data: 'leadName' },
-                                 { data: 'contactPerMobNo' },
-                                 { data: 'propertyName' },
-                                 { data: 'budget' },
-                                 { data: 'status' },
-                                 { data: 'priority' },
-                                 { data: 'assignAgent' },
-                                 {
-                                    data: null,
-                                    render: function() {
-                                        return `
-                                            <div class="action-buttons">
-                                                <button class="action-btn" data-bs-toggle="modal" data-bs-target="#leadConversionModal">
-                                                    <i class="fas fa-plus-circle"></i>
-                                                </button>
-                                                <a href="/Services/LeadProfile" class="action-btn">
-                                                    <i class="fas fa-eye"></i>
-                                                </a>
-                                                <button class="action-btn"><i class="fas fa-edit"></i></button>
-                                                <button class="action-btn"><i class="fas fa-phone"></i></button>
-                                            </div>
-                                        `;
-                                    },
-                                    orderable: false, searchable: false
+                let currentTab = "Assigned"; // default
 
-                                }
-                             ],
-                             initComplete: function () {
-                             var table = this.api();
+            // Clone header for filters (your existing code)
+            $('#TableList thead tr').clone(true).appendTo('#TableList thead');
+            $('#TableList thead tr:eq(1) th').each(function (i) {
+                if ($(this).find('i').length === 0) {
+                    var title = $('#TableList thead tr:eq(0) th').eq(i).text().trim();
+                    $(this).html('<input class="form-control form-control-sm" type="text" placeholder="' + title + '" />');
+                } else {
+                    $(this).html('');
+                }
+            });
 
+            var table = $("#TableList").DataTable({
+                orderCellsTop: true,
+                processing: true,
+                serverSide: true,
+                order: [[0, "asc"]],
+                ajax: {
+                    url: '/Dashboard/LeadList',
+                    type: 'POST',
+                    data: function (d) {
+                        // ← This is the key part
+                        d.tab = currentTab;           // send "Assigned" or "Unassigned"
+                        // You can add more filters later, e.g. d.searchType = "myLeadsOnly";
+                        return d;
+                    },
+                    dataSrc: function (json) {
+                        console.log("Server response:", json);
+                        // Optional: update counts if your backend sends them
+                        if (json.recordsTotal !== undefined) {
+                            // or if you send custom properties:
+                            // $('#assignedCount').text(json.assignedCount || 0);
+                            // $('#unassignedCount').text(json.unassignedCount || 0);
+                        }
+                        return json.data || [];
+                    }
+                },
+                columns: [
+                          {
+            data: null,
+            render: function (data, type, row) {
+                return `<input type="checkbox" class="row-checkbox" value="${row.leadId ?? ''}" />`;
+            },
+            orderable: false,
+            searchable: false
+        },
+        {
+            data: null,
+            render: function (data, type, row, meta) {
+                return meta.row + meta.settings._iDisplayStart + 1;
+            },
+            orderable: false,
+            searchable: false
+        },
+                    { data: 'leadName' },
+                    { data: 'contactPerMobNo' },
+                    { data: 'propertyName' },
+                    { data: 'budget' },
+                    { data: 'status' },
+                    { data: 'priority' },
+                    { data: 'assignAgent' },
+                    {
+                        data: null,
+                        render: function (data, type, row) {
+                            return `<i class="fa-solid fa-circle-plus" style="font-size: larger;"></i></i>`;
+                        },
+                        orderable: false,
+                        searchable: false
+                    }
+                ],
+                initComplete: function () {
+                    // your column search binding
+                    $('#TableList thead tr:eq(1) th').each(function (i) {
+                        $('input', this).on('keyup change', function () {
+                            if (table.column(i).search() !== this.value) {
+                                table.column(i).search(this.value).draw();
+                            }
+                        });
+                    });
+                }
+            });
 
-                             $('#TableList thead tr:eq(1) th').each(function (i) {
-                                 $('input', this).on('keyup change', function () {
-                                     if (table.column(i).search() !== this.value) {
-                                         table
-                                             .column(i)
-                                             .search(this.value)
-                                             .draw();
-                                     }
-                                 });
-                             });
-                             }
-                         });
-
-            // ================= TAB CLICK =================
+            // Tab switching
             $('#leadTabs button').on('click', function () {
-
                 $('#leadTabs button').removeClass('active');
                 $(this).addClass('active');
 
-                currentTab = $(this).data('tab');
+                currentTab = $(this).data('tab');   // "Assigned" or "Unassigned"
 
-                table.ajax.reload(); // reload table based on tab
+                table.ajax.reload(null, false);     // reload + keep current paging/search
             });
-
         });
+
+                // Select / Unselect all rows
+        $('#selectAll').on('change', function () {
+            $('.row-checkbox').prop('checked', this.checked);
+        });
+
+        // If any row unchecked → uncheck selectAll
+        $(document).on('change', '.row-checkbox', function () {
+            if (!this.checked) {
+                $('#selectAll').prop('checked', false);
+            }
+        });
+
+                function getSelectedLeads() {
+            let ids = [];
+            $('.row-checkbox:checked').each(function () {
+                ids.push($(this).val());
+            });
+            return ids;
+        }
     </script>
 }
