@@ -67,13 +67,13 @@
 
         <!-- Card Wrapper -->
         <div class="card shadow-sm border-0">
-            <div class="card-header text-white d-flex justify-content-between align-items-center"
+           @*  <div class="card-header text-white d-flex justify-content-between align-items-center"
                  style="background-color: var(--primary-color);">
                 <h5 class="mb-0">
                     <i class="bi bi-diagram-3-fill me-2"></i>
                     Assignment Dashboard
                 </h5>
-            </div>
+            </div> *@
 
             <div class="card-body">
 
@@ -94,7 +94,52 @@
                         </button>
                     </li>
                 </ul>
+              @*   <!-- Classic Tabs -->
+                <ul class="nav nav-tabs mb-4" id="leadTabs" role="tablist">
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link active"
+                                id="assigned-tab"
+                                data-bs-toggle="tab"
+                                data-bs-target="#Assigned"
+                                type="button"
+                                role="tab">
+                            <i class="bi bi-person-check-fill me-1"></i>
+                            Assigned
+                        </button>
+                    </li>
 
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link"
+                                id="unassigned-tab"
+                                data-bs-toggle="tab"
+                                data-bs-target="#Unassigned"
+                                type="button"
+                                role="tab">
+                            <i class="bi bi-person-x-fill me-1"></i>
+                            Unassigned
+                        </button>
+                    </li>
+                </ul> *@
+                <div class="col-md-12 d-flex justify-content-end align-items-end gap-3">
+
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Users List</label>
+                        <select class="form-select" name="UserIdForAssign" id="UserIdForAssign">
+                            <option value="">Select Users</option>
+                            @foreach (var item in Model.UsersListForAssign)
+                            {
+                                <option value="@item.Value">@item.Text</option>
+                            }
+                        </select>
+                    </div>
+
+                    <div class="mb-3">
+                        <button type="button" class="btn btn-success" id="btnAssigned">
+                            <i class="fa-solid fa-users"></i> Assign Leads To User
+                        </button>
+                    </div>
+
+                </div>
                 <!-- Table -->
                 <div class="table-responsive">
                     <table id="TableList" class="table table-hover align-middle table-bordered">
@@ -127,14 +172,14 @@
 @section Scripts {
 
     <script>
-                $(document).ready(function () {
+        $(document).ready(function() {
 
 
-                let currentTab = "Assigned"; // default
+            let currentTab = "Assigned"; // default
 
             // Clone header for filters (your existing code)
             $('#TableList thead tr').clone(true).appendTo('#TableList thead');
-            $('#TableList thead tr:eq(1) th').each(function (i) {
+            $('#TableList thead tr:eq(1) th').each(function(i) {
                 if ($(this).find('i').length === 0) {
                     var title = $('#TableList thead tr:eq(0) th').eq(i).text().trim();
                     $(this).html('<input class="form-control form-control-sm" type="text" placeholder="' + title + '" />');
@@ -151,13 +196,13 @@
                 ajax: {
                     url: '/Dashboard/LeadList',
                     type: 'POST',
-                    data: function (d) {
+                    data: function(d) {
                         // ← This is the key part
                         d.tab = currentTab;           // send "Assigned" or "Unassigned"
                         // You can add more filters later, e.g. d.searchType = "myLeadsOnly";
                         return d;
                     },
-                    dataSrc: function (json) {
+                    dataSrc: function(json) {
                         console.log("Server response:", json);
                         // Optional: update counts if your backend sends them
                         if (json.recordsTotal !== undefined) {
@@ -169,22 +214,22 @@
                     }
                 },
                 columns: [
-                          {
-            data: null,
-            render: function (data, type, row) {
-                return `<input type="checkbox" class="row-checkbox" value="${row.leadId ?? ''}" />`;
-            },
-            orderable: false,
-            searchable: false
-        },
-        {
-            data: null,
-            render: function (data, type, row, meta) {
-                return meta.row + meta.settings._iDisplayStart + 1;
-            },
-            orderable: false,
-            searchable: false
-        },
+                    {
+                        data: null,
+                        render: function(data, type, row) {
+                            return `<input type="checkbox" class="row-checkbox" value="${row.leadId ?? ''}" />`;
+                        },
+                        orderable: false,
+                        searchable: false
+                    },
+                    {
+                        data: null,
+                        render: function(data, type, row, meta) {
+                            return meta.row + meta.settings._iDisplayStart + 1;
+                        },
+                        orderable: false,
+                        searchable: false
+                    },
                     { data: 'leadName' },
                     { data: 'contactPerMobNo' },
                     { data: 'propertyName' },
@@ -194,17 +239,17 @@
                     { data: 'assignAgent' },
                     {
                         data: null,
-                        render: function (data, type, row) {
+                        render: function(data, type, row) {
                             return `<i class="fa-solid fa-circle-plus" style="font-size: larger;"></i></i>`;
                         },
                         orderable: false,
                         searchable: false
                     }
                 ],
-                initComplete: function () {
+                initComplete: function() {
                     // your column search binding
-                    $('#TableList thead tr:eq(1) th').each(function (i) {
-                        $('input', this).on('keyup change', function () {
+                    $('#TableList thead tr:eq(1) th').each(function(i) {
+                        $('input', this).on('keyup change', function() {
                             if (table.column(i).search() !== this.value) {
                                 table.column(i).search(this.value).draw();
                             }
@@ -214,7 +259,7 @@
             });
 
             // Tab switching
-            $('#leadTabs button').on('click', function () {
+            $('#leadTabs button').on('click', function() {
                 $('#leadTabs button').removeClass('active');
                 $(this).addClass('active');
 
@@ -224,21 +269,25 @@
             });
         });
 
-                // Select / Unselect all rows
-        $('#selectAll').on('change', function () {
+      
+        $('#btnAssigned').on('click', function() {
+            //ajax call 
+        });
+        
+        $('#selectAll').on('change', function() {
             $('.row-checkbox').prop('checked', this.checked);
         });
 
-        // If any row unchecked → uncheck selectAll
-        $(document).on('change', '.row-checkbox', function () {
+      
+        $(document).on('change', '.row-checkbox', function() {
             if (!this.checked) {
                 $('#selectAll').prop('checked', false);
             }
         });
 
-                function getSelectedLeads() {
+        function getSelectedLeads() {
             let ids = [];
-            $('.row-checkbox:checked').each(function () {
+            $('.row-checkbox:checked').each(function() {
                 ids.push($(this).val());
             });
             return ids;

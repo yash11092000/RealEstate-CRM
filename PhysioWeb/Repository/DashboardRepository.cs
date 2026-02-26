@@ -140,5 +140,31 @@ namespace PhysioWeb.Repository
                 throw;
             }
         }
+
+        public async Task<NewLead> GetDropDowndata(string UserID)
+        {
+
+            try
+            {
+                string[] parameterNames = { "UserID" };
+                object[] parameterValues = { UserID };
+
+                string Sp = "FMR_LeadAssignmentDropDown";
+                var data = await _dbHelper.GetDataReaderAsync(Sp, parameterNames, parameterValues);
+                var NewLeadDropDown = new NewLead();
+
+                while (data.Read())
+                {
+                    NewLeadDropDown.UsersListForAssign.Add(new DropDownSource(data, true));
+                }
+               
+                return NewLeadDropDown;
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }
+
     }
 }
