@@ -77,7 +77,7 @@ namespace PhysioWeb.Controllers
             //return View();
         }
 
-        public async Task<ActionResult> AssignedUnassignLeadsList()
+        public async Task<ActionResult> AssignedUnassignLeadsList(int IsFromList)
         {
             var form = Request.Form;
 
