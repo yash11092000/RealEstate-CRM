@@ -172,6 +172,9 @@ namespace PhysioWeb.Models
         public List<DropDownSource> CityList { get; set; }
         public List<DropDownSource> CountryList { get; set; }
         public List<DropDownSource> PropertyInterestedInList { get; set; }
+
+        public List<DropDownSource> UsersListForAssign { get; set; }
+        public string UserIdForAssign { get; set; }
         public NewLead()
         {
 
@@ -190,13 +193,14 @@ namespace PhysioWeb.Models
             AmountUnitList = new List<DropDownSource>();
             PropertyInterestedInList = new List<DropDownSource>();
             CampaignList = new List<DropDownSource>();
-
+            UsersListForAssign = new List<DropDownSource>();
         }
 
 
         // Constructor for list view (flag = 0)
         public NewLead(IDataReader reader, int flag = 0)
         {
+            UsersListForAssign = new List<DropDownSource>();
             if (flag == 0)
             {
                 // Mapping fields for New Lead list/grid view

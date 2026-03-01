@@ -69,10 +69,15 @@ namespace PhysioWeb.Controllers
         [HttpGet]
         public async Task<ActionResult> LeadAssignmentDashboard()
         {
-            return View();
+            string UserID = User.FindFirst(ClaimTypes.PrimarySid)?.Value;
+            NewLead DropDowns = await _IDashboardRepository.GetDropDowndata(UserID);
+
+
+            return View(DropDowns);
+            //return View();
         }
 
-        public async Task<ActionResult> AssignedUnassignLeadsList()
+        public async Task<ActionResult> AssignedUnassignLeadsList(int IsFromList)
         {
             var form = Request.Form;
 
