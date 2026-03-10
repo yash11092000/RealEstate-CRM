@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Components;
+using Org.BouncyCastle.Asn1;
 using PhysioWeb.Data;
 using PhysioWeb.Models;
 
@@ -92,14 +93,14 @@ namespace PhysioWeb.Repository
             }
         }
 
-        public async Task<DataTableResult> AssignedUnassignLeadsList(DataTablePara dataTablePara)
+        public async Task<DataTableResult> AssignedUnassignLeadsList(DataTablePara dataTablePara, int IsFromList)
         {
             try
             {
                 string[] parameterName = new string[]
                 {
                     "DisplayLength", "DisplayStart", "SortCol", "SortDir", "Search",
-                    "Lead","Contact", "PropertyType","Budget", "Status","Priority", "AssignedAgent","AgencyId"
+                    "Lead","Contact", "PropertyType","Budget", "Status","Priority", "AssignedAgent","AgencyId","IsFromList"
                 };
 
                 object[] parameterValue = new object[]
@@ -107,7 +108,7 @@ namespace PhysioWeb.Repository
                     dataTablePara.iDisplayLength,dataTablePara.iDisplayStart,dataTablePara.iSortCol_0,
                     dataTablePara.sSortDir_0,dataTablePara.sSearch,dataTablePara.sSearch_0,
                     dataTablePara.sSearch_1,dataTablePara.sSearch_2,dataTablePara.sSearch_3,
-                    dataTablePara.sSearch_4,dataTablePara.sSearch_5,dataTablePara.sSearch_6,dataTablePara.AgencyId
+                    dataTablePara.sSearch_4,dataTablePara.sSearch_5,dataTablePara.sSearch_6,dataTablePara.AgencyId,IsFromList
                 };
 
 
@@ -163,6 +164,31 @@ namespace PhysioWeb.Repository
             catch (Exception e)
             {
                 throw e;
+            }
+        }
+        public async Task<bool> SaveAssignLeadsToUser(int UserIdForAssign, List<int> LeadIds, string UserID, string AgencyId)
+        {
+            try
+            {
+                string[] parametersName =
+                {
+                    "@UserIdForAssign","@LeadIds","@UserID","@@AgencyId"
+                };
+
+                object[] values =
+                {
+                    UserIdForAssign,LeadIds,UserID,AgencyId
+
+                };
+
+                string Sp = "FMR_SaveAssignLeadsToUser";
+                int RecordAffected = await _dbHelper.ExecuteNonQueryAsync(Sp, parametersName, values);
+                return RecordAffected > 0;
+            }
+            catch (Exception ex)
+            {
+                // Optional: log error here
+                throw ex;
             }
         }
 

@@ -80,14 +80,14 @@
                 <!-- Modern Tabs -->
                 <ul class="nav nav-pills mb-4 custom-tabs" id="leadTabs">
                     <li class="nav-item">
-                        <button class="nav-link active" data-tab="Assigned">
+                        <button class="nav-link active" data-tab="1">
                             <i class="bi bi-person-check-fill me-1"></i>
                             Assigned
                             @* <span class="badge bg-light text-dark ms-1" id="assignedCount">0</span> *@
                         </button>
                     </li>
                     <li class="nav-item">
-                        <button class="nav-link" data-tab="Unassigned">
+                        <button class="nav-link" data-tab="2">
                             <i class="bi bi-person-x-fill me-1"></i>
                             Unassigned
                             @* <span class="badge bg-light text-dark ms-1" id="unassignedCount">0</span> *@
@@ -175,7 +175,7 @@
         $(document).ready(function() {
 
 
-            let currentTab = "Assigned"; // default
+        let currentTab = 1; // Assigned default
 
             // Clone header for filters (your existing code)
             $('#TableList thead tr').clone(true).appendTo('#TableList thead');
@@ -197,10 +197,9 @@
                     url: '/Dashboard/AssignedUnassignLeadsList',
                     type: 'POST',
                     data: function(d) {
-                        // ← This is the key part
-                        d.tab = currentTab;           // send "Assigned" or "Unassigned"
-                        // You can add more filters later, e.g. d.searchType = "myLeadsOnly";
-                        return d;
+        d.IsFromList = currentTab; // 1 or 2
+
+        return d;
                     },
                     dataSrc: function(json) {
                         console.log("Server response:", json);
@@ -258,26 +257,67 @@
                 }
             });
 
-            // Tab switching
-            $('#leadTabs button').on('click', function() {
-                $('#leadTabs button').removeClass('active');
-                $(this).addClass('active');
-
-                currentTab = $(this).data('tab');   // "Assigned" or "Unassigned"
-
-                table.ajax.reload(null, false);     // reload + keep current paging/search
-            });
         });
 
       
         $('#btnAssigned').on('click', function() {
-            //ajax call 
+
+            var UserIdForAssign = $("#UserIdForAssign").val();
+             let ids = [];
+
+    $('.row-checkbox:checked').each(function () {
+        ids.push($(this).val());
+
+    });
+                 var selectedLeads = ids;
+
+            if(UserIdForAssign == "" || UserIdForAssign == null){
+                notyf.error("Please fill User to assign leads.");
+                    UserIdForAssign.focus();
+            }
+                else if (selectedLeads.length === 0) {
+            notyf.error("Please select at least one lead.");
+                }
+            else{
+                
+				 $.ajax({
+                     url: '/Dashboard/SaveAssignLeadsToUser',
+					 method: 'POST',
+                    data: {
+            UserIdForAssign: UserIdForAssign,
+            LeadIds: selectedLeads
+        },
+					 success: function (response) {
+						 if (response) {
+							 notyf.success("New Lead added successfully");
+							 // $("#addAreaModal").modal('hide');
+							 // ClearData();
+							 $("#TableList").DataTable().ajax.reload(null, false);
+						 } else {
+							 notyf.error(response.message || "Failed to save.");
+						 }
+					 },
+					 error: function (xhr) {
+						 console.error(xhr);
+						 notyf.error("Server error: " + (xhr.responseText || "Unknown error"));
+					 }
+				 });
+            }
         });
         
         $('#selectAll').on('change', function() {
             $('.row-checkbox').prop('checked', this.checked);
         });
+                
+        $('#leadTabs button').on('click', function () {
 
+            $('#leadTabs button').removeClass('active');
+            $(this).addClass('active');
+
+            currentTab = $(this).data('tab'); // 1 or 2
+
+            table.ajax.reload(); // reload data
+        });
       
         $(document).on('change', '.row-checkbox', function() {
             if (!this.checked) {
