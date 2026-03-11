@@ -216,7 +216,7 @@
                     {
                         data: null,
                         render: function(data, type, row) {
-                            return `<input type="checkbox" class="row-checkbox" value="${row.leadId ?? ''}" />`;
+                            return `<input type="checkbox" class="row-checkbox" value="${row.uniquId ?? ''}" />`;
                         },
                         orderable: false,
                         searchable: false
@@ -259,49 +259,45 @@
 
         });
 
-      
-        $('#btnAssigned').on('click', function() {
+              $('#btnAssigned').on('click', function () {
 
             var UserIdForAssign = $("#UserIdForAssign").val();
-             let ids = [];
+            let ids = [];
 
-    $('.row-checkbox:checked').each(function () {
-        ids.push($(this).val());
+            $('.row-checkbox:checked').each(function () {
+                ids.push($(this).val());
+            });
 
-    });
-                 var selectedLeads = ids;
+            var selectedLeads = ids.join(','); // convert to comma separated string
 
-            if(UserIdForAssign == "" || UserIdForAssign == null){
+            if (UserIdForAssign == "" || UserIdForAssign == null) {
                 notyf.error("Please fill User to assign leads.");
-                    UserIdForAssign.focus();
             }
-                else if (selectedLeads.length === 0) {
-            notyf.error("Please select at least one lead.");
-                }
-            else{
-                
-				 $.ajax({
-                     url: '/Dashboard/SaveAssignLeadsToUser',
-					 method: 'POST',
+            else if (ids.length === 0) {
+                notyf.error("Please select at least one lead.");
+            }
+            else {
+
+                $.ajax({
+                    url: '/Dashboard/SaveAssignLeadsToUser',
+                    method: 'POST',
                     data: {
-            UserIdForAssign: UserIdForAssign,
-            LeadIds: selectedLeads
-        },
-					 success: function (response) {
-						 if (response) {
-							 notyf.success("New Lead added successfully");
-							 // $("#addAreaModal").modal('hide');
-							 // ClearData();
-							 $("#TableList").DataTable().ajax.reload(null, false);
-						 } else {
-							 notyf.error(response.message || "Failed to save.");
-						 }
-					 },
-					 error: function (xhr) {
-						 console.error(xhr);
-						 notyf.error("Server error: " + (xhr.responseText || "Unknown error"));
-					 }
-				 });
+                        UserIdForAssign: UserIdForAssign,
+                        LeadIds: selectedLeads
+                    },
+                    success: function (response) {
+                        if (response) {
+                            notyf.success("Leads assigned successfully");
+                            $("#TableList").DataTable().ajax.reload(null, false);
+                        } else {
+                            notyf.error(response.message || "Failed to save.");
+                        }
+                    },
+                    error: function (xhr) {
+                        console.error(xhr);
+                        notyf.error("Server error: " + (xhr.responseText || "Unknown error"));
+                    }
+                });
             }
         });
         

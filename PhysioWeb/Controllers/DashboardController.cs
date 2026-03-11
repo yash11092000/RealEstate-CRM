@@ -116,7 +116,7 @@ namespace PhysioWeb.Controllers
             });
         }
         [HttpPost]
-        public async Task<ActionResult> SaveAssignLeadsToUser(int UserIdForAssign, List<int> LeadIds)
+        public async Task<ActionResult> SaveAssignLeadsToUser(int UserIdForAssign, string LeadIds)
         {
           
             var result = await _IDashboardRepository.SaveAssignLeadsToUser(UserIdForAssign, LeadIds, User.FindFirst(ClaimTypes.PrimarySid)?.Value, User.FindFirst(ClaimTypes.GroupSid)?.Value);

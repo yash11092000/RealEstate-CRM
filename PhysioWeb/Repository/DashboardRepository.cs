@@ -166,13 +166,13 @@ namespace PhysioWeb.Repository
                 throw e;
             }
         }
-        public async Task<bool> SaveAssignLeadsToUser(int UserIdForAssign, List<int> LeadIds, string UserID, string AgencyId)
+        public async Task<bool> SaveAssignLeadsToUser(int UserIdForAssign,string LeadIds, string UserID, string AgencyId)
         {
             try
             {
                 string[] parametersName =
                 {
-                    "@UserIdForAssign","@LeadIds","@UserID","@@AgencyId"
+                    "@UserIdForAssign","@LeadIds","@UserID","@AgencyId"
                 };
 
                 object[] values =
