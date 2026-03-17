@@ -26,6 +26,7 @@ namespace PhysioWeb.Models
 
         public string Status { get; set; }
         public int Priority { get; set; }
+        public int UniquId { get; set; }
 
 
         public LeadDashboard()
@@ -73,6 +74,10 @@ namespace PhysioWeb.Models
             if (!rdr.IsDBNull(rdr.GetOrdinal("Priority")))
             {
                 obj.Priority = rdr.GetInt32(rdr.GetOrdinal("Priority"));
+            }
+            if (!rdr.IsDBNull(rdr.GetOrdinal("UniquId")))
+            {
+                obj.UniquId = rdr.GetInt32(rdr.GetOrdinal("UniquId"));
             }
         }
 

@@ -89,6 +89,7 @@ namespace PhysioWeb.Controllers
                 iSortCol_0 = Convert.ToInt32(form["order[0][column]"]),
                 sSortDir_0 = form["order[0][dir]"],
                 sSearch = form["search[value]"]
+                
             };
 
             // ✅ Map column filters dynamically (for first 10 columns)
@@ -104,7 +105,7 @@ namespace PhysioWeb.Controllers
             }
             dataTablePara.UserID = User.FindFirst(ClaimTypes.PrimarySid)?.Value;
             dataTablePara.AgencyId = User.FindFirst(ClaimTypes.GroupSid)?.Value;
-            var result = await _IDashboardRepository.AssignedUnassignLeadsList(dataTablePara);
+            var result = await _IDashboardRepository.AssignedUnassignLeadsList(dataTablePara, IsFromList);
             var requestForm = Request.Form;
             return Json(new
             {
@@ -113,6 +114,13 @@ namespace PhysioWeb.Controllers
                 recordsFiltered = result.iTotalDisplayRecords,  // Total records after filtering
                 data = result.aaData                            // Actual paged data
             });
+        }
+        [HttpPost]
+        public async Task<ActionResult> SaveAssignLeadsToUser(int UserIdForAssign, string LeadIds)
+        {
+          
+            var result = await _IDashboardRepository.SaveAssignLeadsToUser(UserIdForAssign, LeadIds, User.FindFirst(ClaimTypes.PrimarySid)?.Value, User.FindFirst(ClaimTypes.GroupSid)?.Value);
+            return Json(result);
         }
         #endregion
     }

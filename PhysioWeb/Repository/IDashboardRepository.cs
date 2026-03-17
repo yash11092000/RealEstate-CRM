@@ -6,7 +6,8 @@ namespace PhysioWeb.Repository
     {
         Task<LeadDashboard> GetLeadDashboardData(string? userID, string? agencyId);
         Task<DataTableResult> LeadList(DataTablePara dataTablePara);
-        Task<DataTableResult> AssignedUnassignLeadsList(DataTablePara dataTablePara);
+        Task<DataTableResult> AssignedUnassignLeadsList(DataTablePara dataTablePara,int IsFromList);
         Task<NewLead> GetDropDowndata(string UserID);
+        Task<bool> SaveAssignLeadsToUser(int UserIdForAssign,string LeadIds, string UserID, string AgencyId);
     }
 }
