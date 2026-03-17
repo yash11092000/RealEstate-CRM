@@ -1730,6 +1730,29 @@ namespace PhysioWeb.Repository
                 throw e;
             }
         }
+        public async Task<CommanMaster> GetMastersData()
+        {
+            try
+            {
+                string[] parameterNames = { };
+                object[] parameterValues = { };
+
+                string Sp = "FMR_GetMastersData";
+                var data = await _dbHelper.GetDataReaderAsync(Sp, parameterNames, parameterValues);
+                CommanMaster obj = new CommanMaster();
+                while (data.Read())
+                {
+                    obj.MasterDropDown.Add(new DropDownSource(data,true));
+                }
+                return obj;
+
+                //bind 
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }
 
         public async Task<bool> SaveNewLead(NewLead NewLead)
         {
@@ -1772,38 +1795,37 @@ namespace PhysioWeb.Repository
                 string[] parameterName = new string[]
                 {
                     "DisplayLength", "DisplayStart", "SortCol", "SortDir", "Search",
-                    //"FullName", "Email","Phone","CreatedBy","IsActive","AgencyId"
                       "LeadName",
-"LeadUniqueNo",
-    "LeadDate",
-    "ContactPerMobNo",
-    "WpMobNo",
-    "LeadType",
-    "LeadSource",
-    "LeadStatus",
-    "FollowUpDate",
-    "CreatedBy",
-    "IsActive",
-    "AgencyId"
+                    "LeadUniqueNo",
+                        "LeadDate",
+                        "ContactPerMobNo",
+                        "WpMobNo",
+                        "LeadType",
+                        "LeadSource",
+                        "LeadStatus",
+                        "FollowUpDate",
+                        "CreatedBy",
+                        "IsActive",
+                        "AgencyId"
                 };
 
                 object[] parameterValue = new object[]
                 {
                     dataTablePara.iDisplayLength,dataTablePara.iDisplayStart,dataTablePara.iSortCol_0,
                     dataTablePara.sSortDir_0,dataTablePara.sSearch,
-                     dataTablePara.sSearch_1,  
-    dataTablePara.sSearch_2,  
-    dataTablePara.sSearch_3,  
-    dataTablePara.sSearch_4,  
-    dataTablePara.sSearch_5,  
-    dataTablePara.sSearch_6,  
-    dataTablePara.sSearch_7,  
-    dataTablePara.sSearch_8,  
-    dataTablePara.sSearch_9,  
+                    dataTablePara.sSearch_1,  
+                    dataTablePara.sSearch_2,  
+                    dataTablePara.sSearch_3,  
+                    dataTablePara.sSearch_4,  
+                    dataTablePara.sSearch_5,  
+                    dataTablePara.sSearch_6,  
+                    dataTablePara.sSearch_7,  
+                    dataTablePara.sSearch_8,  
+                    dataTablePara.sSearch_9,  
 
-    dataTablePara.sSearch_10, 
-    dataTablePara.sSearch_11, 
-    dataTablePara.AgencyId
+                    dataTablePara.sSearch_10, 
+                    dataTablePara.sSearch_11, 
+                    dataTablePara.AgencyId
                 };
 
                 var reader = await _dbHelper.GetDataReaderAsync("[FMR_DataListNewLead]", parameterName, parameterValue);

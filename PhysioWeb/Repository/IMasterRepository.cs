@@ -65,5 +65,6 @@ namespace PhysioWeb.Repository
         Task<DataTableResult> ListNewLead(DataTablePara dataTablePara);
         Task<bool> DeleteNewLead(NewLead NewLead);
         Task<NewLead> EditNewLead(int uniqueID, int UserID);
+        Task<CommanMaster> GetMastersData();
     }
 }

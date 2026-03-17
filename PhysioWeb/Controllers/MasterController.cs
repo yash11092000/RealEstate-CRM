@@ -1039,6 +1039,16 @@ namespace PhysioWeb.Controllers
         }
         #endregion
 
+
+        #region Comman Master
+
+        public async Task<ActionResult> CommanMaster()
+        {
+            CommanMaster data = await _masterRepository.GetMastersData();
+            return View(data);
+        }
+        #endregion
+
         [HttpPost]
         public async Task<ActionResult> GetSoldOutDetails(int UniqueID)
         {
@@ -1081,13 +1091,13 @@ namespace PhysioWeb.Controllers
                 new DropDownSource { Value = "5", Text = "Telegram" }
             };
 
-            DropDowns.LeadPriorityList = new List<DropDownSource>   
+            DropDowns.LeadPriorityList = new List<DropDownSource>
             {
                 new DropDownSource { Value = "1", Text = "Hot" },
                 new DropDownSource { Value = "2", Text = "Warm" },
                 new DropDownSource { Value = "3", Text = "Cold" }
             };
-          
+
             return View(DropDowns);
         }
         [HttpPost]
@@ -1319,7 +1329,7 @@ namespace PhysioWeb.Controllers
         }
         #endregion
 
-        
+
     }
 
     public class PermissionUpdateModel
