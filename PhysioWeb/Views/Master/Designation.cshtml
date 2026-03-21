@@ -97,79 +97,68 @@
 
 		$(document).ready(function () {
 
-									$('#TableList thead tr').clone(true).appendTo('#TableList thead');
+					$('#TableList thead tr').clone(true).appendTo('#TableList thead');
 
-									$('#TableList thead tr:eq(1) th').each(function (i) {
-										if ($(this).find('i').length === 0) { // ✅ only add input if no icon
-											var title = $('#TableList thead tr:eq(0) th').eq(i).text().trim();
-											$(this).html('<input class="form-control form-control-sm" type="text" placeholder="' + title + '" />');
-										} else {
-											$(this).html('');
+					$('#TableList thead tr:eq(1) th').each(function (i) {
+						if ($(this).find('i').length === 0) { 
+							var title = $('#TableList thead tr:eq(0) th').eq(i).text().trim();
+							$(this).html('<input class="form-control form-control-sm" type="text" placeholder="' + title + '" />');
+						} else {
+							$(this).html('');
+						}
+					});
+					var TableList = $("#TableList").DataTable({
+					orderCellsTop: true,
+					processing: true,
+					serverSide: true,
+					order: [[0, "asc"]],
+					ajax: {
+						url: '/Master/ListDesignation',
+						type: 'POST' ,
+					},
+					columns: [
+								{ data: 'designationName' },
+								{ data: 'description' },
+								{ data: 'inActiveText' },
+								{ data: 'createdBy' },
+								{
+									data: null,
+									render: function (data, type, row) {
+										let para = `'${row.uniquId}', 'Master', 'EditDesignation'`;
+										return `<a href="javascript:void(0)" onclick="EditData(${para})">
+													<i class="bi bi-pencil-square text-primary fs-5" title="Edit"></i>
+												</a>`;
+									},
+									orderable: false,
+									searchable: false
+								},
+
+										{
+									data: null,
+									render: function (data, type, row) {
+											let para = `'${row.uniquId}', 'Master', 'DeleteDesignation'`;
+										return `<a href="javascript:void(0)" onclick="DeleteData(${para})">
+													<i class="bi bi-trash text-danger fs-5" title="Delete"></i>
+												</a>`;
+									},
+									orderable: false, searchable: false
+								}
+								],
+								initComplete: function () {
+								var table = this.api();
+
+								$('#TableList thead tr:eq(1) th').each(function (i) {
+									$('input', this).on('keyup change', function () {
+										if (table.column(i).search() !== this.value) {
+											table
+												.column(i)
+												.search(this.value) // ✅ per-column search
+												.draw();
 										}
 									});
-									var TableList = $("#TableList").DataTable({
-									orderCellsTop: true,
-									processing: true,
-									serverSide: true,
-									order: [[0, "asc"]],
-									ajax: {
-										url: '/Master/ListDesignation',
-										type: 'POST' ,
-									},
-									columns: [
-										{ data: 'designationName' },
-										{ data: 'description' },
-										{ data: 'inActiveText' },
-										{ data: 'createdBy' },
-									//     {
-									//     data: null,
-									//     render: function (data, type, row) {
-									//         let para = row.uniquId + ',' + '"Master"' + ',' + '"PropertyType"';
-									//         return `<a href="javascript:void(0)" onclick="ViewHistory(${para})">
-									//                     <i class="bi bi-clock-history text-success fs-5" title="View History"></i>
-									//                 </a>`;
-									//     },
-									//     orderable: false, searchable: false
-									// },
-									{
-										data: null,
-										render: function (data, type, row) {
-											let para = `'${row.uniquId}', 'Master', 'EditDesignation'`;
-											return `<a href="javascript:void(0)" onclick="EditData(${para})">
-														<i class="bi bi-pencil-square text-primary fs-5" title="Edit"></i>
-													</a>`;
-										},
-										orderable: false,
-										searchable: false
-									},
-
-											{
-										data: null,
-										render: function (data, type, row) {
-											 let para = `'${row.uniquId}', 'Master', 'DeleteDesignation'`;
-											return `<a href="javascript:void(0)" onclick="DeleteData(${para})">
-														<i class="bi bi-trash text-danger fs-5" title="Delete"></i>
-													</a>`;
-										},
-										orderable: false, searchable: false
-									}
-									],
-									initComplete: function () {
-											 var table = this.api();
-
-							// ✅ Attach filter inputs to correct column index
-							$('#TableList thead tr:eq(1) th').each(function (i) {
-								$('input', this).on('keyup change', function () {
-									if (table.column(i).search() !== this.value) {
-										table
-											.column(i)
-											.search(this.value) // ✅ per-column search
-											.draw();
-									}
 								});
+								}
 							});
-									}
-								});
 
 							});
 					$("#btnSave").on("click", function () {

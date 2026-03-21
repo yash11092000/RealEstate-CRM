@@ -172,7 +172,7 @@ namespace PhysioWeb.Repository
             {
                 string[] parametersName =
                 {
-                    "@UserIdForAssign","@LeadIds","@UserID","@AgencyId"
+                    "UserIdForAssign","LeadIds","UserID","AgencyId"
                 };
 
                 object[] values =
@@ -191,6 +191,80 @@ namespace PhysioWeb.Repository
                 throw ex;
             }
         }
+        public async Task<bool> UnAssignLeads(int UserIdForAssign,string LeadIds, string UserID, string AgencyId)
+        {
+            try
+            {
+                string[] parametersName =
+                {
+                    "UserIdForAssign","LeadIds","UserID","AgencyId"
+                };
 
+                object[] values =
+                {
+                    UserIdForAssign,LeadIds,UserID,AgencyId
+
+                };
+
+                string Sp = "FMR_UnAssignLeadsToUser";
+                int RecordAffected = await _dbHelper.ExecuteNonQueryAsync(Sp, parametersName, values);
+                return RecordAffected > 0;
+            }
+            catch (Exception ex)
+            {
+                // Optional: log error here
+                throw ex;
+            }
+        }
+
+        public async Task<DataTableResult> GetAllUnassignedLeads(DataTablePara dataTablePara, bool IsAssignList)
+        {
+            try
+            {
+                string[] parameterName = new string[]
+                {
+                    "DisplayLength","DisplayStart","SortCol","SortDir","Search",
+                    "LeadName","LeadUniqueNo","Contact", "Status"
+                    ,"UserId","IsAssignList"
+                };
+
+                object[] parameterValue = new object[]
+                {
+                    dataTablePara.iDisplayLength,dataTablePara.iDisplayStart,dataTablePara.iSortCol_0,
+                    dataTablePara.sSortDir_0,dataTablePara.sSearch,dataTablePara.sSearch_0,
+                    dataTablePara.sSearch_1,dataTablePara.sSearch_2,dataTablePara.sSearch_3,
+                    dataTablePara.UserID,IsAssignList
+                };
+
+
+                var reader = await _dbHelper.GetDataReaderAsync("[GetAllUnAssignedLeads]", parameterName, parameterValue);
+
+                var result = new DataTableResult();
+                var list = new List<LeadAssignment>();
+
+                while (reader.Read())
+                {
+                    list.Add(new LeadAssignment(reader, 1));
+                }
+
+                if (reader.NextResult())
+                {
+                    while (reader.Read())
+                    {
+                        result.iTotalRecords = Convert.ToInt32(reader[0]);
+                    }
+                }
+
+                result.iTotalDisplayRecords = result.iTotalRecords;
+                result.aaData = list;
+
+                return result;
+            }
+            catch (Exception ex)
+            {
+                // Optional: log error here
+                throw;
+            }
+        }
     }
 }

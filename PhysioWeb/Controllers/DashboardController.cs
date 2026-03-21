@@ -71,17 +71,14 @@ namespace PhysioWeb.Controllers
         {
             string UserID = User.FindFirst(ClaimTypes.PrimarySid)?.Value;
             NewLead DropDowns = await _IDashboardRepository.GetDropDowndata(UserID);
-
-
             return View(DropDowns);
             //return View();
         }
 
-        public async Task<ActionResult> AssignedUnassignLeadsList(int IsFromList)
+        [HttpPost]
+        public async Task<ActionResult> GetAllUnassignedLeads(int? UserId,bool IsAssignList = false)
         {
             var form = Request.Form;
-
-            // ✅ Map DataTables default parameters
             var dataTablePara = new DataTablePara
             {
                 iDisplayStart = Convert.ToInt32(form["start"]),
@@ -89,23 +86,22 @@ namespace PhysioWeb.Controllers
                 iSortCol_0 = Convert.ToInt32(form["order[0][column]"]),
                 sSortDir_0 = form["order[0][dir]"],
                 sSearch = form["search[value]"]
-                
             };
 
             // ✅ Map column filters dynamically (for first 10 columns)
-            for (int i = 0; i < 30; i++)
+            for (int i = 1; i < 30; i++)
             {
                 string key = $"columns[{i}][search][value]";
                 if (Request.Form.ContainsKey(key))
                 {
                     typeof(DataTablePara)
-                        .GetProperty($"sSearch_{i}")
+                        .GetProperty($"sSearch_{i - 1}")
                         ?.SetValue(dataTablePara, Request.Form[key].ToString());
                 }
             }
-            dataTablePara.UserID = User.FindFirst(ClaimTypes.PrimarySid)?.Value;
+            dataTablePara.UserID = UserId==null?User.FindFirst(ClaimTypes.PrimarySid)?.Value:Convert.ToString(UserId);
             dataTablePara.AgencyId = User.FindFirst(ClaimTypes.GroupSid)?.Value;
-            var result = await _IDashboardRepository.AssignedUnassignLeadsList(dataTablePara, IsFromList);
+            var result = await _IDashboardRepository.GetAllUnassignedLeads(dataTablePara, IsAssignList);
             var requestForm = Request.Form;
             return Json(new
             {
@@ -115,11 +111,55 @@ namespace PhysioWeb.Controllers
                 data = result.aaData                            // Actual paged data
             });
         }
+
+        //public async Task<ActionResult> AssignedUnassignLeadsList(int IsFromList)
+        //{
+        //    var form = Request.Form;
+        //    var dataTablePara = new DataTablePara
+        //    {
+        //        iDisplayStart = Convert.ToInt32(form["start"]),
+        //        iDisplayLength = Convert.ToInt32(form["length"]),
+        //        iSortCol_0 = Convert.ToInt32(form["order[0][column]"]),
+        //        sSortDir_0 = form["order[0][dir]"],
+        //        sSearch = form["search[value]"]
+                
+        //    };
+
+        //    // ✅ Map column filters dynamically (for first 10 columns)
+        //    for (int i = 0; i < 30; i++)
+        //    {
+        //        string key = $"columns[{i}][search][value]";
+        //        if (Request.Form.ContainsKey(key))
+        //        {
+        //            typeof(DataTablePara)
+        //                .GetProperty($"sSearch_{i}")
+        //                ?.SetValue(dataTablePara, Request.Form[key].ToString());
+        //        }
+        //    }
+        //    dataTablePara.UserID = User.FindFirst(ClaimTypes.PrimarySid)?.Value;
+        //    dataTablePara.AgencyId = User.FindFirst(ClaimTypes.GroupSid)?.Value;
+        //    var result = await _IDashboardRepository.AssignedUnassignLeadsList(dataTablePara, IsFromList);
+        //    var requestForm = Request.Form;
+        //    return Json(new
+        //    {
+        //        draw = requestForm["draw"],                     // Echo back the draw count
+        //        recordsTotal = result.iTotalRecords,            // Total records in DB
+        //        recordsFiltered = result.iTotalDisplayRecords,  // Total records after filtering
+        //        data = result.aaData                            // Actual paged data
+        //    });
+        //}
         [HttpPost]
         public async Task<ActionResult> SaveAssignLeadsToUser(int UserIdForAssign, string LeadIds)
         {
           
             var result = await _IDashboardRepository.SaveAssignLeadsToUser(UserIdForAssign, LeadIds, User.FindFirst(ClaimTypes.PrimarySid)?.Value, User.FindFirst(ClaimTypes.GroupSid)?.Value);
+            return Json(result);
+        }
+        [HttpPost]
+        public async Task<ActionResult> UnAssignLeads(int UserIdForAssign, string LeadIds)
+        {
+          
+            var result = await _IDashboardRepository.UnAssignLeads(UserIdForAssign, LeadIds, User.FindFirst(ClaimTypes.PrimarySid)?.Value, User.FindFirst(ClaimTypes.GroupSid)?.Value);
             return Json(result);
         }
         #endregion

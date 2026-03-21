@@ -1,332 +1,676 @@
-﻿@model PhysioWeb.Models.NewLead
+﻿@* @model PhysioWeb.Models.NewLead *@
 
 @{
-    ViewData["Title"] = "Lead Assignment Dashboard";
-    var theme = User.FindFirst("Theme")?.Value ?? "#198754";
+	ViewData["Title"] = "Lead Assignment Dashboard";
+	var theme = User.FindFirst("Theme")?.Value ?? "#198754";
 }
 
 <link rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
-      integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA=="
-      crossorigin="anonymous"
-      referrerpolicy="no-referrer" />
+	  href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+	  integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA=="
+	  crossorigin="anonymous"
+	  referrerpolicy="no-referrer" />
 <style>
 
-    :root {
-        --theme-color: @theme;
-        --sidebar-width: 280px;
-        --sidebar-collapsed-width: 70px;
-        --transition-speed: 0.3s;
-        --primary-color: @theme;
-        --secondary-color: #6c757d;
-        --light-bg: #f8f9fa;
-    }
+	:root {
+		--theme-color: @theme;
+		--sidebar-width: 280px;
+		--sidebar-collapsed-width: 70px;
+		--transition-speed: 0.3s;
+		--primary-color: @theme;
+		--secondary-color: #6c757d;
+		--light-bg: #f8f9fa;
+	}
 
-    .custom-tabs .nav-link {
-        border-radius: 30px;
-        padding: 8px 18px;
-        font-weight: 500;
-        color: var(--primary-color);
-        background: #f1f3f5;
-        margin-right: 10px;
-        transition: 0.2s ease-in-out;
-    }
+	.custom-tabs .nav-link {
+		border-radius: 30px;
+		padding: 8px 18px;
+		font-weight: 500;
+		color: var(--primary-color);
+		background: #f1f3f5;
+		margin-right: 10px;
+		transition: 0.2s ease-in-out;
+	}
 
-        .custom-tabs .nav-link.active {
-            background-color: var(--primary-color);
-            color: #fff;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-        }
+		.custom-tabs .nav-link.active {
+			background-color: var(--primary-color);
+			color: #fff;
+			box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+		}
 
-        .custom-tabs .nav-link:hover {
-            background-color: var(--primary-color);
-            color: #fff;
-        }
+		.custom-tabs .nav-link:hover {
+			background-color: var(--primary-color);
+			color: #fff;
+		}
 
-    .table thead th {
-        font-size: 13px;
-        text-transform: uppercase;
-        letter-spacing: 0.5px;
-    }
+	.table thead th {
+		font-size: 13px;
+		text-transform: uppercase;
+		letter-spacing: 0.5px;
+	}
 
-    .btn-assign {
-        background-color: var(--primary-color);
-        border: none;
-        color: white;
-        padding: 4px 10px;
-        border-radius: 20px;
-        font-size: 13px;
-    }
+	.btn-assign {
+		background-color: var(--primary-color);
+		border: none;
+		color: white;
+		padding: 4px 10px;
+		border-radius: 20px;
+		font-size: 13px;
+	}
 
-        .btn-assign:hover {
-            opacity: 0.9;
-        }
+		.btn-assign:hover {
+			opacity: 0.9;
+		}
+
+	.panel-card {
+		border: 1px solid #dee2e6;
+		border-radius: 10px;
+		overflow: hidden;
+		background: #fff;
+	}
+
+	.panel-header {
+		padding: 14px 16px;
+		border-bottom: 1px solid #dee2e6;
+		background: #f8f9fa;
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+	}
+
+		.panel-header h6 {
+			margin: 0;
+			font-size: 14px;
+			font-weight: 600;
+			color: #212529;
+		}
+
+	.panel-body {
+		padding: 16px;
+	}
+
+	.selbar {
+		display: flex;
+		align-items: center;
+		gap: 8px;
+		padding: 8px 16px;
+		background: #f8f9fa;
+		border-bottom: 1px solid #dee2e6;
+		font-size: 13px;
+		color: #6c757d;
+	}
+
+		.selbar label {
+			margin: 0;
+			cursor: pointer;
+			user-select: none;
+		}
+
+	#sel-count {
+		margin-left: auto;
+		font-size: 12px;
+		font-weight: 600;
+		color: #0d6efd;
+	}
+
+
+
+	.badge-hot {
+		background: #d1fae5;
+		color: #065f46;
+		font-size: 11px;
+		padding: 3px 8px;
+		border-radius: 99px;
+		font-weight: 600;
+	}
+
+	.badge-warm {
+		background: #fef3c7;
+		color: #92400e;
+		font-size: 11px;
+		padding: 3px 8px;
+		border-radius: 99px;
+		font-weight: 600;
+	}
+
+	.badge-cold {
+		background: #f1f5f9;
+		color: #475569;
+		font-size: 11px;
+		padding: 3px 8px;
+		border-radius: 99px;
+		font-weight: 600;
+	}
+
+	.badge-status {
+		background: #dbeafe;
+		color: #1e40af;
+		font-size: 11px;
+		padding: 3px 8px;
+		border-radius: 99px;
+		font-weight: 600;
+	}
+
+	.agent-wrap {
+		display: inline-flex;
+		align-items: center;
+		gap: 7px;
+	}
+
+	.agent-avatar {
+		width: 26px;
+		height: 26px;
+		border-radius: 50%;
+		background: #dbeafe;
+		color: #1e40af;
+		font-size: 10px;
+		font-weight: 700;
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		flex-shrink: 0;
+	}
+
+	.dataTables_wrapper .dataTables_paginate .paginate_button {
+		padding: 4px 10px !important;
+		font-size: 12px !important;
+		border-radius: 5px !important;
+		border: 1px solid #dee2e6 !important;
+		margin: 0 2px !important;
+		color: #495057 !important;
+		background: #fff !important;
+	}
+
+		.dataTables_wrapper .dataTables_paginate .paginate_button.current,
+		.dataTables_wrapper .dataTables_paginate .paginate_button.current:hover {
+			background: #0d6efd !important;
+			color: #fff !important;
+			border-color: #0d6efd !important;
+		}
+
+		.dataTables_wrapper .dataTables_paginate .paginate_button:hover {
+			background: #f8f9fa !important;
+			color: #212529 !important;
+		}
+
+	.dataTables_wrapper .dataTables_info,
+	.dataTables_wrapper .dataTables_length,
+	.dataTables_wrapper .dataTables_filter {
+		font-size: 12px;
+		color: #6c757d;
+	}
+
+		.dataTables_wrapper .dataTables_length select,
+		.dataTables_wrapper .dataTables_filter input {
+			border: 1px solid #dee2e6;
+			border-radius: 5px;
+			padding: 3px 8px;
+			font-size: 12px;
+		}
+
+	.dt-bottom {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		padding: 10px 16px;
+		border-top: 1px solid #dee2e6;
+		flex-wrap: wrap;
+		gap: 8px;
+	}
+
+	/* checkbox style */
+	.lead-checkbox {
+		appearance: none;
+		-webkit-appearance: none;
+		width: 18px;
+		height: 18px;
+		border: 2px solid #ced4da;
+		border-radius: 4px;
+		cursor: pointer;
+		position: relative;
+		transition: all 0.2s ease;
+		background-color: #fff;
+		vertical-align: middle;
+	}
+
+		.lead-checkbox:checked {
+			background-color: var(--primary-color);
+			border-color: var(--primary-color);
+		}
+
+			.lead-checkbox:checked::after {
+				content: '';
+				position: absolute;
+				left: 4px;
+				top: 1px;
+				width: 6px;
+				height: 10px;
+				border: 2px solid white;
+				border-top: none;
+				border-left: none;
+				transform: rotate(45deg);
+			}
+
+		.lead-checkbox:hover {
+			border-color: var(--primary-color);
+			box-shadow: 0 0 0 3px rgba(13, 110, 253, 0.15);
+		}
+
 </style>
 <main class="dashboard-content with-sidebar collapsed">
-    <div class="container-fluid mt-4">
+	<div class="container-fluid mt-4">
 
-        <!-- Card Wrapper -->
-        <div class="card shadow-sm border-0">
-           @*  <div class="card-header text-white d-flex justify-content-between align-items-center"
-                 style="background-color: var(--primary-color);">
-                <h5 class="mb-0">
-                    <i class="bi bi-diagram-3-fill me-2"></i>
-                    Assignment Dashboard
-                </h5>
-            </div> *@
+		<!-- Page title -->
+		<div class="d-flex align-items-center justify-content-between mb-4">
+			<div>
+				<h4 class="mb-0">Lead Assignment</h4>
+				<p class="text-muted mb-0" style="font-size:13px;">Assign and unassign leads to agents</p>
+			</div>
+			<div class="d-flex gap-2">
+				<span class="badge bg-primary-subtle text-primary" id="stat-unassigned" style="font-size:12px;">— unassigned</span>
+				<span class="badge bg-success-subtle text-success" id="stat-assigned" style="font-size:12px;">— assigned</span>
+			</div>
+		</div>
 
-            <div class="card-body">
+		<!-- Two panels -->
+		<div class="row g-3">
 
-                <!-- Modern Tabs -->
-                <ul class="nav nav-pills mb-4 custom-tabs" id="leadTabs">
-                    <li class="nav-item">
-                        <button class="nav-link active" data-tab="1">
-                            <i class="bi bi-person-check-fill me-1"></i>
-                            Assigned
-                            @* <span class="badge bg-light text-dark ms-1" id="assignedCount">0</span> *@
-                        </button>
-                    </li>
-                    <li class="nav-item">
-                        <button class="nav-link" data-tab="2">
-                            <i class="bi bi-person-x-fill me-1"></i>
-                            Unassigned
-                            @* <span class="badge bg-light text-dark ms-1" id="unassignedCount">0</span> *@
-                        </button>
-                    </li>
-                </ul>
-              @*   <!-- Classic Tabs -->
-                <ul class="nav nav-tabs mb-4" id="leadTabs" role="tablist">
-                    <li class="nav-item" role="presentation">
-                        <button class="nav-link active"
-                                id="assigned-tab"
-                                data-bs-toggle="tab"
-                                data-bs-target="#Assigned"
-                                type="button"
-                                role="tab">
-                            <i class="bi bi-person-check-fill me-1"></i>
-                            Assigned
-                        </button>
-                    </li>
+			<!-- LEFT: Unassigned -->
+			<div class="col-lg-6">
+				<div class="panel-card h-100">
 
-                    <li class="nav-item" role="presentation">
-                        <button class="nav-link"
-                                id="unassigned-tab"
-                                data-bs-toggle="tab"
-                                data-bs-target="#Unassigned"
-                                type="button"
-                                role="tab">
-                            <i class="bi bi-person-x-fill me-1"></i>
-                            Unassigned
-                        </button>
-                    </li>
-                </ul> *@
-                <div class="col-md-12 d-flex justify-content-end align-items-end gap-3">
+					<div class="panel-header">
+						<h6><i class="fa-solid fa-user-xmark me-2 text-muted" style="font-size:13px;"></i>Assigned leads</h6>
+						<span class="badge bg-secondary" id="badge-unassigned" style="font-size:11px;">0</span>
+					</div>
 
-                    <div class="mb-3">
-                        <label class="form-label fw-bold">Users List</label>
-                        <select class="form-select" name="UserIdForAssign" id="UserIdForAssign">
-                            <option value="">Select Users</option>
-                            @foreach (var item in Model.UsersListForAssign)
-                            {
-                                <option value="@item.Value">@item.Text</option>
-                            }
-                        </select>
-                    </div>
+					<!-- Assign toolbar -->
+					<div class="d-flex align-items-center gap-2 p-3 border-bottom">
+						<select class="form-select form-select-sm" id="UserIdForAssign" style="max-width:200px;">
+							<option value="">Select agent...</option>
+							@foreach (var item in Model.UsersListForAssign)
+							{
+								<option value="@item.Value">@item.Text</option>
+							}
+						</select>
+						<button type="button" class="btn btn-primary btn-sm" id="btnAssign">
+							<i class="fa-solid fa-user-plus me-1" style="font-size:11px;"></i>Assign
+						</button>
+					</div>
 
-                    <div class="mb-3">
-                        <button type="button" class="btn btn-success" id="btnAssigned">
-                            <i class="fa-solid fa-users"></i> Assign Leads To User
-                        </button>
-                    </div>
+					<!-- Select all bar -->
+					<div class="selbar">
+						<input type="checkbox" id="selectAll" />
+						<label for="selectAll">Select all on page</label>
+						<span id="sel-count"></span>
+					</div>
 
-                </div>
-                <!-- Table -->
-                <div class="table-responsive">
-                    <table id="TableList" class="table table-hover align-middle table-bordered">
-                        <thead class="table-light">
-                            <tr>
-                                <th style="width:40px;">
-                                    <input type="checkbox" id="selectAll" />
-                                </th>
-                                <th style="width:50px;">Sr No</th>
-                                <th>Lead</th>
-                                <th>Contact</th>
-                                <th>Property Type</th>
-                                <th>Budget</th>
-                                <th>Status</th>
-                                <th>Priority</th>
-                                <th>Assigned Agent</th>
-                                <th>Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody></tbody>
-                    </table>
-                </div>
+					<!-- Table -->
+					<div class="table-responsive">
+						<table id="AssignedTable" class="table table-hover align-middle mb-0">
+							<thead>
+								<tr>
+									<th></th>
+									<th>Lead Name</th>
+									<th>Lead Unique No</th>
+									<th>Contact</th>
+									<th>Lead Status</th>
+								</tr>
+							</thead>
+							<tbody></tbody>
+						</table>
+					</div>
 
-            </div>
-        </div>
+					<div class="dt-bottom" id="unassigned-dt-footer"></div>
 
-    </div>
+				</div>
+			</div>
+
+			<!-- RIGHT: Assigned -->
+			<div class="col-lg-6">
+				<div class="panel-card h-100">
+
+					<div class="panel-header">
+						<h6><i class="fa-solid fa-user-check me-2 text-muted" style="font-size:13px;"></i>UnAssigned leads</h6>
+						<span class="badge bg-success" id="badge-assigned" style="font-size:11px;">0</span>
+					</div>
+
+					<!-- Agent filter toolbar -->
+					<div class="d-flex align-items-center gap-2 p-3 border-bottom">
+						<select class="form-select form-select-sm" id="agentFilter" style="max-width:200px;">
+							<option value="">All agents</option>
+							@foreach (var item in Model.UsersListForAssign)
+							{
+								<option value="@item.Value">@item.Text</option>
+							}
+						</select>
+						<button type="button" class="btn btn-outline-danger btn-sm" id="btnUnassign">
+							<i class="fa-solid fa-user-minus me-1" style="font-size:11px;"></i>Unassign selected
+						</button>
+					</div>
+
+					<!-- Spacer to align with left panel's selbar -->
+					<div class="selbar border-bottom" style="visibility:hidden;">
+						<input type="checkbox" disabled />
+						<label>&nbsp;</label>
+					</div>
+
+					<!-- Table -->
+					<div class="table-responsive">
+						<table id="UnAssignedTable" class="table table-hover align-middle mb-0">
+							<thead>
+								<tr>
+									<th></th>
+									<th>Lead Name</th>
+									<th>Contact</th>
+									<th>Lead Unique No</th>
+									<th>Lead Status</th>
+								</tr>
+							</thead>
+							<tbody></tbody>
+						</table>
+					</div>
+
+					<div class="dt-bottom" id="assigned-dt-footer"></div>
+
+				</div>
+			</div>
+
+		</div>
+
+
+	</div>
 </main>
 
 @section Scripts {
 
-    <script>
-        $(document).ready(function() {
+	<script>
+		var selectedLeadIds = new Set();
+		var UnassignLeadId = new Set();
+		var AssigneTable = null;
+		$(document).ready(function() {
+			$('#AssignedTable thead tr').clone(true).appendTo('#AssignedTable thead');
+			$('#AssignedTable thead tr:eq(1) th').each(function (i) {
+						if (i === 0) {
+					$(this).html(''); // checkbox column
+					return;
+					}
+				if ($(this).find('i').length === 0) { // ✅ only add input if no icon
+					var title = $('#AssignedTable thead tr:eq(0) th').eq(i).text().trim();
+					$(this).html('<input class="form-control form-control-sm" type="text" placeholder="' + title + '" />');
+				} else {
+					$(this).html('');
+				}
+			});
+			AssigneTable = $("#AssignedTable").DataTable({
+				orderCellsTop: true,
+				processing: true,
+				serverSide: true,
+				pageLength: 5,
+				lengthMenu: [5, 10, 25, 50],
+				order: [[1, "asc"]],
+				ajax: {
+					url: '/Dashboard/GetAllUnassignedLeads',
+					type: 'POST',
+					data: function (d) {
+						d.IsAssignList = true
+					}
+				},
+				columns: [
+					 {
+							data: null,
+							orderable: false,
+							searchable: false,
+							render: function (data, type, row) {
+								var checked = selectedLeadIds.has(row.leadId) ? 'checked' : '';
+								return `<input type="checkbox" class="lead-checkbox" value="${row.leadId}" ${checked} />`;
+							}
+						},
+					{ data: 'leadName' ,className : "text-center" },
+					{ data: 'leadUniqueNo' ,className : "text-center"},
+					{ data: 'contact',className : "text-center" },
+					{ data: 'status' ,className : "text-center"},
+
+				],
+				initComplete: function () {
+					var table = this.api();
+					$('#AssignedTable thead tr:eq(1) th').each(function (i) {
+						$('input', this).on('keyup change', function () {
+							if (table.column(i).search() !== this.value) {
+								table.column(i).search(this.value).draw();
+							}
+						});
+					});
+				}
+			});
+
+		});
+				// ✅ On each page draw, restore checkboxes + bind change events
+		$('#UnAssignedTable').on('draw.dt', function () {
+			// Sync checkbox state from Set
+			$('#AssignedTable tbody .lead-checkbox').each(function () {
+				var id = parseInt($(this).val());
+				$(this).prop('checked', UnassignLeadId.has(id));
+			});
+		});
+
+		// ✅ Handle individual checkbox click (use delegation for dynamic rows)
+		$('#UnAssignedTable tbody').on('change', '.lead-checkbox', function () {
+			var id = parseInt($(this).val());
+			if ($(this).is(':checked')) {
+				UnassignLeadId.add(id);
+			} else {
+				UnassignLeadId.delete(id);
+			}
+		});
+
+				// ✅ On each page draw, restore checkboxes + bind change events
+		$('#AssignedTable').on('draw.dt', function () {
+			// Sync checkbox state from Set
+			$('#AssignedTable tbody .lead-checkbox').each(function () {
+				var id = parseInt($(this).val());
+				$(this).prop('checked', selectedLeadIds.has(id));
+			});
+		});
+
+		// ✅ Handle individual checkbox click (use delegation for dynamic rows)
+		$('#AssignedTable tbody').on('change', '.lead-checkbox', function () {
+			var id = parseInt($(this).val());
+			if ($(this).is(':checked')) {
+				selectedLeadIds.add(id);
+			} else {
+				selectedLeadIds.delete(id);
+			}
+		});
+
+		// ✅ Optional: Select All checkbox in header
+		$('#selectAll').on('change', function () {
+			var isChecked = $(this).is(':checked');
+			$('#AssignedTable tbody .lead-checkbox').each(function () {
+				var id = parseInt($(this).val());
+				$(this).prop('checked', isChecked);
+				if (isChecked) {
+					selectedLeadIds.add(id);
+				} else {
+					selectedLeadIds.delete(id);
+				}
+			});
+		});
+
+		function getSelectedLeadIds() {
+			return Array.from(selectedLeadIds);
+		}
+
+				$('#btnAssign').on('click', function () {
+				 var selectedIds = Array.from(selectedLeadIds);
+				var UserId = $('#UserIdForAssign').val();
+
+				// ✅ Validations
+				if (selectedIds.length === 0) {
+					notyf.error('Please select at least one lead.');
+					return;
+				}
+
+				if (!UserId && UserId == "" ) {
+					notyf.error('Please select an User to assign.');
+					return;
+				}
+
+				assignLeads(selectedIds, UserId);
+			});
+
+			$('#btnUnassign').on('click', function () {
+				var selectedIds = Array.from(UnassignLeadId);
+				var UserId = $('#agentFilter').val();
+
+				// ✅ Validations
+				if (selectedIds.length === 0) {
+					notyf.error('Please select at least one lead.');
+					return;
+				}
+
+				if (!UserId && UserId == "" ) {
+					notyf.error('Please select an User to assign.');
+					return;
+				}
+
+				UnassignLeads(selectedIds, UserId);
+			});
+
+			function UnassignLeads(leadIds, UserId) {
+			$('#btnAssign').prop('disabled', true).html(
+				'<span class="spinner-border spinner-border-sm me-1"></span>Assigning...'
+			);
+
+			$.ajax({
+				url: '/Dashboard/UnAssignLeads',
+				type: 'POST',
+				data: {
+					LeadIds: leadIds.toString(),
+					UserIdForAssign: UserId
+				},
+				success: function (response) {
+					if (response) {
+						notyf.success(`${leadIds.length} lead(s) Unassigned successfully.`);
+						UnassignLeadId.clear();
+						$('#agentFilter').val('');
+						UnAssignedTable.ajax.reload(null, false);
+						//UnAssigneTable.ajax.reload();
+						$("#loader").hide();
+
+					} else {
+						notyf.error('Something went wrong.');
+					}
+				},
+				error: function (xhr) {
+					notyf.error(xhr.responseJSON?.message || 'An unexpected server error occurred.');
+				},
+				complete: function () {
+					$('#btnAssign').prop('disabled', false).html(
+						'<i class="fa-solid fa-user-plus me-1" style="font-size:11px;"></i>Assign'
+					);
+				}
+			});
+		}
 
 
-        let currentTab = 1; // Assigned default
 
-            // Clone header for filters (your existing code)
-            $('#TableList thead tr').clone(true).appendTo('#TableList thead');
-            $('#TableList thead tr:eq(1) th').each(function(i) {
-                if ($(this).find('i').length === 0) {
-                    var title = $('#TableList thead tr:eq(0) th').eq(i).text().trim();
-                    $(this).html('<input class="form-control form-control-sm" type="text" placeholder="' + title + '" />');
-                } else {
-                    $(this).html('');
-                }
-            });
+			function assignLeads(leadIds, UserId) {
+			$('#btnAssign').prop('disabled', true).html(
+				'<span class="spinner-border spinner-border-sm me-1"></span>Assigning...'
+			);
 
-            var table = $("#TableList").DataTable({
-                orderCellsTop: true,
-                processing: true,
-                serverSide: true,
-                order: [[0, "asc"]],
-                ajax: {
-                    url: '/Dashboard/AssignedUnassignLeadsList',
-                    type: 'POST',
-                    data: function(d) {
-        d.IsFromList = currentTab; // 1 or 2
+			$.ajax({
+				url: '/Dashboard/SaveAssignLeadsToUser',
+				type: 'POST',
+				data: {
+					LeadIds: leadIds.toString(),
+					UserIdForAssign: UserId
+				},
+				success: function (response) {
+					if (response) {
+						notyf.success(`${leadIds.length} lead(s) assigned successfully.`);
+						selectedLeadIds.clear();
+						$('#UserIdForAssign').val('');
+						AssigneTable.ajax.reload(null, false);
+						//UnAssigneTable.ajax.reload();
+						$("#loader").hide();
 
-        return d;
-                    },
-                    dataSrc: function(json) {
-                        console.log("Server response:", json);
-                        // Optional: update counts if your backend sends them
-                        if (json.recordsTotal !== undefined) {
-                            // or if you send custom properties:
-                            // $('#assignedCount').text(json.assignedCount || 0);
-                            // $('#unassignedCount').text(json.unassignedCount || 0);
-                        }
-                        return json.data || [];
-                    }
-                },
-                columns: [
-                    {
-                        data: null,
-                        render: function(data, type, row) {
-                            return `<input type="checkbox" class="row-checkbox" value="${row.uniquId ?? ''}" />`;
-                        },
-                        orderable: false,
-                        searchable: false
-                    },
-                    {
-                        data: null,
-                        render: function(data, type, row, meta) {
-                            return meta.row + meta.settings._iDisplayStart + 1;
-                        },
-                        orderable: false,
-                        searchable: false
-                    },
-                    { data: 'leadName' },
-                    { data: 'contactPerMobNo' },
-                    { data: 'propertyName' },
-                    { data: 'budget' },
-                    { data: 'status' },
-                    { data: 'priority' },
-                    { data: 'assignAgent' },
-                    {
-                        data: null,
-                        render: function(data, type, row) {
-                            return `<i class="fa-solid fa-circle-plus" style="font-size: larger;"></i></i>`;
-                        },
-                        orderable: false,
-                        searchable: false
-                    }
-                ],
-                initComplete: function() {
-                    // your column search binding
-                    $('#TableList thead tr:eq(1) th').each(function(i) {
-                        $('input', this).on('keyup change', function() {
-                            if (table.column(i).search() !== this.value) {
-                                table.column(i).search(this.value).draw();
-                            }
-                        });
-                    });
-                }
-            });
+					} else {
+						notyf.error('Something went wrong.');
+					}
+				},
+				error: function (xhr) {
+					notyf.error(xhr.responseJSON?.message || 'An unexpected server error occurred.');
+				},
+				complete: function () {
+					$('#btnAssign').prop('disabled', false).html(
+						'<i class="fa-solid fa-user-plus me-1" style="font-size:11px;"></i>Assign'
+					);
+				}
+			});
+		}
 
-        });
+				$('#UnAssignedTable thead tr').clone(true).appendTo('#UnAssignedTable thead');
 
-              $('#btnAssigned').on('click', function () {
+				$('#UnAssignedTable thead tr:eq(1) th').each(function (i) {
+					if (i === 0) {
+						$(this).html('');
+						return;
+					}
 
-            var UserIdForAssign = $("#UserIdForAssign").val();
-            let ids = [];
+					var title = $('#UnAssignedTable thead tr:eq(0) th').eq(i).text().trim();
+					$(this).html('<input class="form-control form-control-sm" type="text" placeholder="' + title + '" />');
+				});
+				$(document).ready(function () {
+				var UnAssigneTable = $("#UnAssignedTable").DataTable({
+						orderCellsTop: true,
+						processing: true,
+						serverSide: true,
+						pageLength: 5,
+						lengthMenu: [5, 10, 25, 50],
+						order: [[1, "asc"]],
+						ajax: {
+							url: '/Dashboard/GetAllUnassignedLeads',
+							type: 'POST',
+							data: function (d) {
+								d.UserId = $("#agentFilter").val(),
+								d.IsAssignList = false
+							}
+						},
+						columns: [
+							 {
+									data: null,
+									orderable: false,
+									searchable: false,
+									render: function (data, type, row) {
+										var checked = selectedLeadIds.has(row.leadId) ? 'checked' : '';
+										return `<input type="checkbox" class="lead-checkbox" value="${row.leadId}" ${checked} />`;
+									}
+								},
+							{ data: 'leadName' ,className : "text-center" },
+							{ data: 'contact',className : "text-center" },
+							{ data: 'leadUniqueNo' ,className : "text-center"},
+							{ data: 'status' ,className : "text-center"},
 
-            $('.row-checkbox:checked').each(function () {
-                ids.push($(this).val());
-            });
+						],
+						initComplete: function () {
+							var table = this.api();
+							$('#UnAssignedTable thead tr:eq(1) th').each(function (i) {
+								$('input', this).on('keyup change', function () {
+									if (table.column(i).search() !== this.value) {
+										table.column(i).search(this.value).draw();
+									}
+								});
+							});
+						}
+					});
+						$("#agentFilter").on("change",function(){
+							  if (UnAssigneTable) {
+									UnAssigneTable.ajax.reload();
+								}
+							})
 
-            var selectedLeads = ids.join(','); // convert to comma separated string
-
-            if (UserIdForAssign == "" || UserIdForAssign == null) {
-                notyf.error("Please fill User to assign leads.");
-            }
-            else if (ids.length === 0) {
-                notyf.error("Please select at least one lead.");
-            }
-            else {
-
-                $.ajax({
-                    url: '/Dashboard/SaveAssignLeadsToUser',
-                    method: 'POST',
-                    data: {
-                        UserIdForAssign: UserIdForAssign,
-                        LeadIds: selectedLeads
-                    },
-                    success: function (response) {
-                        if (response) {
-                            notyf.success("Leads assigned successfully");
-                            $("#TableList").DataTable().ajax.reload(null, false);
-                        } else {
-                            notyf.error(response.message || "Failed to save.");
-                        }
-                    },
-                    error: function (xhr) {
-                        console.error(xhr);
-                        notyf.error("Server error: " + (xhr.responseText || "Unknown error"));
-                    }
-                });
-            }
-        });
-        
-        $('#selectAll').on('change', function() {
-            $('.row-checkbox').prop('checked', this.checked);
-        });
-                
-        $('#leadTabs button').on('click', function () {
-
-            $('#leadTabs button').removeClass('active');
-            $(this).addClass('active');
-
-            currentTab = $(this).data('tab'); // 1 or 2
-
-            table.ajax.reload(); // reload data
-        });
-      
-        $(document).on('change', '.row-checkbox', function() {
-            if (!this.checked) {
-                $('#selectAll').prop('checked', false);
-            }
-        });
-
-        function getSelectedLeads() {
-            let ids = [];
-            $('.row-checkbox:checked').each(function() {
-                ids.push($(this).val());
-            });
-            return ids;
-        }
-    </script>
+					});
+	</script>
 }

@@ -9,5 +9,7 @@ namespace PhysioWeb.Repository
         Task<DataTableResult> AssignedUnassignLeadsList(DataTablePara dataTablePara,int IsFromList);
         Task<NewLead> GetDropDowndata(string UserID);
         Task<bool> SaveAssignLeadsToUser(int UserIdForAssign,string LeadIds, string UserID, string AgencyId);
+        Task<DataTableResult> GetAllUnassignedLeads(DataTablePara dataTablePara, bool IsAssignList);
+        Task<bool> UnAssignLeads(int userIdForAssign, string leadIds, string? value1, string? value2);
     }
 }
