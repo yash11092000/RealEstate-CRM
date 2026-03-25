@@ -1329,6 +1329,14 @@ namespace PhysioWeb.Controllers
         }
         #endregion
 
+        #region Sidebar MenuMapper
+        public async Task<ActionResult> UserMenuAccess() {
+            var result = await _masterRepository.UserMenuAccess();
+            return View(result);
+        }
+
+        #endregion
+
 
     }
 

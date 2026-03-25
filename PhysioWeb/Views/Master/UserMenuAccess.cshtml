@@ -1,0 +1,95 @@
+﻿@model List<PhysioWeb.Models.SidebarMenu>
+@{
+	ViewBag.Title = "Menu Access";
+	var theme = User.FindFirst("Theme")?.Value ?? "#198754";
+}
+<style>
+	:root {
+	--theme-color: @theme;
+	--sidebar-width: 280px;
+	--sidebar-collapsed-width: 70px;
+	--transition-speed: 0.3s;
+	--primary-color: @theme;
+	--secondary-color: #6c757d;
+	--light-bg: #f8f9fa;
+	}
+</style>
+
+<main class="dashboard-content with-sidebar collapsed">
+	<div class="container-fluid mt-4">
+		<table class="table table-bordered table-hover align-middle">
+			<thead class="table-light">
+				<tr>
+					<th style="width: 80px;">Action</th>
+					<th style="width: 250px;">Menu Name</th>
+					<th>Sub Menu Name</th>
+				</tr>
+			</thead>
+
+			<tbody>
+
+				@foreach (var parent in Model)
+				{
+					if (parent.RowNo == 0)
+					{
+
+						<tr class="table-secondary fw-semibold">
+							<td>
+								<input type="checkbox"
+								class="form-check-input parent_@parent.ParentMenuId MyParentCheckBox"
+								value="@parent.UniquId" />
+							</td>
+							<td colspan="2">
+								@parent.MenuName
+							</td>
+						</tr>
+					}
+
+					else
+					{
+					<tr>
+							<td></td>
+							<td>
+								<input type="checkbox"
+									   class="form-check-input child_@parent.ParentMenuId MyChildCheckBox"
+									   data-parent="@parent.ParentMenuId"
+									   value="@parent.UniquId" />
+							</td>
+							<td class="ps-4">
+								@parent.MenuName
+							</td>
+						</tr>
+					}
+					
+				}
+
+			</tbody>
+		</table>
+	</div>
+</main>
+@section Scripts {
+
+	<script>
+		$(".MyParentCheckBox").on("click", function () {
+			var parentId = $(this).val();
+
+			var isChecked = $(this).is(':checked');
+
+			$(".child_" + parentId).prop("checked", isChecked);
+		});
+
+
+		$(document).on("change", ".MyChildCheckBox", function () {
+				console.log("Hi")
+
+			var parentId = $(this).data("parent");
+				console.log(parentId);
+
+			// check if ANY child is selected
+			var anyChecked = $(".child_" + parentId + ":checked").length > 0;
+
+			$(".parent_" + parentId).prop("checked", anyChecked);
+		});
+	</script>
+
+}

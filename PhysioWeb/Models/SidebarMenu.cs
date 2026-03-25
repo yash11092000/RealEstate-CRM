@@ -1,5 +1,7 @@
 ﻿using System.Data;
+using System.Runtime.InteropServices;
 using System.Runtime.Intrinsics.Arm;
+using Org.BouncyCastle.Asn1.X500;
 
 namespace PhysioWeb.Models
 {
@@ -22,9 +24,35 @@ namespace PhysioWeb.Models
         {
             ParentList = new List<DropDownSource>();
         }
-        public SidebarMenu(IDataReader reader)
+        public SidebarMenu(IDataReader reader, int flag = 0)
         {
-            populateObject(this, reader);
+            if (flag == 1)
+            {
+                populateObjectForSideBar(this, reader);
+            }
+            else {
+                populateObject(this, reader);
+            }
+        }
+
+        private void populateObjectForSideBar(SidebarMenu obj, IDataReader rdr)
+        {
+            if (!rdr.IsDBNull(rdr.GetOrdinal("ParentMenuId")))
+            {
+                obj.ParentMenuId = rdr.GetInt32(rdr.GetOrdinal("ParentMenuId"));
+            }
+            if (!rdr.IsDBNull(rdr.GetOrdinal("MenuName")))
+            {
+                obj.MenuName = rdr.GetString(rdr.GetOrdinal("MenuName"));
+            }
+            if (!rdr.IsDBNull(rdr.GetOrdinal("UniquId")))
+            {
+                obj.UniquId = rdr.GetInt32(rdr.GetOrdinal("UniquId"));
+            }
+            if (!rdr.IsDBNull(rdr.GetOrdinal("RowNo")))
+            {
+                obj.RowNo = rdr.GetInt32(rdr.GetOrdinal("RowNo"));
+            }
         }
 
         private void populateObject(SidebarMenu obj, IDataReader rdr)
@@ -57,7 +85,7 @@ namespace PhysioWeb.Models
             {
                 obj.MenuIcon = rdr.GetString(rdr.GetOrdinal("MenuIcon"));
             }
-            
+
         }
     }
 }

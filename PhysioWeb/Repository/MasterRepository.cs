@@ -1898,5 +1898,29 @@ namespace PhysioWeb.Repository
             }
         }
 
+        public async Task<List<SidebarMenu>> UserMenuAccess()
+        {
+            try
+            {
+                string[] parameterNames = {};
+                object[] parameterValues = { };
+
+                string Sp = "FMR_UserMenuAccess";
+                var data = await _dbHelper.GetDataReaderAsync(Sp, parameterNames, parameterValues);
+                List<SidebarMenu> SideBar = new List<SidebarMenu>(); 
+
+                while (data.Read())
+                {
+                    SideBar.Add(new SidebarMenu(data, 1));
+                    
+                }
+                return SideBar;
+                //bind 
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }
     }
 }

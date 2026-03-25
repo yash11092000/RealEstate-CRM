@@ -66,5 +66,6 @@ namespace PhysioWeb.Repository
         Task<bool> DeleteNewLead(NewLead NewLead);
         Task<NewLead> EditNewLead(int uniqueID, int UserID);
         Task<CommanMaster> GetMastersData();
+        Task<List<SidebarMenu>> UserMenuAccess();
     }
 }
