@@ -1742,7 +1742,7 @@ namespace PhysioWeb.Repository
                 CommanMaster obj = new CommanMaster();
                 while (data.Read())
                 {
-                    obj.MasterDropDown.Add(new DropDownSource(data,true));
+                    obj.MasterDropDown.Add(new DropDownSource(data, true));
                 }
                 return obj;
 
@@ -1768,15 +1768,15 @@ namespace PhysioWeb.Repository
 
                 object[] values =
                 {
-                    NewLead.UniquId,NewLead.FullName, NewLead.LeadId, NewLead.LeadDate,null, NewLead.PhoneNumber,          
-                    NewLead.AlternateNumber,NewLead.PanCard, NewLead.AadharCard, NewLead.LeadType,NewLead.LeadSource,NewLead.LeadStatus,      
+                    NewLead.UniquId,NewLead.FullName, NewLead.LeadId, NewLead.LeadDate,null, NewLead.PhoneNumber,
+                    NewLead.AlternateNumber,NewLead.PanCard, NewLead.AadharCard, NewLead.LeadType,NewLead.LeadSource,NewLead.LeadStatus,
                     NewLead.LeadPriority,false,NewLead.RequirementDescription,NewLead.Campaign,NewLead.Address,
-                    NewLead.Pincode, NewLead.CountryID, NewLead.StateID, NewLead.CityID,  NewLead.AssignedAgent,DBNull.Value,     
+                    NewLead.Pincode, NewLead.CountryID, NewLead.StateID, NewLead.CityID,  NewLead.AssignedAgent,DBNull.Value,
                     NewLead.IsActive,NewLead.UserID, NewLead.AgencyId ,NewLead.PropertyType,NewLead.Email,NewLead.FollowUpDate,NewLead.PreferredContactMethod,
                     NewLead.BudgetMin,NewLead.BudgetMax,NewLead.AmountUnitMinPrice ,NewLead.AmountUnitMaxPrice,
                     NewLead.ConvertedActualPrice ,NewLead.ConvertedNegotiablePrice,NewLead.LocationPreference,NewLead.PropertyInterestedIn
                 };
-                    
+
                 string Sp = "FMR_SaveNewLead";
                 int RecordAffected = await _dbHelper.ExecuteNonQueryAsync(Sp, parametersName, values);
                 return RecordAffected > 0;
@@ -1813,18 +1813,18 @@ namespace PhysioWeb.Repository
                 {
                     dataTablePara.iDisplayLength,dataTablePara.iDisplayStart,dataTablePara.iSortCol_0,
                     dataTablePara.sSortDir_0,dataTablePara.sSearch,
-                    dataTablePara.sSearch_1,  
-                    dataTablePara.sSearch_2,  
-                    dataTablePara.sSearch_3,  
-                    dataTablePara.sSearch_4,  
-                    dataTablePara.sSearch_5,  
-                    dataTablePara.sSearch_6,  
-                    dataTablePara.sSearch_7,  
-                    dataTablePara.sSearch_8,  
-                    dataTablePara.sSearch_9,  
+                    dataTablePara.sSearch_1,
+                    dataTablePara.sSearch_2,
+                    dataTablePara.sSearch_3,
+                    dataTablePara.sSearch_4,
+                    dataTablePara.sSearch_5,
+                    dataTablePara.sSearch_6,
+                    dataTablePara.sSearch_7,
+                    dataTablePara.sSearch_8,
+                    dataTablePara.sSearch_9,
 
-                    dataTablePara.sSearch_10, 
-                    dataTablePara.sSearch_11, 
+                    dataTablePara.sSearch_10,
+                    dataTablePara.sSearch_11,
                     dataTablePara.AgencyId
                 };
 
@@ -1898,23 +1898,29 @@ namespace PhysioWeb.Repository
             }
         }
 
-        public async Task<List<SidebarMenu>> UserMenuAccess()
+        public async Task<UserAccess> UserMenuAccess(string? userID)
         {
             try
             {
-                string[] parameterNames = {};
-                object[] parameterValues = { };
+                string[] parameterNames = { "UserId" };
+                object[] parameterValues = { userID };
 
                 string Sp = "FMR_UserMenuAccess";
                 var data = await _dbHelper.GetDataReaderAsync(Sp, parameterNames, parameterValues);
-                List<SidebarMenu> SideBar = new List<SidebarMenu>(); 
+                UserAccess UserAccess = new UserAccess();
 
                 while (data.Read())
                 {
-                    SideBar.Add(new SidebarMenu(data, 1));
-                    
+                    UserAccess.SideBarMenu.Add(new SidebarMenu(data, 1));
                 }
-                return SideBar;
+                if (data.NextResult())
+                {
+                    while (data.Read())
+                    {
+                        UserAccess.UserRoles.Add(new DropDownSource(data,true));
+                    }
+                }
+                return UserAccess;
                 //bind 
             }
             catch (Exception e)

@@ -18,6 +18,7 @@ namespace PhysioWeb.Models
         public bool OpenInNewTab { get; set; }
         public bool HasChild { get; set; }
         public bool IsParent { get; set; }
+        public bool IsChecked { get; set; }
 
         public List<DropDownSource> ParentList { get; set; }
         public SidebarMenu()
@@ -30,7 +31,8 @@ namespace PhysioWeb.Models
             {
                 populateObjectForSideBar(this, reader);
             }
-            else {
+            else
+            {
                 populateObject(this, reader);
             }
         }
@@ -52,6 +54,10 @@ namespace PhysioWeb.Models
             if (!rdr.IsDBNull(rdr.GetOrdinal("RowNo")))
             {
                 obj.RowNo = rdr.GetInt32(rdr.GetOrdinal("RowNo"));
+            }
+            if (!rdr.IsDBNull(rdr.GetOrdinal("IsChecked")))
+            {
+                obj.IsChecked = rdr.GetBoolean(rdr.GetOrdinal("IsChecked"));
             }
         }
 

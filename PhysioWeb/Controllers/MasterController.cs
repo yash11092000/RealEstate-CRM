@@ -1331,7 +1331,8 @@ namespace PhysioWeb.Controllers
 
         #region Sidebar MenuMapper
         public async Task<ActionResult> UserMenuAccess() {
-            var result = await _masterRepository.UserMenuAccess();
+            string UserID = User.FindFirst(ClaimTypes.PrimarySid)?.Value;
+            var result = await _masterRepository.UserMenuAccess(UserID);
             return View(result);
         }
 
