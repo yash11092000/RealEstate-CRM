@@ -1335,12 +1335,28 @@ namespace PhysioWeb.Controllers
             var result = await _masterRepository.UserMenuAccess(UserID);
             return View(result);
         }
+        [HttpGet]
+          public async Task<ActionResult> GetMenusByRole(int roleId) {
+            string UserID = User.FindFirst(ClaimTypes.PrimarySid)?.Value;
+            var result = await _masterRepository.GetMenusByRole(roleId);
+            return Json(result);
+        }
 
+        public async Task<ActionResult> SaveRoleMenus([FromBody] RoleMenuDto model) {
+            string AgencyId = User.FindFirst(ClaimTypes.GroupSid)?.Value;
+            var result = await _masterRepository.SaveRoleMenus(model.RoleId,model.MenuIds);
+            return Json(result);
+        }
         #endregion
 
 
     }
 
+    public class RoleMenuDto
+    {
+        public int RoleId { get; set; }
+        public string MenuIds { get; set; }
+    }
     public class PermissionUpdateModel
     {
         public string Id { get; set; }

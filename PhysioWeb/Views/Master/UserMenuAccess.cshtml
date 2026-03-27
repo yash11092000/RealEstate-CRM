@@ -52,6 +52,7 @@
 								<input type="checkbox"
 									   class="form-check-input parent_@parent.ParentMenuId MyParentCheckBox"
 									   value="@parent.UniquId"
+									   id="Menu_@parent.UniquId"
 								@(parent.IsChecked ? "checked" : "") />
 							</td>
 							<td colspan="2">
@@ -69,6 +70,7 @@
 									   class="form-check-input child_@parent.ParentMenuId MyChildCheckBox"
 									   data-parent="@parent.ParentMenuId"
 									   value="@parent.UniquId"
+									   id="Menu_@parent.UniquId"
 								@(parent.IsChecked ? "checked" : "") />
 							</td>
 							<td class="ps-4">
@@ -127,11 +129,55 @@
 						return $(this).val();
 						}).get().join(",");
 
+					var roleId = $("#UserRole").val();
 					// ajax call here
+
+					if(selectedParents != "" && selectChilds!=""){
+						 $.ajax({
+							url: '/Master/SaveRoleMenus',
+							type: 'POST',
+							contentType: 'application/json',
+							data: JSON.stringify({
+								roleId: roleId,
+								menuIds: selectedParents+","+selectChilds
+							}),
+							success: function (response) {
+								notyf.success("Saved successfully");
+							},
+							error: function (err) {
+								console.error(err);
+								notyf.error("Error while saving");
+							}
+						});
+					}
+
 
 				}
 
 		}
+
+		$("#UserRole").on("change",function(){
+			var RoleId = $(this).val();
+			$(".MyParentCheckBox").prop("checked",false);
+			$(".MyChildCheckBox").prop("checked",false);
+			if(RoleId){
+					$.ajax({
+					url: '/Master/GetMenusByRole',
+					type: 'GET',
+					data: { roleId: RoleId },
+					success: function (response) {
+						console.log(response);
+								for (let menuId of response) {
+									$("#Menu_"+menuId).prop("checked",true);
+							}
+					},
+					error: function (err) {
+						console.error(err);
+					}
+				});
+			}
+
+		})
 	</script>
 
 }

@@ -1928,5 +1928,58 @@ namespace PhysioWeb.Repository
                 throw e;
             }
         }
+        public async Task<bool> SaveRoleMenus(int RoleId ,string MenuId)
+        {
+            try
+            {
+                string[] parameterNames = { "RoleId","MenuId" };
+                object[] parameterValues = { RoleId,MenuId};
+
+                string Sp = "FMR_SaveRoleMenus";
+                var data = await _dbHelper.GetDataReaderAsync(Sp, parameterNames, parameterValues);
+                UserAccess UserAccess = new UserAccess();
+
+                while (data.Read())
+                {
+                    UserAccess.SideBarMenu.Add(new SidebarMenu(data, 1));
+                }
+                if (data.NextResult())
+                {
+                    while (data.Read())
+                    {
+                        UserAccess.UserRoles.Add(new DropDownSource(data,true));
+                    }
+                }
+                return true;
+                //bind 
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }
+        public async Task<List<string>> GetMenusByRole(int RoleId)
+        {
+            try
+            {
+                string[] parameterNames = { "RoleId" };
+                object[] parameterValues = { RoleId};
+
+                string Sp = "FMR_GetMenusByRole";
+                var data = await _dbHelper.GetDataReaderAsync(Sp, parameterNames, parameterValues);
+                List<string> MenuId = new List<string>();            
+                while (data.Read())
+                {
+                    MenuId.Add(Convert.ToString(data.GetValue(0)));
+                }
+                
+                return MenuId;
+                //bind 
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }
     }
 }

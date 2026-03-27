@@ -67,5 +67,7 @@ namespace PhysioWeb.Repository
         Task<NewLead> EditNewLead(int uniqueID, int UserID);
         Task<CommanMaster> GetMastersData();
         Task<UserAccess> UserMenuAccess(string? userID);
+        Task<bool> SaveRoleMenus(int roleId, string menuIds);
+        Task<List<string>> GetMenusByRole(int roleId);
     }
 }
