@@ -1920,7 +1920,14 @@ namespace PhysioWeb.Repository
                         UserAccess.UserRoles.Add(new DropDownSource(data,true));
                     }
                 }
-                return UserAccess;
+                if (data.NextResult())
+                {
+                    while (data.Read())
+                    {
+                        UserAccess.UserRoleId = Convert.ToInt32(data.GetValue(0));
+                    }
+                }
+                        return UserAccess;
                 //bind 
             }
             catch (Exception e)

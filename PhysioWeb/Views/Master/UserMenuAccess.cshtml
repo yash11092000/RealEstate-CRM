@@ -25,7 +25,7 @@
 					<option value="">Select User Role</option>
 					@foreach (var item in Model.UserRoles)
 					{
-						<option value="@item.Value">@item.Text</option>
+						<option value="@item.Value" selected="@(item.Value == Convert.ToString(Model.UserRoleId) ? "selected" : null)">@item.Text</option>
 					}
 				</select>
 			</div>

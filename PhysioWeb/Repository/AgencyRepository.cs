@@ -38,12 +38,12 @@ namespace PhysioWeb.Repository
 
         }
 
-        public async Task<List<SidebarMenu>> GetSideBar()
+        public async Task<List<SidebarMenu>> GetSideBar(string? userID)
         {
             try
             {
-                string[] parametersName = { };
-                object[] Values = { };
+                string[] parametersName = { "UserId"};
+                object[] Values = { userID};
 
                 string Sp = "FMR_GetSideBar";
                 var data = await _dbHelper.GetDataReaderAsync(Sp, parametersName, Values);

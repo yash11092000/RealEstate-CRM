@@ -19,520 +19,520 @@
 	<link rel="stylesheet" type="text/css" href="https://npmcdn.com/flatpickr/dist/themes/material_blue.css">
 
 	@{
-		var theme = User.FindFirst("Theme")?.Value ?? "#198754";
+		var theme = User.FindFirst("Theme")?.Value ?? "#204b91";
 	}
 	<style>
 		* {
-			margin:0;
-			padding:0;
-			box-sizing:border-box;
+		margin: 0;
+		padding: 0;
+		box-sizing: border-box;
 		}
 
 
 		:root {
-			--theme-color: @theme;
+		--theme-color: @theme;
 		}
 
 		html {
-			scroll-behavior: smooth;
+		scroll-behavior: smooth;
 		}
 
 		.text-success {
-			color: var(--theme-color) !important;
+		color: var(--theme-color) !important;
 		}
 
 		.btn-outline-success:hover {
-			background-color: var(--theme-color) !important;
+		background-color: var(--theme-color) !important;
 		}
 
 		.btn:hover {
-			color: #212529;
+		color: #212529;
 		}
 
 		.btn-outline-success {
-			color: var(--theme-color) !important;
-			border-color: var(--theme-color) !important;
+		color: var(--theme-color) !important;
+		border-color: var(--theme-color) !important;
 		}
 
 		.bg-dark-green {
-			background-color: var(--theme-color) !important;
+		background-color: var(--theme-color) !important;
 		}
 
 		.bg-success {
-			background-color: var(--theme-color) !important;
+		background-color: var(--theme-color) !important;
 		}
 
 		.btn-success {
-			color: #fff !important;
-			background-color: var(--theme-color) !important;
-			border-color: var(--theme-color) !important;
+		color: #fff !important;
+		background-color: var(--theme-color) !important;
+		border-color: var(--theme-color) !important;
 		}
 
 		.navbar-dark .navbar-nav .nav-link {
-			color: white !important;
+		color: white !important;
 		}
 
 		.navbar-dark .navbar-brand {
-			color: white !important;
+		color: white !important;
 		}
 
 		.navbar-nav .nav-link {
-			color: #ffffffcc;
-			transition: all 0.3s ease-in-out;
-			position: relative;
-			font-weight: 500;
+		color: #ffffffcc;
+		transition: all 0.3s ease-in-out;
+		position: relative;
+		font-weight: 500;
 		}
 
-			.navbar-nav .nav-link:hover {
-				color: #ffffff; /* pure white on hover */
-			}
+		.navbar-nav .nav-link:hover {
+		color: #ffffff; /* pure white on hover */
+		}
 
-			.navbar-nav .nav-link::after {
-				content: "";
-				position: absolute;
-				width: 0%;
-				height: 2px;
-				background-color: #ffffff; /* white underline */
-				left: 0;
-				bottom: 0;
-				transition: 0.3s;
-			}
+		.navbar-nav .nav-link::after {
+		content: "";
+		position: absolute;
+		width: 0%;
+		height: 2px;
+		background-color: #ffffff; /* white underline */
+		left: 0;
+		bottom: 0;
+		transition: 0.3s;
+		}
 
-			.navbar-nav .nav-link:hover::after {
-				width: 100%;
-			}
+		.navbar-nav .nav-link:hover::after {
+		width: 100%;
+		}
 
 		.footer a:hover {
-			color: var(--theme-color) !important;
+		color: var(--theme-color) !important;
 		}
 
 		.impMark {
-			color: #f75d5d;
+		color: #f75d5d;
 		}
 
 		#TableList {
-			width: 100% !important;
-			border-collapse: collapse;
+		width: 100% !important;
+		border-collapse: collapse;
 		}
 
-			#TableList thead th {
-				background-color: color-mix(in srgb, var(--theme-color) 10%, white);
-				color: var(--theme-color) !important;
-				font-weight: 600;
-				text-align: center;
-				vertical-align: middle;
-			}
+		#TableList thead th {
+		background-color: color-mix(in srgb, var(--theme-color) 10%, white);
+		color: var(--theme-color) !important;
+		font-weight: 600;
+		text-align: center;
+		vertical-align: middle;
+		}
 
-			#TableList tbody tr:hover {
-				background-color: white;
-			}
+		#TableList tbody tr:hover {
+		background-color: white;
+		}
 
-			#TableList tbody td {
-				vertical-align: middle;
-				text-align: center;
-			}
+		#TableList tbody td {
+		vertical-align: middle;
+		text-align: center;
+		}
 
-			#TableList thead input {
-				width: 100%;
-				padding: 5px;
-				box-sizing: border-box;
-				font-size: 0.9rem;
-			}
+		#TableList thead input {
+		width: 100%;
+		padding: 5px;
+		box-sizing: border-box;
+		font-size: 0.9rem;
+		}
 
 		.dataTables_wrapper .dataTables_paginate .paginate_button {
-			padding: 0.3rem 0.75rem;
-			margin: 2px;
-			border-radius: 0.3rem;
+		padding: 0.3rem 0.75rem;
+		margin: 2px;
+		border-radius: 0.3rem;
 		}
 
-			.dataTables_wrapper .dataTables_paginate .paginate_button.current {
-				background-color: var(--theme-color) !important;
-				color: white !important;
-				border: 1px solid var(--theme-color) !important;
-			}
+		.dataTables_wrapper .dataTables_paginate .paginate_button.current {
+		background-color: var(--theme-color) !important;
+		color: white !important;
+		border: 1px solid var(--theme-color) !important;
+		}
 
 		.dataTables_wrapper .dataTables_filter input,
 		.dataTables_wrapper .dataTables_length select {
-			border-radius: 5px;
-			padding: 5px;
-			border: 1px solid #ced4da;
+		border-radius: 5px;
+		padding: 5px;
+		border: 1px solid #ced4da;
 		}
 
 		.footer {
-			margin-top: auto; /* Push footer to bottom */
-			width: 100%;
+		margin-top: auto; /* Push footer to bottom */
+		width: 100%;
 		}
 
 		@@media (max-width: 576px) {
-			.content-area {
-				padding: 10px;
-			}
+		.content-area {
+		padding: 10px;
+		}
 
-			.footer {
-				padding: 15px 0;
-			}
+		.footer {
+		padding: 15px 0;
+		}
 		}
 
 		footer {
-			line-height: 30px !important;
+		line-height: 30px !important;
 		}
 
 		.slide-btn {
-			position: relative;
-			overflow: hidden;
-			transition: color 0.3s;
-			z-index: 1;
+		position: relative;
+		overflow: hidden;
+		transition: color 0.3s;
+		z-index: 1;
 		}
 
-			.slide-btn:hover {
-				color: #fff !important;
-			}
+		.slide-btn:hover {
+		color: #fff !important;
+		}
 
-				.slide-btn:hover::before {
-					width: 100%;
-				}
+		.slide-btn:hover::before {
+		width: 100%;
+		}
 
 		.slide-btn {
-			position: relative;
-			overflow: hidden;
-			z-index: 1;
-			color: #fff;
-			border: 2px solid var(--theme-color);
-			background: transparent;
-			padding: 10px 20px;
-			cursor: pointer;
+		position: relative;
+		overflow: hidden;
+		z-index: 1;
+		color: #fff;
+		border: 2px solid var(--theme-color);
+		background: transparent;
+		padding: 10px 20px;
+		cursor: pointer;
 		}
 
-			.slide-btn::before {
-				content: "";
-				position: absolute;
-				left: 0;
-				top: 0;
-				bottom: 0;
-				width: 0;
-				background: var(--theme-color); /* dynamic theme color */
-				z-index: -1;
-				transition: width 0.4s cubic-bezier(0.45,0,0.55,1);
-			}
+		.slide-btn::before {
+		content: "";
+		position: absolute;
+		left: 0;
+		top: 0;
+		bottom: 0;
+		width: 0;
+		background: var(--theme-color); /* dynamic theme color */
+		z-index: -1;
+		transition: width 0.4s cubic-bezier(0.45,0,0.55,1);
+		}
 
 		.dt-length {
-			display: flex !important;
-			gap: 6px !important;
+		display: flex !important;
+		gap: 6px !important;
 		}
 
 		.dnone {
-			display: none !important;
+		display: none !important;
 		}
 
 
 		/* Sidebar Styles */
 		#agencySidebar {
-			min-height: calc(100vh - 57px);
-			width: var(--sidebar-width);
-			position: fixed;
-			top: 56px;
-			left: 0;
-			transition: all var(--transition-speed) ease;
-			z-index: 1010;
-			box-shadow: 3px 0 10px rgba(0, 0, 0, 0.1);
-			background-color: var(--theme-color);
-			display: flex;
-			flex-direction: column;
-			background-color: rgb(25, 135, 84);
-			border: 2px solid color-mix(in srgb, var(--theme-color) 70%, white);
-			border-radius: 0px 0px 0px 0px;
+		min-height: calc(100vh - 57px);
+		width: var(--sidebar-width);
+		position: fixed;
+		top: 56px;
+		left: 0;
+		transition: all var(--transition-speed) ease;
+		z-index: 1010;
+		box-shadow: 3px 0 10px rgba(0, 0, 0, 0.1);
+		background-color: var(--theme-color);
+		display: flex;
+		flex-direction: column;
+		background-color: rgb(25, 135, 84);
+		border: 2px solid color-mix(in srgb, var(--theme-color) 70%, white);
+		border-radius: 0px 0px 0px 0px;
 		}
 
-			#agencySidebar.collapsed {
-				width: var(--sidebar-collapsed-width);
-			}
+		#agencySidebar.collapsed {
+		width: var(--sidebar-collapsed-width);
+		}
 
-			#agencySidebar .sidebar-header {
-				padding: 20px;
-				border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-				transition: all var(--transition-speed) ease;
-				display: flex;
-				align-items: center;
-				justify-content: space-between;
-				flex-shrink: 0; /* Prevent header from shrinking */
-			}
+		#agencySidebar .sidebar-header {
+		padding: 20px;
+		border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+		transition: all var(--transition-speed) ease;
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		flex-shrink: 0; /* Prevent header from shrinking */
+		}
 
-			#agencySidebar.collapsed .sidebar-header {
-				padding: 20px 10px;
-			}
+		#agencySidebar.collapsed .sidebar-header {
+		padding: 20px 10px;
+		}
 
-			#agencySidebar .sidebar-header h4 {
-				color: white;
-				margin: 0;
-				white-space: nowrap;
-				overflow: hidden;
-				transition: all var(--transition-speed) ease;
-				font-size: 1.1rem;
-			}
+		#agencySidebar .sidebar-header h4 {
+		color: white;
+		margin: 0;
+		white-space: nowrap;
+		overflow: hidden;
+		transition: all var(--transition-speed) ease;
+		font-size: 1.1rem;
+		}
 
-			#agencySidebar.collapsed .sidebar-header h4 {
-				opacity: 0;
-				width: 0;
-			}
+		#agencySidebar.collapsed .sidebar-header h4 {
+		opacity: 0;
+		width: 0;
+		}
 
-			/* Scrollable menu container */
-			#agencySidebar .sidebar-menu-container {
-				flex: 1;
-				overflow-y: auto;
-				overflow-x: hidden;
-				padding: 0;
-				margin: 0;
-				scrollbar-width: thin;
-				scrollbar-color: rgba(255, 255, 255, 0.3) transparent;
-			}
+		/* Scrollable menu container */
+		#agencySidebar .sidebar-menu-container {
+		flex: 1;
+		overflow-y: auto;
+		overflow-x: hidden;
+		padding: 0;
+		margin: 0;
+		scrollbar-width: thin;
+		scrollbar-color: rgba(255, 255, 255, 0.3) transparent;
+		}
 
-				/* Custom scrollbar for webkit browsers */
-				#agencySidebar .sidebar-menu-container::-webkit-scrollbar {
-					width: 6px;
-				}
+		/* Custom scrollbar for webkit browsers */
+		#agencySidebar .sidebar-menu-container::-webkit-scrollbar {
+		width: 6px;
+		}
 
-				#agencySidebar .sidebar-menu-container::-webkit-scrollbar-track {
-					background: transparent;
-				}
+		#agencySidebar .sidebar-menu-container::-webkit-scrollbar-track {
+		background: transparent;
+		}
 
-				#agencySidebar .sidebar-menu-container::-webkit-scrollbar-thumb {
-					background-color: rgba(255, 255, 255, 0.3);
-					border-radius: 3px;
-				}
+		#agencySidebar .sidebar-menu-container::-webkit-scrollbar-thumb {
+		background-color: rgba(255, 255, 255, 0.3);
+		border-radius: 3px;
+		}
 
-					#agencySidebar .sidebar-menu-container::-webkit-scrollbar-thumb:hover {
-						background-color: rgba(255, 255, 255, 0.5);
-					}
+		#agencySidebar .sidebar-menu-container::-webkit-scrollbar-thumb:hover {
+		background-color: rgba(255, 255, 255, 0.5);
+		}
 
-			#agencySidebar ul.components {
-				padding: 0;
-				margin: 0;
-				list-style: none;
-				min-height: min-content; /* Ensure proper height calculation */
-			}
+		#agencySidebar ul.components {
+		padding: 0;
+		margin: 0;
+		list-style: none;
+		min-height: min-content; /* Ensure proper height calculation */
+		}
 
-			#agencySidebar ul li {
-				position: relative;
-			}
+		#agencySidebar ul li {
+		position: relative;
+		}
 
-				#agencySidebar ul li a {
-					padding: 12px 20px;
-					display: flex;
-					align-items: center;
-					color: rgba(255, 255, 255, 0.8);
-					text-decoration: none;
-					transition: all 0.2s ease;
-					white-space: nowrap;
-					border-left: 3px solid transparent;
-				}
+		#agencySidebar ul li a {
+		padding: 12px 20px;
+		display: flex;
+		align-items: center;
+		color: rgba(255, 255, 255, 0.8);
+		text-decoration: none;
+		transition: all 0.2s ease;
+		white-space: nowrap;
+		border-left: 3px solid transparent;
+		}
 
-					#agencySidebar ul li a:hover {
-						background-color: rgba(255, 255, 255, 0.1);
-						color: white;
-					}
+		#agencySidebar ul li a:hover {
+		background-color: rgba(255, 255, 255, 0.1);
+		color: white;
+		}
 
-				#agencySidebar ul li.active > a {
-					background-color: rgba(255, 255, 255, 0.15);
-					color: white;
-					border-left-color: #fff;
-				}
+		#agencySidebar ul li.active > a {
+		background-color: rgba(255, 255, 255, 0.15);
+		color: white;
+		border-left-color: #fff;
+		}
 
-				#agencySidebar ul li a i {
-					margin-right: 15px;
-					font-size: 1.2rem;
-					min-width: 30px;
-					text-align: center;
-					transition: margin-right var(--transition-speed) ease;
-				}
+		#agencySidebar ul li a i {
+		margin-right: 15px;
+		font-size: 1.2rem;
+		min-width: 30px;
+		text-align: center;
+		transition: margin-right var(--transition-speed) ease;
+		}
 
-			#agencySidebar.collapsed ul li a i {
-				margin-right: 0;
-			}
+		#agencySidebar.collapsed ul li a i {
+		margin-right: 0;
+		}
 
-			#agencySidebar ul li a span {
-				transition: opacity var(--transition-speed) ease;
-				flex: 1;
-			}
+		#agencySidebar ul li a span {
+		transition: opacity var(--transition-speed) ease;
+		flex: 1;
+		}
 
-			#agencySidebar.collapsed ul li a span {
-				opacity: 0;
-				width: 0;
-				overflow: hidden;
-			}
+		#agencySidebar.collapsed ul li a span {
+		opacity: 0;
+		width: 0;
+		overflow: hidden;
+		}
 
 		/* Dropdown arrow */
 		.dropdown-arrow {
-			margin-left: auto;
-			transition: transform 0.3s ease;
+		margin-left: auto;
+		transition: transform 0.3s ease;
 		}
 
 		#agencySidebar.collapsed .dropdown-arrow {
-			display: none;
+		display: none;
 		}
 
 		/* Child menu items */
 		.child-menu {
-			max-height: 0;
-			overflow: hidden;
-			transition: max-height 0.3s ease;
-			background-color: rgba(0, 0, 0, 0.1);
+		max-height: 0;
+		overflow: hidden;
+		transition: max-height 0.3s ease;
+		background-color: rgba(0, 0, 0, 0.1);
 		}
 
-			.child-menu.show {
-				max-height: 500px;
-				overflow-y:auto;
-			}
+		.child-menu.show {
+		max-height: 500px;
+		overflow-y: auto;
+		}
 
-			.child-menu li a {
-				padding-left: 50px !important;
-				font-size: 0.9rem;
-				border-left: 3px solid transparent;
-			}
+		.child-menu li a {
+		padding-left: 50px !important;
+		font-size: 0.9rem;
+		border-left: 3px solid transparent;
+		}
 
-				.child-menu li a:hover {
-					background-color: rgba(255, 255, 255, 0.05);
-				}
+		.child-menu li a:hover {
+		background-color: rgba(255, 255, 255, 0.05);
+		}
 
-			.child-menu li.active a {
-				border-left-color: rgba(255, 255, 255, 0.7);
-			}
+		.child-menu li.active a {
+		border-left-color: rgba(255, 255, 255, 0.7);
+		}
 
 		#agencySidebar.collapsed .child-menu {
-			display: none !important;
+		display: none !important;
 		}
 
 		/* Parent item indicator */
 		.has-children > a::after {
-			content: "";
-			margin-left: auto;
-			border: solid rgba(255, 255, 255, 0.6);
-			border-width: 0 2px 2px 0;
-			display: inline-block;
-			padding: 3px;
-			transform: rotate(45deg);
-			transition: transform 0.3s ease;
+		content: "";
+		margin-left: auto;
+		border: solid rgba(255, 255, 255, 0.6);
+		border-width: 0 2px 2px 0;
+		display: inline-block;
+		padding: 3px;
+		transform: rotate(45deg);
+		transition: transform 0.3s ease;
 		}
 
 		.has-children.open > a::after {
-			transform: rotate(-135deg);
+		transform: rotate(-135deg);
 		}
 
 		#agencySidebar.collapsed .has-children > a::after {
-			display: none;
+		display: none;
 		}
 
 		/* Content Area Styles */
 		.dashboard-content {
-			transition: margin-left var(--transition-speed) ease;
-			min-height: calc(100vh - 60px);
+		transition: margin-left var(--transition-speed) ease;
+		min-height: calc(100vh - 60px);
 		}
 
-			.dashboard-content.with-sidebar {
-				margin-left: var(--sidebar-width);
-			}
+		.dashboard-content.with-sidebar {
+		margin-left: var(--sidebar-width);
+		}
 
-				.dashboard-content.with-sidebar.collapsed {
-					margin-left: var(--sidebar-collapsed-width);
-				}
+		.dashboard-content.with-sidebar.collapsed {
+		margin-left: var(--sidebar-collapsed-width);
+		}
 
 		/* Toggle Button */
 		.sidebar-toggle {
-			background-color: transparent;
-			border: none;
-			color: white;
-			font-size: 1.3rem;
-			cursor: pointer;
-			padding: 5px 10px;
-			border-radius: 4px;
-			transition: background-color 0.2s;
+		background-color: transparent;
+		border: none;
+		color: white;
+		font-size: 1.3rem;
+		cursor: pointer;
+		padding: 5px 10px;
+		border-radius: 4px;
+		transition: background-color 0.2s;
 		}
 
-			.sidebar-toggle:hover {
-				background-color: rgba(255, 255, 255, 0.1);
-			}
+		.sidebar-toggle:hover {
+		background-color: rgba(255, 255, 255, 0.1);
+		}
 
 		/* Mobile Responsive */
 		@@media (max-width: 768px) {
-			#agencySidebar {
-				width: var(--sidebar-collapsed-width);
-				transform: translateX(-100%);
-			}
+		#agencySidebar {
+		width: var(--sidebar-collapsed-width);
+		transform: translateX(-100%);
+		}
 
-				#agencySidebar.mobile-open {
-					transform: translateX(0);
-					width: var(--sidebar-width);
-				}
+		#agencySidebar.mobile-open {
+		transform: translateX(0);
+		width: var(--sidebar-width);
+		}
 
-				#agencySidebar .sidebar-header h4,
-				#agencySidebar ul li a span {
-					opacity: 0;
-					width: 0;
-				}
+		#agencySidebar .sidebar-header h4,
+		#agencySidebar ul li a span {
+		opacity: 0;
+		width: 0;
+		}
 
-				#agencySidebar ul li a i {
-					margin-right: 0;
-				}
+		#agencySidebar ul li a i {
+		margin-right: 0;
+		}
 
-			.dashboard-content.with-sidebar {
-				margin-left: 0;
-			}
+		.dashboard-content.with-sidebar {
+		margin-left: 0;
+		}
 
-			#agencySidebar.mobile-open .sidebar-header h4,
-			#agencySidebar.mobile-open ul li a span {
-				opacity: 1;
-				width: auto;
-			}
+		#agencySidebar.mobile-open .sidebar-header h4,
+		#agencySidebar.mobile-open ul li a span {
+		opacity: 1;
+		width: auto;
+		}
 
-			#agencySidebar.mobile-open ul li a i {
-				margin-right: 15px;
-			}
+		#agencySidebar.mobile-open ul li a i {
+		margin-right: 15px;
+		}
 
-			.mobile-sidebar-toggle {
-				display: block !important;
-			}
+		.mobile-sidebar-toggle {
+		display: block !important;
+		}
 
-			#agencySidebar.mobile-open .child-menu {
-				display: block !important;
-			}
+		#agencySidebar.mobile-open .child-menu {
+		display: block !important;
+		}
 
-			#agencySidebar.mobile-open .has-children > a::after {
-				display: inline-block;
-			}
+		#agencySidebar.mobile-open .has-children > a::after {
+		display: inline-block;
+		}
 		}
 
 		/* Mobile Sidebar Toggle Button */
 		.mobile-sidebar-toggle {
-			display: none;
-			background: none;
-			border: none;
-			font-size: 1.5rem;
-			color: #6c757d;
-			margin-right: 10px;
+		display: none;
+		background: none;
+		border: none;
+		font-size: 1.5rem;
+		color: #6c757d;
+		margin-right: 10px;
 		}
 		/* Fix sidebar scrolling */
 		#agencySidebar {
-			height: calc(100vh - 56px);
-			overflow-y: auto;
-			overflow-x: hidden;
+		height: calc(100vh - 56px);
+		overflow-y: auto;
+		overflow-x: hidden;
 		}
 
-			/* Custom scrollbar */
-			#agencySidebar::-webkit-scrollbar {
-				width: 6px;
-			}
+		/* Custom scrollbar */
+		#agencySidebar::-webkit-scrollbar {
+		width: 6px;
+		}
 
-			#agencySidebar::-webkit-scrollbar-track {
-				background: transparent;
-			}
+		#agencySidebar::-webkit-scrollbar-track {
+		background: transparent;
+		}
 
-			#agencySidebar::-webkit-scrollbar-thumb {
-				background-color: rgba(255, 255, 255, 0.3);
-				border-radius: 3px;
-			}
+		#agencySidebar::-webkit-scrollbar-thumb {
+		background-color: rgba(255, 255, 255, 0.3);
+		border-radius: 3px;
+		}
 
-				#agencySidebar::-webkit-scrollbar-thumb:hover {
-					background-color: rgba(255, 255, 255, 0.5);
-				}
+		#agencySidebar::-webkit-scrollbar-thumb:hover {
+		background-color: rgba(255, 255, 255, 0.5);
+		}
 
 	</style>
 </head>
@@ -558,10 +558,10 @@
 						{
 							<li class="nav-item"><a class="nav-link text-dark" href="/Agent/AgencyDashboard">Admin Dashboard</a></li>
 						}
-						@if (User.IsInRole("Agent"))
+						@* @if (!User.IsInRole("Admin") && !User.IsInRole("SuperAdmin"))
 						{
 							<li class="nav-item"><a class="nav-link text-dark" href="/Dashboard/LeadDashboard">Lead Dashboard</a></li>
-						}
+						} *@
 						@if (User.IsInRole("User"))
 						{
 							<li class="nav-item"><a class="nav-link text-dark" href="#">Buy</a></li>
@@ -645,12 +645,12 @@
 				{
 			"/",
 			"/propertydetails/property",
-			"/home/searchproperty"
+			"/home/searchproperty",
+			"/Home/Index",
 			};
-				@if (User.IsInRole("Admin") && !excludedPaths.Contains(currentPath))
+				@if (!excludedPaths.Contains(currentPath))
 				{
 					@await Component.InvokeAsync("SidebarMenu")
-
 				}
 			}
 

@@ -108,7 +108,7 @@ namespace PhysioWeb.Controllers
                     {
                         "SUPERADMIN" => "/SuperAdmin/AdminDashboard",
                         "ADMIN" => "/Agent/AgencyDashboard",
-                        _ => "/Home/Index"
+                        _ => "/Dashboard/LeadDashboard"
                     };
                     return Json(new { success = true, redirect = redirectUrl });
                 }

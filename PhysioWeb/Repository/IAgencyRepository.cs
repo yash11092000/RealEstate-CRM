@@ -6,7 +6,7 @@ namespace PhysioWeb.Repository
     {
         Task<int> GetNextOrder(int parentId);
         Task<SidebarMenu> GetParentsForSideBar();
-        Task<List<SidebarMenu>> GetSideBar();
+        Task<List<SidebarMenu>> GetSideBar(string? userID);
         Task<bool> SaveMenuMaster(SidebarMenu sidebar);
     }
 }
