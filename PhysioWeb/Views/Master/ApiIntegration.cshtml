@@ -1,0 +1,121 @@
+﻿@model PhysioWeb.Models.ApiIntegration
+
+@{
+	ViewData["Title"] = "Api Integration";
+	var theme = User.FindFirst("Theme")?.Value ?? "#198754";
+}
+
+<style>
+	:root {
+		--theme-color: @theme;
+		--sidebar-width: 280px;
+		--sidebar-collapsed-width: 70px;
+		--transition-speed: 0.3s;
+		--primary-color: @theme;
+		--secondary-color: #6c757d;
+		--light-bg: #f8f9fa;
+	}
+
+</style>
+
+
+<main class="dashboard-content with-sidebar collapsed">
+	<div class="container-fluid mt-4">
+		<div class="d-flex justify-content-between align-items-center mb-3">
+			<h4 class="mb-0">Api Integrations</h4>
+			<button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#addIntegrationModal">
+				<i class="bi bi-plus-circle"></i> Add Integrations
+			</button>
+		</div>
+
+		<!-- ✅ Agents Table -->
+		<div class="card shadow-sm border-0">
+			<div class="card-header bg-success text-white">
+				<h5 class="mb-0"><i class="bi bi-people-fill"></i> All Integrations</h5>
+			</div>
+			<div class="card-body">
+				<div class="table-responsive">
+					<table id="TableList" class="table table-hover align-middle">
+						<thead class="table-light">
+							<tr>
+								<th>SrNo</th>
+								<th>Integration Type</th>
+								<th>Settings</th>
+								<th>Encrypted</th>
+								<th>Status</th>
+								<th><i class="bi bi-pencil-square text-primary fs-5" title="Edit"></i></th>
+								<th><i class="bi bi-trash text-danger fs-5" title="Delete"></i></th>
+							</tr>
+						</thead>
+						<tbody>
+							<!-- Dynamic Rows -->
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<!-- ✅ Add/Edit Agent Modal -->
+	<div class="modal fade" id="addIntegrationModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1">
+		<div class="modal-dialog modal-xl">
+			<div class="modal-content">
+				<div class="modal-header bg-success text-white">
+					<h5 class="modal-title">Add New Integration</h5>
+					<button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+				</div>
+				<div class="modal-body">
+					<input type="hidden" id="OldPassword" name="OldPassword" value="" />
+					<form id="agentForm" enctype="multipart/form-data">
+						<input type="hidden" id="IntegrationId" name="IntegrationId" />
+						<div class="row">
+							<div class="col-md-12 mb-3">
+								<label class="form-label fw-bold">Integration Type <span class="impMark">*</span></label>
+								<select class="form-select" name="IntegrationId" id="IntegrationId">
+									<option value="">Select Integration Type</option>
+									@foreach (var item in Model.IntegrationType)
+									{
+										<option value="@item.Value">@item.Text</option>
+									}
+								</select>
+							</div>
+
+							<div class="col-md-12 mb-3">
+								<label class="form-label fw-bold">App Id<span class="impMark">*</span></label>
+								<input type="text" class="form-control" id="AppId" name="AppId" />
+							</div>
+							<div class="col-md-12 mb-3">
+								<label class="form-label fw-bold">App Secret<span class="impMark">*</span></label>
+								<input type="text" class="form-control" id="AppSecret" name="App Secret" />
+							</div>
+							<div class="col-md-12 mb-3">
+								<label class="form-label fw-bold">Access Token<span class="impMark">*</span></label>
+								<input type="text" class="form-control" id="AccessToken" name="AccessToken" />
+							</div>
+
+							<div class="form-check mb-3 mx-2">
+								<input class="form-check-input" type="checkbox" id="Status" name="Status" value="true" checked />
+								<label class="form-check-label fw-bold" for="Status">Is Active</label>
+							</div>
+
+							<div class="form-check mb-3 mx-2">
+								<input class="form-check-input" type="checkbox" id="IsEncrypt" name="IsEncrypt" value="true" checked />
+								<label class="form-check-label fw-bold" for="IsEncrypt">Encrypt Data</label>
+							</div>
+
+						</div>
+					</form>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
+						<i class="bi bi-x-circle"></i> Cancel
+					</button>
+					<button type="button" class="btn btn-success" id="btnSaveIntegration">
+						<i class="bi bi-save"></i> Save
+					</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+</main>

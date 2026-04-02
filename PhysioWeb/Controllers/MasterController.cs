@@ -1350,6 +1350,24 @@ namespace PhysioWeb.Controllers
         #endregion
 
 
+        #region Api Integration
+        public async Task<ActionResult> ApiIntegration() {
+            ApiIntegration demo = new ApiIntegration();
+            demo.IntegrationType = new List<DropDownSource>() {
+                new DropDownSource(){
+                    Text="Facebook",
+                    Value="1"
+                },
+                new DropDownSource(){
+                    Text="Gmail",
+                    Value="2"
+                }
+
+            };
+            return View(demo);
+        }
+        #endregion
+
     }
 
     public class RoleMenuDto
