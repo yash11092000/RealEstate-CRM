@@ -16,6 +16,8 @@
 
         public string AccessToken { get; set; }
 
+        public string PageAccessToken { get; set; }
+        public string PageId { get; set; }
         public ApiIntegration()
         {
             IntegrationType = new List<DropDownSource>();

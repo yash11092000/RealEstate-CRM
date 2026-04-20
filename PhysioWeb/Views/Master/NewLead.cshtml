@@ -110,7 +110,7 @@
 					<i class="bi bi-list-stars"></i> All Leads
 				</button>
 			</li>
-		</ul>	
+		</ul>
 
 		<div class="tab-content border border-top-0 p-4" id="leadTabsContent">
 			<div class="tab-pane fade show active" id="new-lead" role="tabpanel" aria-labelledby="new-lead-tab">
@@ -123,12 +123,12 @@
 							<div class="card p-3 mb-4 shadow-sm">
 								<h5 class="card-title text-primary"><i class="bi bi-info-circle-fill"></i> Lead Information</h5>
 								<div class="row">
-								
+
 									<div class="col-md-2 mb-3">
 										<label asp-for="LeadDate" class="form-label"></label>
 										<input type="date" class="form-control currDate" id="LeadDate" name="LeadDate">
 									</div>
-									
+
 									<div class="col-md-3 mb-3">
 										<label class="form-label fw-bold">LeadType</label>
 										<select class="form-select" id="LeadType" name="LeadType">
@@ -157,7 +157,7 @@
 										</select>
 										<span asp-validation-for="LeadSource" class="text-danger"></span>
 									</div>
-									
+
 									<div class="col-md-4 mb-3">
 										<label asp-for="LeadStatus" class="form-label"></label>
 										<select class="form-select" id="LeadStatus" name="LeadStatus">
@@ -212,7 +212,7 @@
 										<input asp-for="PhoneNumber" class="form-control" placeholder="Mobile No." />
 										<span asp-validation-for="PhoneNumber" class="text-danger"></span>
 									</div>
-									
+
 									<div class="col-md-6 mb-3">
 										<label asp-for="AlternateNumber" class="form-label"></label>
 										<input asp-for="AlternateNumber" class="form-control" placeholder="WhatsApp No." />
@@ -225,7 +225,7 @@
 										</select>
 										<span asp-validation-for="PreferredContactMethod" class="text-danger"></span>
 									</div>
-								
+
 									<div class="col-md-3 mb-3">
 										<label asp-for="FollowUpDate" class="form-label"></label>
 										<input type="date" class="form-control currDate" id="FollowUpDate" name="FollowUpDate">
@@ -290,7 +290,7 @@
 							<div class="card p-3 mb-4 shadow-sm">
 								<h5 class="card-title text-primary"><i class="bi bi-house-fill"></i> Property Requirements</h5>
 								<div class="row">
-								@* 	<div class="col-md-4 mb-3">
+									@* 	<div class="col-md-4 mb-3">
 										<label asp-for="RequirementType" class="form-label"></label>
 										<select class="form-select" id="RequirementId">
 											<option value="">-- Select RequirementType --</option>
@@ -314,7 +314,17 @@
 										</select>
 										<span asp-validation-for="PropertyType" class="text-danger"></span>
 									</div>
-									
+									<div class="col-md-2 mb-3">
+										<label asp-for="Bedrooms" class="form-label"></label>
+										<select class="form-select" id="Bedrooms" name="Bedrooms">
+											<option value="">-- Select Bedroom--</option>
+											@foreach (var Type in Model.BedroomsList)
+											{
+												<option value="@Type.Value">@Type.Text</option>
+											}
+										</select>
+										<span asp-validation-for="Bedrooms" class="text-danger"></span>
+									</div>
 									@* <div class="col-md-4 mb-3">
 										<label asp-for="BudgetMin" class="form-label"></label>
 										<input asp-for="BudgetMin" class="form-control" type="number" step="0.01" placeholder="Min Budget" />
@@ -362,19 +372,11 @@
 										<span id="displayMinBudget" class="text-success fw-bold"></span>
 
 									</div>
-									@* <div class="col-md-2 mb-3">
-										<label asp-for="Bedrooms" class="form-label"></label>
-										<select class="form-select" id="Bedrooms" name="Bedrooms">
-											<option value="">-- Select Bedroom--</option>
-											@foreach (var Type in Model.BedroomsList)
-											{
-												<option value="@Type.Value">@Type.Text</option>
-											}
-										</select>
-										<span asp-validation-for="Bedrooms" class="text-danger"></span>
-									</div>
-								 *@
-								@* 	<div class="col-md-4 mb-3">
+
+
+
+
+									@* 	<div class="col-md-4 mb-3">
 										<label asp-for="FurnishingType" class="form-label"></label>
 										<select class="form-select" id="FurnishingType" name="FurnishingType">
 											<option value="">-- Select FurnishingType --</option>
@@ -410,7 +412,7 @@
 												<option value="@Type.Value">@Type.Text</option>
 											}
 										</select>
-										
+
 										<span asp-validation-for="PropertyInterestedIn" class="text-danger"></span>
 									</div>
 									<div class="col-md-4 mb-3">
@@ -456,7 +458,7 @@
 										<input asp-for="CreatedDate" class="form-control" type="date" readonly />
 										<span asp-validation-for="CreatedDate" class="text-danger"></span>
 									</div>
-									
+
 									<div class="col-md-6 mb-3 form-check">
 										<input class="form-check-input" type="checkbox" id="ReminderNotification" name="ReminderNotification">
 										<label class="form-check-label" for="ReminderNotification">
@@ -478,7 +480,7 @@
 										</select>
 										<span asp-validation-for="LeadPriority" class="text-danger"></span>
 									</div> *@
-								
+
 									@* <div class="col-md-6 mb-3">
 										<label asp-for="IsActive" class="form-label"></label>
 										<select asp-for="IsActive" class="form-select">
@@ -521,7 +523,7 @@
 
 			<!-- All Leads Tab (Static Example) -->
 			<div class="tab-pane fade" id="all-leads" role="tabpanel" aria-labelledby="all-leads-tab">
-			
+
 				<table id="TableList" class="table table-hover align-middle">
 					<thead class="table-light">
 						<tr>
@@ -544,7 +546,7 @@
 					<tbody></tbody>
 				</table>
 
-				
+
 			</div>
 		</div>
 	</div>
@@ -575,9 +577,9 @@
 	</div>
 </main>
 @section Scripts {
-	@* @{
-		await Html.RenderPartialAsync("_ValidationScriptsPartial");
-	} *@
+@* @{
+			await Html.RenderPartialAsync("_ValidationScriptsPartial");
+		} *@
 	<script>
 		// document.addEventListener('DOMContentLoaded', function () {
 		// 	var triggerEl = document.querySelector('#leadTabs button[data-bs-target="#new-lead"]');
@@ -682,7 +684,7 @@
 					$(".negotiableprice").hide();
 				}
 
-					
+
 			});
 
 
@@ -807,7 +809,9 @@
 					 }
 				 });
 			 });
-					function OnSuccessOfEdit(data) {
+			function OnSuccessOfEdit(data) {
+
+			console.log(data);
 
 			$("#UniquId").val(data.uniquId);
 			$("#LeadId").val(data.leadId);
@@ -850,7 +854,7 @@
 		}
 
 
-					function ClearData() {
+			function ClearData() {
 
 			$("#UniquId").val("");
 			$("#LeadId").val("");

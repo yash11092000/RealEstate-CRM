@@ -65,13 +65,12 @@
 					<button type="button" class="btn-close" data-bs-dismiss="modal"></button>
 				</div>
 				<div class="modal-body">
-					<input type="hidden" id="OldPassword" name="OldPassword" value="" />
-					<form id="agentForm" enctype="multipart/form-data">
+					<form id="IntegrationForm" enctype="multipart/form-data">
 						<input type="hidden" id="IntegrationId" name="IntegrationId" />
 						<div class="row">
 							<div class="col-md-12 mb-3">
 								<label class="form-label fw-bold">Integration Type <span class="impMark">*</span></label>
-								<select class="form-select" name="IntegrationId" id="IntegrationId">
+								<select class="form-select" name="IntegrationId" id="IntegrationTypeId">
 									<option value="">Select Integration Type</option>
 									@foreach (var item in Model.IntegrationType)
 									{
@@ -79,14 +78,13 @@
 									}
 								</select>
 							</div>
-
 							<div class="col-md-12 mb-3">
 								<label class="form-label fw-bold">App Id<span class="impMark">*</span></label>
 								<input type="text" class="form-control" id="AppId" name="AppId" />
 							</div>
 							<div class="col-md-12 mb-3">
 								<label class="form-label fw-bold">App Secret<span class="impMark">*</span></label>
-								<input type="text" class="form-control" id="AppSecret" name="App Secret" />
+								<input type="text" class="form-control" id="AppSecret" name="AppSecret" />
 							</div>
 							<div class="col-md-12 mb-3">
 								<label class="form-label fw-bold">Access Token<span class="impMark">*</span></label>
@@ -119,3 +117,31 @@
 	</div>
 
 </main>
+
+@section Scripts {
+	<script>
+			$('#btnSaveIntegration').on('click', function () {
+			var formData = new FormData($('#IntegrationForm')[0]);
+			console.log(formData);
+			$.ajax({
+				url: '/Master/SaveIntegration',
+				type: 'POST',
+				data: formData,
+				processData: false,
+				contentType: false,
+				success: function (res) {
+					if (res.success) {
+						alert('Integration saved!');
+						// close modal, reload table etc.
+					} else {
+						alert('Error: ' + res.message);
+					}
+				},
+				error: function () {
+					alert('Something went wrong!');
+				}
+			});
+		});
+
+</script>
+}

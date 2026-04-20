@@ -1763,7 +1763,7 @@ namespace PhysioWeb.Repository
                     "@UniquId","@LeadName","@LeadUniqueNo","@LeadDate","@ContactPersonName","@ContactPerMobNo","@WpMobNo","@PanCard","@AadharNo","@LeadType","@LeadSource",
                     "@LeadStatus","@Priority","@IsHotLead","@Description","@Campaign","@Address","@PinCode","@CountryID","@StateID","@CityID","@SalesPersonID","@SalesCoordinatorID",
                     "@IsActive","@UserID","@AgencyID","@PropertyType","@Email","@FollowUpDate","@PreferredContactMethod","@BudgetMin","@BudgetMax","@AmountUnitMinPrice","@AmountUnitMaxPrice",
-                    "@ConvertedActualPrice","@ConvertedNegotiablePrice","@LocationPreference","@PropertyInterestedIn"
+                    "@ConvertedActualPrice","@ConvertedNegotiablePrice","@LocationPreference","@PropertyInterestedIn","Bedrooms"
                 };
 
                 object[] values =
@@ -1774,7 +1774,7 @@ namespace PhysioWeb.Repository
                     NewLead.Pincode, NewLead.CountryID, NewLead.StateID, NewLead.CityID,  NewLead.AssignedAgent,DBNull.Value,
                     NewLead.IsActive,NewLead.UserID, NewLead.AgencyId ,NewLead.PropertyType,NewLead.Email,NewLead.FollowUpDate,NewLead.PreferredContactMethod,
                     NewLead.BudgetMin,NewLead.BudgetMax,NewLead.AmountUnitMinPrice ,NewLead.AmountUnitMaxPrice,
-                    NewLead.ConvertedActualPrice ,NewLead.ConvertedNegotiablePrice,NewLead.LocationPreference,NewLead.PropertyInterestedIn
+                    NewLead.ConvertedActualPrice ,NewLead.ConvertedNegotiablePrice,NewLead.LocationPreference,NewLead.PropertyInterestedIn,NewLead.Bedrooms
                 };
 
                 string Sp = "FMR_SaveNewLead";
@@ -1917,7 +1917,7 @@ namespace PhysioWeb.Repository
                 {
                     while (data.Read())
                     {
-                        UserAccess.UserRoles.Add(new DropDownSource(data,true));
+                        UserAccess.UserRoles.Add(new DropDownSource(data, true));
                     }
                 }
                 if (data.NextResult())
@@ -1927,7 +1927,7 @@ namespace PhysioWeb.Repository
                         UserAccess.UserRoleId = Convert.ToInt32(data.GetValue(0));
                     }
                 }
-                        return UserAccess;
+                return UserAccess;
                 //bind 
             }
             catch (Exception e)
@@ -1935,12 +1935,12 @@ namespace PhysioWeb.Repository
                 throw e;
             }
         }
-        public async Task<bool> SaveRoleMenus(int RoleId ,string MenuId)
+        public async Task<bool> SaveRoleMenus(int RoleId, string MenuId)
         {
             try
             {
-                string[] parameterNames = { "RoleId","MenuId" };
-                object[] parameterValues = { RoleId,MenuId};
+                string[] parameterNames = { "RoleId", "MenuId" };
+                object[] parameterValues = { RoleId, MenuId };
 
                 string Sp = "FMR_SaveRoleMenus";
                 var data = await _dbHelper.GetDataReaderAsync(Sp, parameterNames, parameterValues);
@@ -1954,10 +1954,36 @@ namespace PhysioWeb.Repository
                 {
                     while (data.Read())
                     {
-                        UserAccess.UserRoles.Add(new DropDownSource(data,true));
+                        UserAccess.UserRoles.Add(new DropDownSource(data, true));
                     }
                 }
                 return true;
+                //bind 
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }
+
+
+        public async Task<bool> SaveIntegration(ApiIntegration model)
+        {
+            try
+            {
+                string[] parameterNames = { "IntegrationTypeId", "Status", "IsEncrypt", "AppId", "AppSecret", "AccessToken", "PageAccessToken", "PageId", "AgencyId" };
+                object[] parameterValues = { model.IntegrationTypeId, model.Status, model.IsEncrypt, model.AppId, model.AppSecret, model.AccessToken, model.PageAccessToken, model.PageId, model.AgencyId };
+
+                string Sp = "SaveIntegration";
+                var data = await _dbHelper.GetDataReaderAsync(Sp, parameterNames, parameterValues);
+                UserAccess UserAccess = new UserAccess();
+                int result = 0;
+                while (data.Read())
+                {
+                    result = Convert.ToInt32(data.GetValue(0));
+                }
+
+                return result > 0;
                 //bind 
             }
             catch (Exception e)
@@ -1970,16 +1996,16 @@ namespace PhysioWeb.Repository
             try
             {
                 string[] parameterNames = { "RoleId" };
-                object[] parameterValues = { RoleId};
+                object[] parameterValues = { RoleId };
 
                 string Sp = "FMR_GetMenusByRole";
                 var data = await _dbHelper.GetDataReaderAsync(Sp, parameterNames, parameterValues);
-                List<string> MenuId = new List<string>();            
+                List<string> MenuId = new List<string>();
                 while (data.Read())
                 {
                     MenuId.Add(Convert.ToString(data.GetValue(0)));
                 }
-                
+
                 return MenuId;
                 //bind 
             }

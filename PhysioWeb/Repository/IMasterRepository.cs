@@ -69,5 +69,6 @@ namespace PhysioWeb.Repository
         Task<UserAccess> UserMenuAccess(string? userID);
         Task<bool> SaveRoleMenus(int roleId, string menuIds);
         Task<List<string>> GetMenusByRole(int roleId);
+        Task<bool> SaveIntegration(ApiIntegration model);
     }
 }

@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Pages;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using PhysioWeb.Hubs;
 using PhysioWeb.Models;
 using PhysioWeb.Repository;
@@ -1365,6 +1366,76 @@ namespace PhysioWeb.Controllers
 
             };
             return View(demo);
+        }
+        [HttpPost]
+        public async Task<JsonResult> SaveIntegration(ApiIntegration model) {
+            try
+            {
+                // Step 1: Convert to long-lived token
+                var longLivedToken = await GetLongLivedToken(model.AppId, model.AppSecret, model.AccessToken);
+
+                // Step 2: Get never-expiring Page Access Token + Page ID
+                var (pageToken, pageId) = await GetPageAccessToken(longLivedToken);
+
+                model.PageAccessToken = pageToken;
+                model.PageId = pageId;
+                model.AgencyId = User.FindFirst(ClaimTypes.GroupSid)?.Value;
+
+                // Step 3: Save to DB (your existing DB logic here)
+                var response = _masterRepository.SaveIntegration(model);
+                // await _db.SaveChangesAsync();
+
+                return Json(new { success = true, message = "Integration saved successfully!" });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, message = ex.Message });
+            }
+        }
+        private async Task<string> GetLongLivedToken(string appId, string appSecret, string shortToken)
+        {
+            using var client = new HttpClient();
+            var url = $"https://graph.facebook.com/v25.0/oauth/access_token" +
+                      $"?grant_type=fb_exchange_token" +
+                      $"&client_id={appId}" +
+                      $"&client_secret={appSecret}" +
+                      $"&fb_exchange_token={shortToken}";
+
+            var response = await client.GetAsync(url);
+            var content = await response.Content.ReadAsStringAsync();
+
+            if (!response.IsSuccessStatusCode)
+            {
+                throw new Exception($"Token Exchange Failed (400/Error): {content}");
+            }
+
+            var json = JObject.Parse(content);
+            return json["access_token"]?.ToString()
+                   ?? throw new Exception("Long-lived token not received");
+        }
+        private async Task<(string pageToken, string pageId)> GetPageAccessToken(string longLivedToken)
+        {
+            using var client = new HttpClient();
+            var url = $"https://graph.facebook.com/v25.0/me/accounts?" +
+                      $"fields=id,name,access_token" +
+                      $"&access_token={longLivedToken}";
+
+            var response = await client.GetAsync(url);
+            var content = await response.Content.ReadAsStringAsync();
+
+            if (!response.IsSuccessStatusCode)
+                throw new Exception($"Failed to get pages: {content}");
+
+            var json = JObject.Parse(content);
+            var firstPage = json["data"]?[0];
+
+            if (firstPage == null)
+                throw new Exception("No Facebook Page found. Please check if you are admin of the page.");
+
+            return (
+                pageToken: firstPage["access_token"]?.ToString() ?? "",
+                pageId: firstPage["id"]?.ToString() ?? ""
+            );
         }
         #endregion
 
