@@ -1768,11 +1768,15 @@ namespace PhysioWeb.Repository
 
                 object[] values =
                 {
-                    NewLead.UniquId,NewLead.FullName, NewLead.LeadId, NewLead.LeadDate,null, NewLead.PhoneNumber,
+                    NewLead.UniquId,NewLead.FullName, NewLead.LeadId,
+                    NewLead.LeadDate.HasValue ? NewLead.LeadDate.Value.ToString("yyyy-MM-dd") : (object)DBNull.Value,
+                    null, NewLead.PhoneNumber,
                     NewLead.AlternateNumber,NewLead.PanCard, NewLead.AadharCard, NewLead.LeadType,NewLead.LeadSource,NewLead.LeadStatus,
                     NewLead.LeadPriority,false,NewLead.RequirementDescription,NewLead.Campaign,NewLead.Address,
                     NewLead.Pincode, NewLead.CountryID, NewLead.StateID, NewLead.CityID,  NewLead.AssignedAgent,DBNull.Value,
-                    NewLead.IsActive,NewLead.UserID, NewLead.AgencyId ,NewLead.PropertyType,NewLead.Email,NewLead.FollowUpDate,NewLead.PreferredContactMethod,
+                    NewLead.IsActive,NewLead.UserID, NewLead.AgencyId ,NewLead.PropertyType,NewLead.Email,
+                    NewLead.FollowUpDate.HasValue ? NewLead.FollowUpDate.Value.ToString("yyyy-MM-dd") : (object)DBNull.Value,
+                    NewLead.PreferredContactMethod,
                     NewLead.BudgetMin,NewLead.BudgetMax,NewLead.AmountUnitMinPrice ,NewLead.AmountUnitMaxPrice,
                     NewLead.ConvertedActualPrice ,NewLead.ConvertedNegotiablePrice,NewLead.LocationPreference,NewLead.PropertyInterestedIn
                 };

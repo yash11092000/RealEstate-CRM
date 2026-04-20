@@ -27,8 +27,7 @@ builder.Services.AddScoped<IEmailService, EmailServiceRepository>();
 builder.Services.AddScoped<IEmailService, EmailServiceRepository>();
 builder.Services.AddScoped<IDashboardRepository, DashboardRepository>();
 builder.Services.AddScoped<FileUploadService>();
-builder.Services.Configure<EmailSettings>(
-    builder.Configuration.GetSection("EmailSettings"));
+builder.Services.Configure<EmailSettings>(builder.Configuration.GetSection("EmailSettings"));
 
 
 
@@ -82,5 +81,5 @@ app.MapControllerRoute(
     pattern: "{controller=Home}/{action=Index}/{id?}");
 
 app.MapHub<PhysioWeb.Hubs.NotificationHub>("/notificationHub");
-
+app.UseMiddleware<ExceptionMiddleware>();
 app.Run();
