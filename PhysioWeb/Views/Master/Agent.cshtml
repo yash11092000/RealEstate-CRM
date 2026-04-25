@@ -523,6 +523,14 @@
 				}
 			});
 		});
-
+		$('#Phone').on('change', function () {
+				validateMobileNo($('#Phone'));
+			});
+		$('#AlternatePhone').on('change', function () {
+				validateMobileNo($('#AlternatePhone'));
+			});
+			$('#Email').on('change', function () {
+				validateEmailID($('#Email'));
+			});
 	</script>
 }
