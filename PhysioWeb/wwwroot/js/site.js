@@ -20,24 +20,59 @@ function EditData(ID, Controller, Action) {
     });
 }
 
-function DeleteData(ID, Controller, Action) {
+//function DeleteData(ID, Controller, Action) {
     
-    $.ajax({
-        type: "POST",
-        url: "/" + Controller + "/" + Action,
-        data: { UniqueID: ID },
-        success: function (response) {
-            if (response) {
-               // notyf.success("Property Type Deleted");
-                OnSuccessOfDelete();
-                $("#TableList").DataTable().ajax.reload(null, false);
-            } else {
-                notyf.error(response.message || "Failed to delete.");
-            }
-        },
-        error: function (xhr) {
-            console.error(xhr);
-            notyf.error("Server error: " + (xhr.responseText || "Unknown error"));
+//    $.ajax({
+//        type: "POST",
+//        url: "/" + Controller + "/" + Action,
+//        data: { UniqueID: ID },
+//        success: function (response) {
+//            if (response) {
+//               // notyf.success("Property Type Deleted");
+//                OnSuccessOfDelete();
+//                $("#TableList").DataTable().ajax.reload(null, false);
+//            } else {
+//                notyf.error(response.message || "Failed to delete.");
+//            }
+//        },
+//        error: function (xhr) {
+//            console.error(xhr);
+//            notyf.error("Server error: " + (xhr.responseText || "Unknown error"));
+//        }
+//    });
+//}
+
+function DeleteData(ID, Controller, Action) {
+
+    Swal.fire({
+        title: 'Are you sure?',
+        text: "This action cannot be undone!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Yes, delete it',
+        cancelButtonText: 'Cancel'
+    }).then((result) => {
+
+        if (result.isConfirmed) {
+
+            $.ajax({
+                type: "POST",
+                url: "/" + Controller + "/" + Action,
+                data: { UniqueID: ID },
+                success: function (response) {
+                    if (response) {
+                        OnSuccessOfDelete();
+                        $("#TableList").DataTable().ajax.reload(null, false);
+                    } else {
+                        notyf.error(response.message || "Failed to delete.");
+                    }
+                },
+                error: function (xhr) {
+                    console.error(xhr);
+                    notyf.error("Server error: " + (xhr.responseText || "Unknown error"));
+                }
+            });
+
         }
     });
 }
