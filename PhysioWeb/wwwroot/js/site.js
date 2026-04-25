@@ -178,3 +178,42 @@ document.addEventListener("DOMContentLoaded", () => {
         input.value = today;
     });
 });
+document.addEventListener("DOMContentLoaded", () => {
+    const today = new Date();
+
+    // Set tomorrow
+    const tomorrow = new Date();
+    tomorrow.setDate(today.getDate() + 1);
+
+    // Format function (yyyy-MM-dd)
+    const formatDate = (date) => {
+        const year = date.getFullYear();
+        const month = String(date.getMonth() + 1).padStart(2, '0');
+        const day = String(date.getDate()).padStart(2, '0');
+        return `${day}/${month}/${year}`;
+    };
+
+    const minDate = formatDate(tomorrow); // block today & past
+    const defaultDate = formatDate(tomorrow);
+
+    document.querySelectorAll(".FutureDate").forEach(input => {
+        input.min = minDate;        // disables past + today
+        input.value = defaultDate; // default = tomorrow
+    });
+});
+function validateAadhaar(aadhaarInput) {
+    var aadhaar = $(aadhaarInput).val().trim();
+
+    // Remove spaces
+    aadhaar = aadhaar.replace(/\s/g, '');
+
+    // Basic check: 12 digits
+    if (!/^\d{12}$/.test(aadhaar)) {
+        notyf.error("Please enter a valid 12-digit Aadhaar number");
+        $(aadhaarInput).val("");
+        $(aadhaarInput).focus();
+        return false;
+    }
+
+   
+}

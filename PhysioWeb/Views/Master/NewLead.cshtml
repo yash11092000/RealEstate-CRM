@@ -130,7 +130,7 @@
 									</div>
 
 									<div class="col-md-3 mb-3">
-										<label class="form-label">LeadType</label>
+										<label class="form-label">Lead Type<span style="color: red;">*</span></label>
 										<select class="form-select" id="LeadType" name="LeadType">
 											<option value="">-- Select Type --</option>
 											@foreach (var item in Model.LeadTypeList)
@@ -142,7 +142,7 @@
 
 									<div class="col-md-3 mb-3">
 										<label asp-for="LeadId" class="form-label"></label>
-										<input asp-for="LeadId" class="form-control" readonly />
+										<input asp-for="LeadId" class="form-control" />
 										<span asp-validation-for="LeadId" class="text-danger"></span>
 									</div>
 									<div class="col-md-4 mb-3">
@@ -197,29 +197,43 @@
 								<h5 class="card-title text-primary"><i class="bi bi-person-fill"></i> Personal / Contact Details</h5>
 								<div class="row">
 									<div class="col-md-6 mb-3">
-										<label asp-for="FullName" class="form-label"></label>
+										<label class="form-label">Full Name<span style="color: red;">*</span></label>
 										<input asp-for="FullName" class="form-control" placeholder="Full Name" />
 										<span asp-validation-for="FullName" class="text-danger"></span>
 									</div>
 									<div class="col-md-6 mb-3">
-										<label asp-for="Email" class="form-label"></label>
+										<label class="form-label">Email ID<span style="color: red;">*</span></label>
 										<input asp-for="Email" class="form-control" type="email" placeholder="Email ID" />
 										<span asp-validation-for="Email" class="text-danger"></span>
 									</div>
 
 									<div class="col-md-6 mb-3">
-										<label asp-for="PhoneNumber" class="form-label"></label>
+										<label class="form-label">Contact No.<span style="color: red;">*</span></label>
 										<input asp-for="PhoneNumber" class="form-control" placeholder="Mobile No." />
 										<span asp-validation-for="PhoneNumber" class="text-danger"></span>
 									</div>
 
 									<div class="col-md-6 mb-3">
 										<label asp-for="AlternateNumber" class="form-label"></label>
-										<input asp-for="AlternateNumber" class="form-control" placeholder="WhatsApp No." />
+    
+										<div class="input-group">
+											<input asp-for="AlternateNumber"
+												   id="AlternateNumber"
+												   class="form-control"
+												   placeholder="WhatsApp No." />
+        
+											<div class="input-group-text">
+												<input class="form-check-input mt-0"
+													   type="checkbox"
+													   id="SameAsPhone"
+													   title="Same as Contact Number">
+											</div>
+										</div>
+    
 										<span asp-validation-for="AlternateNumber" class="text-danger"></span>
 									</div>
 									<div class="col-md-3 mb-3">
-										<label asp-for="PreferredContactMethod" class="form-label"></label>
+										<label class="form-label">Preferred Contact Method<span style="color: red;">*</span></label>
 										<select asp-for="PreferredContactMethod" asp-items="@(new SelectList(Model.PreferredContactMethodList, "Value", "Text"))" class="form-select">
 											<option value="">-- Select Method --</option>
 										</select>
@@ -227,8 +241,8 @@
 									</div>
 
 									<div class="col-md-3 mb-3">
-										<label asp-for="FollowUpDate" class="form-label"></label>
-										<input type="date" class="form-control currDate" id="FollowUpDate" name="FollowUpDate">
+										<label asp-for="FollowUpDate" class="form-label">Follow-up Date<span style="color: red;">*</span></label>
+										<input type="date" class="form-control FutureDate" id="FollowUpDate" name="FollowUpDate">
 									</div>
 									<div class="col-md-3 mb-3">
 										<label asp-for="PanCard" class="form-label"></label>
@@ -416,7 +430,7 @@
 										<span asp-validation-for="PropertyInterestedIn" class="text-danger"></span>
 									</div>
 									<div class="col-md-4 mb-3">
-										<label asp-for="LocationPreference" class="form-label"></label>
+										<label asp-for="LocationPreference" class="form-label">Location Preference<span style="color: red;">*</span></label>
 										<input asp-for="LocationPreference" class="form-control" placeholder="Preferred area" />
 										<span asp-validation-for="LocationPreference" class="text-danger"></span>
 									</div>
@@ -782,13 +796,48 @@
 
 			 $("#btnSave").on("click", function () {
 				 let Area = $("#Area").val();
+				 let LeadType = $("#LeadType").val();
+				 let FullName = $("#FullName").val();
+				 let Email = $("#Email").val();
+				 let PhoneNumber = $("#PhoneNumber").val();
+				 let PreferredContactMethod = $("#PreferredContactMethod").val();
+				 let FollowUpDate = $("#FollowUpDate").val();
 
-				 if (Area === "") {
-					 notyf.error("Please enter Area");
-					 $("#Area").focus();
-					 return;
+				 if (LeadType === "") {
+					 notyf.error("Please select Lead Type");
+					 $("#LeadType").focus();
 				 }
-
+				  else if (FullName === "") {
+					 notyf.error("Please enter Lead Name");
+					 $("#FullName").focus();
+					 
+				 }
+				  
+				  else if (Email === "") {
+					 notyf.error("Please enter Email ID");
+					 $("#Email").focus();
+					 
+				 }
+				  else if (PhoneNumber === "") {
+					 notyf.error("Please enter Contact No.");
+					 $("#PhoneNumber").focus();
+					 
+				 }
+				  else if (PreferredContactMethod === "") {
+					 notyf.error("Please enter Preferred preferredContact Method ");
+					 $("#PreferredContactMethod").focus();
+					 
+				 } else if (FollowUpDate === "") {
+					 notyf.error("Please select Follow Up Date");
+					 $("#FollowUpDate").focus();
+					 
+				 }
+				 else if (Area === "") {
+					 notyf.error("Please enter Location Preference");
+					 $("#Area").focus();
+					 
+				 }
+				 else{
 				 $.ajax({
 					 url: '/Master/SaveNewLead',
 					 method: 'POST',
@@ -798,6 +847,8 @@
 							 notyf.success("New Lead added successfully");
 							 // $("#addAreaModal").modal('hide');
 							 // ClearData();
+							 var triggerTab = new bootstrap.Tab(document.querySelector('#all-leads-tab'));
+				              triggerTab.show();
 							 $("#TableList").DataTable().ajax.reload(null, false);
 						 } else {
 							 notyf.error(response.message || "Failed to save.");
@@ -808,52 +859,64 @@
 						 notyf.error("Server error: " + (xhr.responseText || "Unknown error"));
 					 }
 				 });
+				 }
 			 });
 			function OnSuccessOfEdit(data) {
 				var triggerTab = new bootstrap.Tab(document.querySelector('#new-lead-tab'));
 				triggerTab.show();
 			console.log(data);
+		// Basic Information
+			$("#UniquId").val(data.uniquId || '');
+			$("#LeadId").val(data.leadId || '');
+			$("#FullName").val(data.fullName || '');
 
-			$("#UniquId").val(data.uniquId);
-			$("#LeadId").val(data.leadId);
-			$("#LeadName").val(data.fullName);
-
-			// Dates (ISO → input[type=date] safe)
+			// Dates - safely handle ISO format
 			$("#LeadDate").val(data.leadDate ? data.leadDate.split('T')[0] : '');
 			$("#FollowUpDate").val(data.followUpDate ? data.followUpDate.split('T')[0] : '');
 
-			$("#ContactPerMobNo").val(data.phoneNumber);
-			$("#WpMobNo").val(data.alternateNumber);
-			$("#Email").val(data.email);
+			// Contact Details
+			$("#PhoneNumber").val(data.phoneNumber || '');
+			$("#AlternateNumber").val(data.alternateNumber || '');
+			$("#Email").val(data.email || '');
+			$("#PreferredContactMethod").val(data.preferredContactMethod || '');
 
-			$("#PanCard").val(data.panCard);
-			$("#AadharCard").val(data.aadharCard);
+			$("#PanCard").val(data.panCard || '');
+			$("#AadharCard").val(data.aadharCard || '');
+			$("#Address").val(data.address || '');
+			$("#LocationPreference").val(data.locationPreference || '');
 
-			$("#LeadTypeID").val(data.leadType);
-			$("#LeadSourceID").val(data.leadSource);
-			$("#LeadStatusID").val(data.leadStatus);
-			$("#PropertyTypeID").val(data.propertyType);
+			// Dropdowns - Use correct IDs from your form
+			$("#LeadType").val(data.leadType || '');
+			$("#LeadSource").val(data.leadSource || '');           // Note: your form has id="LeadSource"
+			$("#LeadStatus").val(data.leadStatus || '');
+			$("#PropertyType").val(data.propertyType || '');
+			$("#Campaign").val(data.campaign || '');
 
-			$("#Priority").val(data.leadPriority);
-			$("#Description").val(data.requirementDescription);
-			$("#CampaignID").val(data.campaign);
+			// Priority (your form uses asp-for="LeadPriority" → id="LeadPriority")
+			$("#LeadPriority").val(data.leadPriority || '');
 
-			$("#Address").val(data.address);
-			$("#LocationPreference").val(data.locationPreference);
-			$("#PropertyInterestedIn").val(data.propertyInterestedIn);
-			$("#PreferredContactMethod").val(data.preferredContactMethod);
+			// Property Requirements
+			$("#PropertyInterestedIn").val(data.propertyInterestedIn || '');
+			$("#Bedrooms").val(data.bedrooms || '');
 
-			$("#MinPrice").val(data.budgetMin);
-			$("#MaxPrice").val(data.budgetMax);
-			$("#AmountUnitMinPrice").val(data.amountUnitMinPrice);
-			$("#AmountUnitMaxPrice").val(data.amountUnitMaxPrice);
+			// Budgets
+			$("#BudgetMin").val(data.budgetMin || 0);
+			$("#BudgetMax").val(data.budgetMax || 0);
+			$("#AmountUnitMinPrice").val(data.amountUnitMinPrice || '');
+			$("#AmountUnitMaxPrice").val(data.amountUnitMaxPrice || '');
 
-			$("#ConvertedActualPrice").val(data.convertedActualPrice);
-			$("#ConvertedNegotiablePrice").val(data.convertedNegotiablePrice);
+			$("#ConvertedActualPrice").val(data.convertedActualPrice || 0);
+			$("#ConvertedNegotiablePrice").val(data.convertedNegotiablePrice || 0);
 
+			// Description (textarea)
+			$("#RequirementDescription").val(data.requirementDescription || '');
+
+			// Is Active Checkbox
 			$("#IsActive").prop("checked", data.isActive === true);
-		}
 
+			// Optional: Trigger change events if any dependent dropdowns/filters exist
+			// $("#PropertyType").trigger('change');
+		}
 
 			function ClearData() {
 
@@ -899,6 +962,39 @@
 			 function OnSuccessOfDelete() {
 				 notyf.success("New Lead deleted successfully");
 			 }
+
+		$('#SameAsPhone').on('change', function () {
+				if ($(this).is(':checked')) {
+					$('#AlternateNumber').val($('#PhoneNumber').val()).prop('readonly', true);
+				} else {
+					$('#AlternateNumber').val('').prop('readonly', false);
+				}
+			});
+
+			// Optional: Auto-update AlternateNumber when PhoneNumber changes (if checkbox is checked)
+			$('#PhoneNumber').on('input', function () {
+				if ($('#SameAsPhone').is(':checked')) {
+					$('#AlternateNumber').val($(this).val());
+				}
+			});
+
+			$('#PanCard').on('change', function () {
+				validatepancards($('#PanCard'));
+			});
+
+			$('#Email').on('change', function () {
+				validateEmailID($('#Email'));
+			});
+
+			$('#PhoneNumber').on('change', function () {
+				validateMobileNo($('#PhoneNumber'));
+			});
+			$('#AlternateNumber').on('change', function () {
+				validateMobileNo($('#AlternateNumber'));
+			});
+			$('#AadharCard').on('change', function () {
+				validateAadhaar('#AadharCard');
+			});
 
 	</script>
 }
