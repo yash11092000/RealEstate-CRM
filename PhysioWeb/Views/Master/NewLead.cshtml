@@ -810,7 +810,8 @@
 				 });
 			 });
 			function OnSuccessOfEdit(data) {
-
+				var triggerTab = new bootstrap.Tab(document.querySelector('#new-lead-tab'));
+				triggerTab.show();
 			console.log(data);
 
 			$("#UniquId").val(data.uniquId);
